@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+
+  <meta name="description" content="Android Native开发Android 从 0x01 JNI 开发1. Demo我们现来看一个例子。 1234567public class HelloJni &amp;#123;    static &amp;#123;        System.loadLibrary(&quot;native-lib&quot;);    &amp;#125;    public static native String stringFrom">
+<meta name="keywords" content="Android,JNI,Native,CMake">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Native开发">
+<meta property="og:url" content="https://www.cwiki.cn/2021/01/17/Android-Native开发/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="Android Native开发Android 从 0x01 JNI 开发1. Demo我们现来看一个例子。 1234567public class HelloJni &amp;#123;    static &amp;#123;        System.loadLibrary(&quot;native-lib&quot;);    &amp;#125;    public static native String stringFrom">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://www.cwiki.cn/images/image-20190628232500731.webp">
+<meta property="og:image" content="https://www.cwiki.cn/images/image-20190628233820985.webp">
+<meta property="og:image" content="https://www.cwiki.cn/images/image-20190628234045501.webp">
+<meta property="og:updated_time" content="2021-01-17T12:42:26.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Native开发">
+<meta name="twitter:description" content="Android Native开发Android 从 0x01 JNI 开发1. Demo我们现来看一个例子。 1234567public class HelloJni &amp;#123;    static &amp;#123;        System.loadLibrary(&quot;native-lib&quot;);    &amp;#125;    public static native String stringFrom">
+<meta name="twitter:image" content="https://www.cwiki.cn/images/image-20190628232500731.webp">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.cwiki.cn/2021/01/17/Android-Native开发/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Android Native开发 | 个人博客</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-97381903-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/Android-Native开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Native开发
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-17 20:42:26" itemprop="dateCreated datePublished" datetime="2021-01-17T20:42:26+08:00">2021-01-17</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/17/Android-Native开发/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/Android-Native开发/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/17/Android-Native开发/" class="leancloud_visitors" data-flag-title="Android Native开发">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">48k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">44 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Android-Native开发"><a href="#Android-Native开发" class="headerlink" title="Android Native开发"></a>Android Native开发</h2><p>Android 从</p>
+<h3 id="0x01-JNI-开发"><a href="#0x01-JNI-开发" class="headerlink" title="0x01 JNI 开发"></a>0x01 JNI 开发</h3><h4 id="1-Demo"><a href="#1-Demo" class="headerlink" title="1. Demo"></a>1. Demo</h4><p>我们现来看一个例子。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloJni</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">"native-lib"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> String <span class="title">stringFromJNI</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_cn_cwiki_someapp_test_HelloJni_stringFromJNI(JNIEnv *env, jclass type) &#123;</span><br><span class="line">    <span class="comment">// TODO</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"Hello, Java Native Interface!"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_cn_cwiki_someapp_test_HelloJni_test(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    <span class="comment">// TODO</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"test"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20190628232500731.webp" alt="image-20190628232500731"></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span>.<span class="number">1</span>)</span><br><span class="line"><span class="keyword">add_library</span>(</span><br><span class="line">        native-lib SHARED</span><br><span class="line">        src/main/cpp/native-lib.cpp</span><br><span class="line">)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(</span><br><span class="line">        native-lib</span><br><span class="line">        src/main/cpp/native-lib.cpp</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">            path <span class="string">"CMakeLists.txt"</span>  <span class="comment">//CMakeLists.txt的路径</span></span><br><span class="line">            version <span class="string">"3.10.2"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20190628233820985.webp" alt="image-20190628233820985"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String stringFromJNI = HelloJni.stringFromJNI();</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20190628234045501.webp" alt="image-20190628234045501"></p>
+<a id="more"></a>
+
+<h4 id="2-Java-Native-Interface-Jni-："><a href="#2-Java-Native-Interface-Jni-：" class="headerlink" title="2.  Java Native Interface(Jni)："></a>2.  Java Native Interface(Jni)：</h4><p>jni.h</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">uint8_t</span>  jboolean; <span class="comment">/* unsigned 8 bits */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int8_t</span>   jbyte;    <span class="comment">/* signed 8 bits */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">uint16_t</span> jchar;    <span class="comment">/* unsigned 16 bits */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int16_t</span>  jshort;   <span class="comment">/* signed 16 bits */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int32_t</span>  jint;     <span class="comment">/* signed 32 bits */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int64_t</span>  jlong;    <span class="comment">/* signed 64 bits */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">float</span>    jfloat;   <span class="comment">/* 32-bit IEEE 754 */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">double</span>   jdouble;  <span class="comment">/* 64-bit IEEE 754 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Reference types, in C.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span>*           jobject;</span><br><span class="line"><span class="keyword">typedef</span> jobject         jclass;</span><br><span class="line"><span class="keyword">typedef</span> jobject         jstring;</span><br><span class="line"><span class="keyword">typedef</span> jobject         jarray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jobjectArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jbooleanArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jbyteArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jcharArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jshortArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jintArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jlongArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jfloatArray;</span><br><span class="line"><span class="keyword">typedef</span> jarray          jdoubleArray;</span><br><span class="line"><span class="keyword">typedef</span> jobject         jthrowable;</span><br><span class="line"><span class="keyword">typedef</span> jobject         jweak;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(__cplusplus)</span></span><br><span class="line"><span class="keyword">typedef</span> _JNIEnv JNIEnv;</span><br><span class="line"><span class="keyword">typedef</span> _JavaVM JavaVM;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">JNINativeInterface</span>* <span class="title">JNIEnv</span>;</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">JNIInvokeInterface</span>* <span class="title">JavaVM</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="0x02-NDK-开发"><a href="#0x02-NDK-开发" class="headerlink" title="0x02 NDK 开发"></a>0x02 NDK 开发</h3><p>CMake配置：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span>.<span class="number">1</span>)</span><br><span class="line"><span class="keyword">add_library</span>(native_app_glue STATIC</span><br><span class="line">        <span class="variable">$&#123;ANDROID_NDK&#125;</span>/sources/android/native_app_glue/android_native_app_glue.c)</span><br><span class="line"><span class="keyword">add_library</span>(main SHARED <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/src/main/cpp/main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(main PRIVATE</span><br><span class="line">        <span class="variable">$&#123;ANDROID_NDK&#125;</span>/sources/android/native_app_glue)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(</span><br><span class="line">        main</span><br><span class="line">        android</span><br><span class="line">        native_app_glue</span><br><span class="line">        EGL</span><br><span class="line">        GLESv1_CM</span><br><span class="line">        log</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>AndroidManifest.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span> <span class="attr">android:hasCode</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">"android.app.NativeActivity"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"android.app.lib_name"</span></span></span><br><span class="line"><span class="tag">                       <span class="attr">android:value</span>=<span class="string">"main"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Main.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Copyright (C) 2010 The Android Open Source Project</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Licensed under the Apache License, Version 2.0 (the "License");</span></span><br><span class="line"><span class="comment"> * you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment"> * You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *      http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//BEGIN_INCLUDE(all)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cassert&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;EGL/egl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;GLES/gl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;android/sensor.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;android/log.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;android_native_app_glue.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;android/bitmap.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;GrContext.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SkGpuDevice.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;gl/GrGLInterface.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;GrContext.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SkCanvas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SkGraphics.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SkSurface.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SkString.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SkTime.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"GrBackendSemaphore.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;GLES/gl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;core/SkExecutor.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"cpp/skia/WindowContextFactory_android.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"cpp/skia/Window.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, <span class="meta-string">"native-activity"</span>, __VA_ARGS__))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, <span class="meta-string">"native-activity"</span>, __VA_ARGS__))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Our saved state data.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">saved_state</span> &#123;</span></span><br><span class="line">    <span class="keyword">float</span> angle;</span><br><span class="line">    <span class="keyword">int32_t</span> x;</span><br><span class="line">    <span class="keyword">int32_t</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Shared state for our app.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">engine</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">android_app</span> *<span class="title">app</span>;</span></span><br><span class="line">    ASensorManager *sensorManager;</span><br><span class="line">    <span class="keyword">const</span> ASensor *accelerometerSensor;</span><br><span class="line">    ASensorEventQueue *sensorEventQueue;</span><br><span class="line">    <span class="keyword">int</span> animating;</span><br><span class="line">    EGLDisplay display;</span><br><span class="line">    EGLSurface surface;</span><br><span class="line">    EGLContext context;</span><br><span class="line">    <span class="keyword">int32_t</span> width;</span><br><span class="line">    <span class="keyword">int32_t</span> height;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">saved_state</span> <span class="title">state</span>;</span></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">init_es_egl</span><span class="params">(struct engine *engine)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// initialize OpenGL ES and EGL</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * Here specify the attributes of the desired configuration.</span></span><br><span class="line"><span class="comment">     * Below, we select an EGLConfig with at least 8 bits per color</span></span><br><span class="line"><span class="comment">     * component compatible with on-screen windows</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">const</span> EGLint attribs[] = &#123;</span><br><span class="line">            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,</span><br><span class="line">            EGL_BLUE_SIZE, <span class="number">8</span>,</span><br><span class="line">            EGL_GREEN_SIZE, <span class="number">8</span>,</span><br><span class="line">            EGL_RED_SIZE, <span class="number">8</span>,</span><br><span class="line">            EGL_NONE</span><br><span class="line">    &#125;;</span><br><span class="line">    EGLint w, h, format;</span><br><span class="line">    EGLint numConfigs;</span><br><span class="line">    EGLConfig config;</span><br><span class="line">    EGLSurface surface;</span><br><span class="line">    EGLContext context;</span><br><span class="line">    EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);</span><br><span class="line">    eglInitialize(display, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    SkAssertResult(eglBindAPI(EGL_OPENGL_ES_API));</span><br><span class="line">    <span class="comment">/* Here, the application chooses the configuration it desires.</span></span><br><span class="line"><span class="comment">     * find the best match if possible, otherwise use the very first one</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    eglChooseConfig(display, attribs, <span class="literal">nullptr</span>, <span class="number">0</span>, &amp;numConfigs);</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;EGLConfig[]&gt; supportedConfigs(<span class="keyword">new</span> EGLConfig[numConfigs]);</span><br><span class="line">    assert(supportedConfigs);</span><br><span class="line">    eglChooseConfig(display, attribs, supportedConfigs.get(), numConfigs, &amp;numConfigs);</span><br><span class="line">    assert(numConfigs);</span><br><span class="line">    <span class="keyword">auto</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (; i &lt; numConfigs; i++) &#123;</span><br><span class="line">        <span class="keyword">auto</span> &amp;cfg = supportedConfigs[i];</span><br><span class="line">        EGLint r, g, b, d;</span><br><span class="line">        <span class="keyword">if</span> (eglGetConfigAttrib(display, cfg, EGL_RED_SIZE, &amp;r) &amp;&amp;</span><br><span class="line">            eglGetConfigAttrib(display, cfg, EGL_GREEN_SIZE, &amp;g) &amp;&amp;</span><br><span class="line">            eglGetConfigAttrib(display, cfg, EGL_BLUE_SIZE, &amp;b) &amp;&amp;</span><br><span class="line">            eglGetConfigAttrib(display, cfg, EGL_DEPTH_SIZE, &amp;d) &amp;&amp;</span><br><span class="line">            r == <span class="number">8</span> &amp;&amp; g == <span class="number">8</span> &amp;&amp; b == <span class="number">8</span> &amp;&amp; d == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">            config = supportedConfigs[i];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (i == numConfigs) &#123;</span><br><span class="line">        config = supportedConfigs[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is</span></span><br><span class="line"><span class="comment">     * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().</span></span><br><span class="line"><span class="comment">     * As soon as we picked a EGLConfig, we can safely reconfigure the</span></span><br><span class="line"><span class="comment">     * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */</span></span><br><span class="line">    eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &amp;format);</span><br><span class="line">    surface = eglCreateWindowSurface(display, config, engine-&gt;app-&gt;window, <span class="literal">NULL</span>);</span><br><span class="line">    context = eglCreateContext(display, config, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) &#123;</span><br><span class="line">        LOGW(<span class="string">"Unable to eglMakeCurrent"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    eglQuerySurface(display, surface, EGL_WIDTH, &amp;w);</span><br><span class="line">    eglQuerySurface(display, surface, EGL_HEIGHT, &amp;h);</span><br><span class="line"></span><br><span class="line">    engine-&gt;display = display;</span><br><span class="line">    engine-&gt;context = context;</span><br><span class="line">    engine-&gt;surface = surface;</span><br><span class="line">    engine-&gt;width = w;</span><br><span class="line">    engine-&gt;height = h;</span><br><span class="line">    engine-&gt;state.angle = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check openGL on the system</span></span><br><span class="line">    <span class="keyword">auto</span> opengl_info = &#123;GL_VENDOR, GL_RENDERER, GL_VERSION, GL_EXTENSIONS&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> name : opengl_info) &#123;</span><br><span class="line">        <span class="keyword">auto</span> info = glGetString(name);</span><br><span class="line">        LOGI(<span class="string">"OpenGL Info: %s"</span>, info);</span><br><span class="line">    &#125;</span><br><span class="line">    LOGI(<span class="string">"Canvas size: %d x %d"</span>, w, h);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Initialize GL state.</span></span><br><span class="line">    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);</span><br><span class="line">    glEnable(GL_CULL_FACE);</span><br><span class="line">    glShadeModel(GL_SMOOTH);</span><br><span class="line">    glDisable(GL_DEPTH_TEST);</span><br><span class="line"></span><br><span class="line">    eglSurfaceAttrib(display, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Initialize an EGL context for the current display.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">engine_init_display</span><span class="params">(struct engine *engine)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> r = init_es_egl(engine);</span><br><span class="line">    <span class="keyword">if</span> (r != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">    init_raster_skia(engine);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initEgl</span><span class="params">(struct engine *engine)</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Just the current frame in the display.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">engine_draw_frame</span><span class="params">(struct engine *engine)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (engine-&gt;display == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="comment">// No display.</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Just fill the screen with a color.</span></span><br><span class="line">    glClearColor(((<span class="keyword">float</span>) engine-&gt;state.x) / engine-&gt;width, engine-&gt;state.angle,</span><br><span class="line">                 ((<span class="keyword">float</span>) engine-&gt;state.y) / engine-&gt;height, <span class="number">1</span>);</span><br><span class="line">    glClear(GL_COLOR_BUFFER_BIT);</span><br><span class="line">    eglSwapBuffers(engine-&gt;display, engine-&gt;surface);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Tear down the EGL context currently associated with the display.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">engine_term_display</span><span class="params">(struct engine *engine)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (engine-&gt;display != EGL_NO_DISPLAY) &#123;</span><br><span class="line">        eglMakeCurrent(engine-&gt;display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);</span><br><span class="line">        <span class="keyword">if</span> (engine-&gt;context != EGL_NO_CONTEXT) &#123;</span><br><span class="line">            eglDestroyContext(engine-&gt;display, engine-&gt;context);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (engine-&gt;surface != EGL_NO_SURFACE) &#123;</span><br><span class="line">            eglDestroySurface(engine-&gt;display, engine-&gt;surface);</span><br><span class="line">        &#125;</span><br><span class="line">        eglTerminate(engine-&gt;display);</span><br><span class="line">    &#125;</span><br><span class="line">    engine-&gt;animating = <span class="number">0</span>;</span><br><span class="line">    engine-&gt;display = EGL_NO_DISPLAY;</span><br><span class="line">    engine-&gt;context = EGL_NO_CONTEXT;</span><br><span class="line">    engine-&gt;surface = EGL_NO_SURFACE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Process the next input event.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> int32_t <span class="title">engine_handle_input</span><span class="params">(struct android_app *app, AInputEvent *event)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">engine</span> *<span class="title">engine</span> = (<span class="title">struct</span> <span class="title">engine</span> *) <span class="title">app</span>-&gt;<span class="title">userData</span>;</span></span><br><span class="line">    <span class="keyword">if</span> (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) &#123;</span><br><span class="line">        engine-&gt;animating = <span class="number">1</span>;</span><br><span class="line">        engine-&gt;state.x = AMotionEvent_getX(event, <span class="number">0</span>);</span><br><span class="line">        engine-&gt;state.y = AMotionEvent_getY(event, <span class="number">0</span>);</span><br><span class="line">        LOGI(<span class="string">"touch %d,%d"</span>, engine-&gt;state.x, engine-&gt;state.y);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Process the next main command.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">engine_handle_cmd</span><span class="params">(struct android_app *app, <span class="keyword">int32_t</span> cmd)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">engine</span> *<span class="title">engine</span> = (<span class="title">struct</span> <span class="title">engine</span> *) <span class="title">app</span>-&gt;<span class="title">userData</span>;</span></span><br><span class="line">    <span class="keyword">switch</span> (cmd) &#123;</span><br><span class="line">        <span class="keyword">case</span> APP_CMD_SAVE_STATE:</span><br><span class="line">            <span class="comment">// The system has asked us to save our current state.  Do so.</span></span><br><span class="line">            engine-&gt;app-&gt;savedState = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(struct saved_state));</span><br><span class="line">            *((struct saved_state *) engine-&gt;app-&gt;savedState) = engine-&gt;state;</span><br><span class="line">            engine-&gt;app-&gt;savedStateSize = <span class="keyword">sizeof</span>(struct saved_state);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> APP_CMD_INIT_WINDOW:</span><br><span class="line">            <span class="comment">// The window is being shown, get it ready.</span></span><br><span class="line">            <span class="keyword">if</span> (engine-&gt;app-&gt;window != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                engine_init_display(engine);</span><br><span class="line">                engine_draw_frame(engine);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> APP_CMD_TERM_WINDOW:</span><br><span class="line">            <span class="comment">// The window is being hidden or closed, clean it up.</span></span><br><span class="line">            engine_term_display(engine);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> APP_CMD_GAINED_FOCUS:</span><br><span class="line">            <span class="comment">// When our app gains focus, we start monitoring the accelerometer.</span></span><br><span class="line">            <span class="keyword">if</span> (engine-&gt;accelerometerSensor != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                ASensorEventQueue_enableSensor(engine-&gt;sensorEventQueue,</span><br><span class="line">                                               engine-&gt;accelerometerSensor);</span><br><span class="line">                <span class="comment">// We'd like to get 60 events per second (in us).</span></span><br><span class="line">                ASensorEventQueue_setEventRate(engine-&gt;sensorEventQueue,</span><br><span class="line">                                               engine-&gt;accelerometerSensor,</span><br><span class="line">                                               (<span class="number">1000L</span> / <span class="number">60</span>) * <span class="number">1000</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> APP_CMD_LOST_FOCUS:</span><br><span class="line">            <span class="comment">// When our app loses focus, we stop monitoring the accelerometer.</span></span><br><span class="line">            <span class="comment">// This is to avoid consuming battery while not being used.</span></span><br><span class="line">            <span class="keyword">if</span> (engine-&gt;accelerometerSensor != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                ASensorEventQueue_disableSensor(engine-&gt;sensorEventQueue,</span><br><span class="line">                                                engine-&gt;accelerometerSensor);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Also stop animating.</span></span><br><span class="line">            engine-&gt;animating = <span class="number">0</span>;</span><br><span class="line">            engine_draw_frame(engine);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * AcquireASensorManagerInstance(void)</span></span><br><span class="line"><span class="comment"> *    Workaround ASensorManager_getInstance() deprecation false alarm</span></span><br><span class="line"><span class="comment"> *    for Android-N and before, when compiling with NDK-r15</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;dlfcn.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">ASensorManager *<span class="title">AcquireASensorManagerInstance</span><span class="params">(android_app *app)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!app)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typedef</span> ASensorManager *(*PF_GETINSTANCEFORPACKAGE)(<span class="keyword">const</span> <span class="keyword">char</span> *name);</span><br><span class="line">    <span class="keyword">void</span> *androidHandle = dlopen(<span class="string">"libandroid.so"</span>, RTLD_NOW);</span><br><span class="line">    PF_GETINSTANCEFORPACKAGE getInstanceForPackageFunc = (PF_GETINSTANCEFORPACKAGE)</span><br><span class="line">            dlsym(androidHandle, <span class="string">"ASensorManager_getInstanceForPackage"</span>);</span><br><span class="line">    <span class="keyword">if</span> (getInstanceForPackageFunc) &#123;</span><br><span class="line">        JNIEnv *env = <span class="literal">nullptr</span>;</span><br><span class="line">        app-&gt;activity-&gt;vm-&gt;AttachCurrentThread(&amp;env, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">        jclass android_content_Context = env-&gt;GetObjectClass(app-&gt;activity-&gt;clazz);</span><br><span class="line">        jmethodID midGetPackageName = env-&gt;GetMethodID(android_content_Context,</span><br><span class="line">                                                       <span class="string">"getPackageName"</span>,</span><br><span class="line">                                                       <span class="string">"()Ljava/lang/String;"</span>);</span><br><span class="line">        jstring packageName = (jstring) env-&gt;CallObjectMethod(app-&gt;activity-&gt;clazz,</span><br><span class="line">                                                              midGetPackageName);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *nativePackageName = env-&gt;GetStringUTFChars(packageName, <span class="number">0</span>);</span><br><span class="line">        ASensorManager *mgr = getInstanceForPackageFunc(nativePackageName);</span><br><span class="line">        env-&gt;ReleaseStringUTFChars(packageName, nativePackageName);</span><br><span class="line">        app-&gt;activity-&gt;vm-&gt;DetachCurrentThread();</span><br><span class="line">        <span class="keyword">if</span> (mgr) &#123;</span><br><span class="line">            dlclose(androidHandle);</span><br><span class="line">            <span class="keyword">return</span> mgr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typedef</span> ASensorManager *(*PF_GETINSTANCE)();</span><br><span class="line">    PF_GETINSTANCE getInstanceFunc = (PF_GETINSTANCE)</span><br><span class="line">            dlsym(androidHandle, <span class="string">"ASensorManager_getInstance"</span>);</span><br><span class="line">    <span class="comment">// by all means at this point, ASensorManager_getInstance should be available</span></span><br><span class="line">    assert(getInstanceFunc);</span><br><span class="line">    dlclose(androidHandle);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> getInstanceFunc();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This is the main entry point of a native application that is using</span></span><br><span class="line"><span class="comment"> * android_native_app_glue.  It runs in its own thread, with its own</span></span><br><span class="line"><span class="comment"> * event loop for receiving input events and doing other things.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">android_main</span><span class="params">(struct android_app *state)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">engine</span> <span class="title">engine</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;engine, <span class="number">0</span>, <span class="keyword">sizeof</span>(engine));</span><br><span class="line">    state-&gt;userData = &amp;engine;</span><br><span class="line">    state-&gt;onAppCmd = engine_handle_cmd;</span><br><span class="line">    state-&gt;onInputEvent = engine_handle_input;</span><br><span class="line">    engine.app = state;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Prepare to monitor accelerometer</span></span><br><span class="line">    engine.sensorManager = AcquireASensorManagerInstance(state);</span><br><span class="line">    engine.accelerometerSensor = ASensorManager_getDefaultSensor(</span><br><span class="line">            engine.sensorManager,</span><br><span class="line">            ASENSOR_TYPE_ACCELEROMETER);</span><br><span class="line">    engine.sensorEventQueue = ASensorManager_createEventQueue(</span><br><span class="line">            engine.sensorManager,</span><br><span class="line">            state-&gt;looper, LOOPER_ID_USER,</span><br><span class="line">            <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (state-&gt;savedState != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="comment">// We are starting with a previous saved state; restore from it.</span></span><br><span class="line">        engine.state = *(struct saved_state *) state-&gt;savedState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// loop waiting for stuff to do.</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// Read all pending events.</span></span><br><span class="line">        <span class="keyword">int</span> ident;</span><br><span class="line">        <span class="keyword">int</span> events;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">android_poll_source</span> *<span class="title">source</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// If not animating, we will block forever waiting for events.</span></span><br><span class="line">        <span class="comment">// If animating, we loop until all events are read, then continue</span></span><br><span class="line">        <span class="comment">// to draw the next frame of animation.</span></span><br><span class="line">        <span class="keyword">while</span> ((ident = ALooper_pollAll(engine.animating ? <span class="number">0</span> : <span class="number">-1</span>, <span class="literal">NULL</span>, &amp;events,</span><br><span class="line">                                        (<span class="keyword">void</span> **) &amp;source)) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Process this event.</span></span><br><span class="line">            <span class="keyword">if</span> (source != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                source-&gt;process(state, source);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If a sensor has data, process it now.</span></span><br><span class="line">            <span class="keyword">if</span> (ident == LOOPER_ID_USER) &#123;</span><br><span class="line">                <span class="keyword">if</span> (engine.accelerometerSensor != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                    ASensorEvent event;</span><br><span class="line">                    <span class="keyword">while</span> (ASensorEventQueue_getEvents(engine.sensorEventQueue,</span><br><span class="line">                                                       &amp;event, <span class="number">1</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        LOGI(<span class="string">"accelerometer: x=%f y=%f z=%f"</span>,</span><br><span class="line">                             event.acceleration.x, event.acceleration.y,</span><br><span class="line">                             event.acceleration.z);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Check if we are exiting.</span></span><br><span class="line">            <span class="keyword">if</span> (state-&gt;destroyRequested != <span class="number">0</span>) &#123;</span><br><span class="line">                engine_term_display(&amp;engine);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (engine.animating) &#123;</span><br><span class="line">            <span class="comment">// Done with events; draw next animation frame.</span></span><br><span class="line">            engine.state.angle += <span class="number">.01</span>f;</span><br><span class="line">            <span class="keyword">if</span> (engine.state.angle &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                engine.state.angle = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Drawing is throttled to the screen update rate, so there</span></span><br><span class="line">            <span class="comment">// is no need to do timing here.</span></span><br><span class="line">            engine_draw_frame(&amp;engine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//END_INCLUDE(all)</span></span><br></pre></td></tr></table></figure>
+
+<p>cmake中配置main.cpp和android_native_app_glue.c，编译成main.o动态库，供NativeActivity.java调用，Android App启动入口为Java的Activity（NativeActivity），NativeActivity加载main.o动态库，将执行过程交给Native代码android_native_app_glue.c，android_native_app_glue.c中包含了Native部分的启动方法，ANativeActivity_onCreate。</p>
+<p> /<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/" target="_blank" rel="noopener">prebuilts</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/" target="_blank" rel="noopener">ndk</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/" target="_blank" rel="noopener">current</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/" target="_blank" rel="noopener">sources</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/" target="_blank" rel="noopener">android</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/native_app_glue/" target="_blank" rel="noopener">native_app_glue</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/native_app_glue/android_native_app_glue.c" target="_blank" rel="noopener">android_native_app_glue.c</a> </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">JNIEXPORT</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ANativeActivity_onCreate</span><span class="params">(ANativeActivity* activity, <span class="keyword">void</span>* savedState,</span></span></span><br><span class="line"><span class="function"><span class="params">															<span class="keyword">size_t</span> savedStateSize)</span></span>&#123;</span><br><span class="line">		LOGV(<span class="string">"Creating: %p\n"</span>, activity);</span><br><span class="line">    activity-&gt;callbacks-&gt;onDestroy = onDestroy;</span><br><span class="line">    activity-&gt;callbacks-&gt;onStart = onStart;</span><br><span class="line">    activity-&gt;callbacks-&gt;onResume = onResume;</span><br><span class="line">    activity-&gt;callbacks-&gt;onSaveInstanceState = onSaveInstanceState;</span><br><span class="line">    activity-&gt;callbacks-&gt;onPause = onPause;</span><br><span class="line">    activity-&gt;callbacks-&gt;onStop = onStop;</span><br><span class="line">    activity-&gt;callbacks-&gt;onConfigurationChanged = onConfigurationChanged;</span><br><span class="line">    activity-&gt;callbacks-&gt;onLowMemory = onLowMemory;</span><br><span class="line">    activity-&gt;callbacks-&gt;onWindowFocusChanged = onWindowFocusChanged;</span><br><span class="line">    activity-&gt;callbacks-&gt;onNativeWindowCreated = onNativeWindowCreated;</span><br><span class="line">    activity-&gt;callbacks-&gt;onNativeWindowDestroyed = onNativeWindowDestroyed;</span><br><span class="line">    activity-&gt;callbacks-&gt;onInputQueueCreated = onInputQueueCreated;</span><br><span class="line">    activity-&gt;callbacks-&gt;onInputQueueDestroyed = onInputQueueDestroyed;</span><br><span class="line">    activity-&gt;instance = android_app_create(activity, savedState, savedStateSize);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>android_native_app_glue.c中包含Activity的Native原生生命周期方法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">(ANativeActivity* activity)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">(ANativeActivity* activity)</span></span>; </span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">(ANativeActivity* activity)</span></span>;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>在执行ANativeActivity_onCreate方法后，调用android_app_create方法，进入android_app_entry方法。android_app_entry调用main.cpp中我们写的android_main(android_app)。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> struct android_app* <span class="title">android_app_create</span><span class="params">(ANativeActivity* activity,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">void</span>* savedState, <span class="keyword">size_t</span> savedStateSize)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">android_app</span>* <span class="title">android_app</span> = (<span class="title">struct</span> <span class="title">android_app</span>*)<span class="title">malloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">android_app</span>));</span></span><br><span class="line">    <span class="built_in">memset</span>(android_app, <span class="number">0</span>, <span class="keyword">sizeof</span>(struct android_app));</span><br><span class="line">    android_app-&gt;activity = activity;</span><br><span class="line"></span><br><span class="line">    pthread_mutex_init(&amp;android_app-&gt;mutex, <span class="literal">NULL</span>);</span><br><span class="line">    pthread_cond_init(&amp;android_app-&gt;cond, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (savedState != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        android_app-&gt;savedState = <span class="built_in">malloc</span>(savedStateSize);</span><br><span class="line">        android_app-&gt;savedStateSize = savedStateSize;</span><br><span class="line">        <span class="built_in">memcpy</span>(android_app-&gt;savedState, savedState, savedStateSize);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> msgpipe[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span> (pipe(msgpipe)) &#123;</span><br><span class="line">        LOGE(<span class="string">"could not create pipe: %s"</span>, strerror(errno));</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    android_app-&gt;msgread = msgpipe[<span class="number">0</span>];</span><br><span class="line">    android_app-&gt;msgwrite = msgpipe[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pthread_attr_t</span> attr; </span><br><span class="line">    pthread_attr_init(&amp;attr);</span><br><span class="line">    pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACHED);</span><br><span class="line">    pthread_create(&amp;android_app-&gt;thread, &amp;attr, android_app_entry, android_app);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Wait for thread to start.</span></span><br><span class="line">    pthread_mutex_lock(&amp;android_app-&gt;mutex);</span><br><span class="line">    <span class="keyword">while</span> (!android_app-&gt;running) &#123;</span><br><span class="line">        pthread_cond_wait(&amp;android_app-&gt;cond, &amp;android_app-&gt;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_mutex_unlock(&amp;android_app-&gt;mutex);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> android_app;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="title">android_app_entry</span><span class="params">(<span class="keyword">void</span>* param)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">android_app</span>* <span class="title">android_app</span> = (<span class="title">struct</span> <span class="title">android_app</span>*)<span class="title">param</span>;</span></span><br><span class="line">    android_app-&gt;config = AConfiguration_new();</span><br><span class="line">    AConfiguration_fromAssetManager(android_app-&gt;config, android_app-&gt;activity-&gt;assetManager);</span><br><span class="line">    print_cur_config(android_app);</span><br><span class="line">    android_app-&gt;cmdPollSource.id = LOOPER_ID_MAIN;</span><br><span class="line">    android_app-&gt;cmdPollSource.app = android_app;</span><br><span class="line">    android_app-&gt;cmdPollSource.process = process_cmd;</span><br><span class="line">    android_app-&gt;inputPollSource.id = LOOPER_ID_INPUT;</span><br><span class="line">    android_app-&gt;inputPollSource.app = android_app;</span><br><span class="line">    android_app-&gt;inputPollSource.process = process_input;</span><br><span class="line">    ALooper* looper = ALooper_prepare(ALOOPER_PREPARE_ALLOW_NON_CALLBACKS);</span><br><span class="line">    ALooper_addFd(looper, android_app-&gt;msgread, LOOPER_ID_MAIN, ALOOPER_EVENT_INPUT, <span class="literal">NULL</span>,</span><br><span class="line">            &amp;android_app-&gt;cmdPollSource);</span><br><span class="line">    android_app-&gt;looper = looper;</span><br><span class="line">    pthread_mutex_lock(&amp;android_app-&gt;mutex);</span><br><span class="line">    android_app-&gt;running = <span class="number">1</span>;</span><br><span class="line">    pthread_cond_broadcast(&amp;android_app-&gt;cond);</span><br><span class="line">    pthread_mutex_unlock(&amp;android_app-&gt;mutex);</span><br><span class="line">    android_main(android_app);</span><br><span class="line">    android_app_destroy(android_app);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x03-NDK-Native-调用原理"><a href="#0x03-NDK-Native-调用原理" class="headerlink" title="0x03 NDK Native 调用原理"></a>0x03 NDK Native 调用原理</h3><p>我们来看一下NativeActivity加载NativeCode的过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NativeActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> <span class="keyword">implements</span> <span class="title">SurfaceHolder</span>.<span class="title">Callback2</span>,</span></span><br><span class="line"><span class="class">        <span class="title">InputQueue</span>.<span class="title">Callback</span>, <span class="title">OnGlobalLayoutListener</span></span>&#123;</span><br><span class="line">      <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">          String libname = <span class="string">"main"</span>;</span><br><span class="line">          String funcname = <span class="string">"ANativeActivity_onCreate"</span>;</span><br><span class="line">          ActivityInfo ai;</span><br><span class="line">          mIMM = getSystemService(InputMethodManager.class);</span><br><span class="line">          getWindow().takeSurface(<span class="keyword">this</span>);</span><br><span class="line">          getWindow().takeInputQueue(<span class="keyword">this</span>);</span><br><span class="line">          getWindow().setFormat(PixelFormat.RGB_565);</span><br><span class="line">          getWindow().setSoftInputMode(</span><br><span class="line">                  WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED</span><br><span class="line">                  | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);</span><br><span class="line">          mNativeContentView = <span class="keyword">new</span> NativeContentView(<span class="keyword">this</span>);</span><br><span class="line">          mNativeContentView.mActivity = <span class="keyword">this</span>;</span><br><span class="line">          setContentView(mNativeContentView);</span><br><span class="line">          mNativeContentView.requestFocus();</span><br><span class="line">          mNativeContentView.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">this</span>);</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">              ai = getPackageManager().getActivityInfo(</span><br><span class="line">                      getIntent().getComponent(), PackageManager.GET_META_DATA);</span><br><span class="line">              <span class="keyword">if</span> (ai.metaData != <span class="keyword">null</span>) &#123;</span><br><span class="line">                  String ln = ai.metaData.getString(META_DATA_LIB_NAME);</span><br><span class="line">                  <span class="keyword">if</span> (ln != <span class="keyword">null</span>) libname = ln;</span><br><span class="line">                  ln = ai.metaData.getString(META_DATA_FUNC_NAME);</span><br><span class="line">                  <span class="keyword">if</span> (ln != <span class="keyword">null</span>) funcname = ln;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException e) &#123;</span><br><span class="line">              <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Error getting activity info"</span>, e);</span><br><span class="line">          &#125;</span><br><span class="line">          BaseDexClassLoader classLoader = (BaseDexClassLoader) getClassLoader();</span><br><span class="line">          String path = classLoader.findLibrary(libname);</span><br><span class="line">          <span class="keyword">if</span> (path == <span class="keyword">null</span>) &#123;</span><br><span class="line">              <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Unable to find native library "</span> + libname +</span><br><span class="line">                                                 <span class="string">" using classloader: "</span> + classLoader.toString());</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">byte</span>[] nativeSavedState = savedInstanceState != <span class="keyword">null</span></span><br><span class="line">                  ? savedInstanceState.getByteArray(KEY_NATIVE_SAVED_STATE) : <span class="keyword">null</span>;</span><br><span class="line">          mNativeHandle = loadNativeCode(path, funcname, Looper.myQueue(),</span><br><span class="line">                  getAbsolutePath(getFilesDir()), getAbsolutePath(getObbDir()),</span><br><span class="line">                  getAbsolutePath(getExternalFilesDir(<span class="keyword">null</span>)),</span><br><span class="line">                  Build.VERSION.SDK_INT, getAssets(), nativeSavedState,</span><br><span class="line">                  classLoader, classLoader.getLdLibraryPath());</span><br><span class="line">          <span class="keyword">if</span> (mNativeHandle == <span class="number">0</span>) &#123;</span><br><span class="line">              <span class="keyword">throw</span> <span class="keyword">new</span> UnsatisfiedLinkError(</span><br><span class="line">                      <span class="string">"Unable to load native library \""</span> + path + <span class="string">"\": "</span> + getDlError());</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>onCreate方法中主要实现了以下功能：</p>
+<ol>
+<li>托管Surface、InputQueue给Native</li>
+<li>设置 NativeContentView</li>
+<li>加载so库，获取mNativeHandle</li>
+</ol>
+<p>在onStart、onResume、onPause、onStop等中分别调用Native方法，在onDestroy总则注销Surface、InputQueue以及unloadNativeCode。</p>
+<p>其中libname默认为main，funcname默认为ANativeActivity_onCreate。libname即为加载的Native库的名称：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">application</span> <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span> <span class="attr">android:hasCode</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">"android.app.NativeActivity"</span></span></span><br><span class="line"><span class="tag">             <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"android.app.lib_name"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:value</span>=<span class="string">"main"</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对应<code>android.app.lib_name</code> 的值<code>main</code> ，而funcname对于Native中loadNativeCode_native时的createActivityFunc，用于创建Activity。这2个名字可根据实际情况自定义。</p>
+<p>在/<a href="http://androidxref.com/9.0.0_r3/xref/frameworks/" target="_blank" rel="noopener">frameworks</a>/<a href="http://androidxref.com/9.0.0_r3/xref/frameworks/base/" target="_blank" rel="noopener">base</a>/<a href="http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/" target="_blank" rel="noopener">core</a>/<a href="http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/jni/" target="_blank" rel="noopener">jni</a>/<a href="http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/jni/android_app_NativeActivity.cpp" target="_blank" rel="noopener">android_app_NativeActivity.cpp</a> 中我们可以看到Native方法的具体实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> jlong</span><br><span class="line">loadNativeCode_native(JNIEnv* env, jobject clazz, jstring path, jstring funcName,</span><br><span class="line">        jobject messageQueue, jstring internalDataDir, jstring obbDir,</span><br><span class="line">        jstring externalDataDir, jint sdkVersion, jobject jAssetMgr,</span><br><span class="line">        jbyteArray savedState, jobject classLoader, jstring libraryPath) &#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"loadNativeCode_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">ScopedUtfChars <span class="title">pathStr</span><span class="params">(env, path)</span></span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;NativeCode&gt; code;</span><br><span class="line">    <span class="keyword">bool</span> needs_native_bridge = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span>* handle = OpenNativeLibrary(env,</span><br><span class="line">                                     sdkVersion,</span><br><span class="line">                                     pathStr.c_str(),</span><br><span class="line">                                     classLoader,</span><br><span class="line">                                     libraryPath,</span><br><span class="line">                                     &amp;needs_native_bridge,</span><br><span class="line">                                     &amp;g_error_msg);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (handle == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        ALOGW(<span class="string">"NativeActivity LoadNativeLibrary(\"%s\") failed: %s"</span>,</span><br><span class="line">              pathStr.c_str(),</span><br><span class="line">              g_error_msg.c_str());</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span>* funcPtr = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* funcStr = env-&gt;GetStringUTFChars(funcName, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">if</span> (needs_native_bridge) &#123;</span><br><span class="line">        funcPtr = NativeBridgeGetTrampoline(handle, funcStr, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        funcPtr = dlsym(handle, funcStr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    code.reset(<span class="keyword">new</span> NativeCode(handle, (ANativeActivity_createFunc*)funcPtr));</span><br><span class="line">    env-&gt;ReleaseStringUTFChars(funcName, funcStr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (code-&gt;createActivityFunc == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        g_error_msg = needs_native_bridge ? NativeBridgeGetError() : dlerror();</span><br><span class="line">        ALOGW(<span class="string">"ANativeActivity_onCreate not found: %s"</span>, g_error_msg.c_str());</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    code-&gt;messageQueue = android_os_MessageQueue_getMessageQueue(env, messageQueue);</span><br><span class="line">    <span class="keyword">if</span> (code-&gt;messageQueue == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        g_error_msg = <span class="string">"Unable to retrieve native MessageQueue"</span>;</span><br><span class="line">        ALOGW(<span class="string">"%s"</span>, g_error_msg.c_str());</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> msgpipe[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span> (pipe(msgpipe)) &#123;</span><br><span class="line">        g_error_msg = android::base::StringPrintf(<span class="string">"could not create pipe: %s"</span>, strerror(errno));</span><br><span class="line">        ALOGW(<span class="string">"%s"</span>, g_error_msg.c_str());</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    code-&gt;mainWorkRead = msgpipe[<span class="number">0</span>];</span><br><span class="line">    code-&gt;mainWorkWrite = msgpipe[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> result = fcntl(code-&gt;mainWorkRead, F_SETFL, O_NONBLOCK);</span><br><span class="line">    SLOGW_IF(result != <span class="number">0</span>, <span class="string">"Could not make main work read pipe "</span></span><br><span class="line">            <span class="string">"non-blocking: %s"</span>, strerror(errno));</span><br><span class="line">    result = fcntl(code-&gt;mainWorkWrite, F_SETFL, O_NONBLOCK);</span><br><span class="line">    SLOGW_IF(result != <span class="number">0</span>, <span class="string">"Could not make main work write pipe "</span></span><br><span class="line">            <span class="string">"non-blocking: %s"</span>, strerror(errno));</span><br><span class="line">    code-&gt;messageQueue-&gt;getLooper()-&gt;addFd(</span><br><span class="line">            code-&gt;mainWorkRead, <span class="number">0</span>, ALOOPER_EVENT_INPUT, mainWorkCallback, code.get());</span><br><span class="line"></span><br><span class="line">    code-&gt;ANativeActivity::callbacks = &amp;code-&gt;callbacks;</span><br><span class="line">    <span class="keyword">if</span> (env-&gt;GetJavaVM(&amp;code-&gt;vm) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        g_error_msg = <span class="string">"NativeActivity GetJavaVM failed"</span>;</span><br><span class="line">        ALOGW(<span class="string">"%s"</span>, g_error_msg.c_str());</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    code-&gt;env = env;</span><br><span class="line">    code-&gt;clazz = env-&gt;NewGlobalRef(clazz);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* dirStr = env-&gt;GetStringUTFChars(internalDataDir, <span class="literal">NULL</span>);</span><br><span class="line">    code-&gt;internalDataPathObj = dirStr;</span><br><span class="line">    code-&gt;internalDataPath = code-&gt;internalDataPathObj.<span class="built_in">string</span>();</span><br><span class="line">    env-&gt;ReleaseStringUTFChars(internalDataDir, dirStr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (externalDataDir != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        dirStr = env-&gt;GetStringUTFChars(externalDataDir, <span class="literal">NULL</span>);</span><br><span class="line">        code-&gt;externalDataPathObj = dirStr;</span><br><span class="line">        env-&gt;ReleaseStringUTFChars(externalDataDir, dirStr);</span><br><span class="line">    &#125;</span><br><span class="line">    code-&gt;externalDataPath = code-&gt;externalDataPathObj.<span class="built_in">string</span>();</span><br><span class="line"></span><br><span class="line">    code-&gt;sdkVersion = sdkVersion;</span><br><span class="line"></span><br><span class="line">    code-&gt;javaAssetManager = env-&gt;NewGlobalRef(jAssetMgr);</span><br><span class="line">    code-&gt;assetManager = NdkAssetManagerForJavaObject(env, jAssetMgr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (obbDir != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        dirStr = env-&gt;GetStringUTFChars(obbDir, <span class="literal">NULL</span>);</span><br><span class="line">        code-&gt;obbPathObj = dirStr;</span><br><span class="line">        env-&gt;ReleaseStringUTFChars(obbDir, dirStr);</span><br><span class="line">    &#125;</span><br><span class="line">    code-&gt;obbPath = code-&gt;obbPathObj.<span class="built_in">string</span>();</span><br><span class="line"></span><br><span class="line">    jbyte* rawSavedState = <span class="literal">NULL</span>;</span><br><span class="line">    jsize rawSavedSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (savedState != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        rawSavedState = env-&gt;GetByteArrayElements(savedState, <span class="literal">NULL</span>);</span><br><span class="line">        rawSavedSize = env-&gt;GetArrayLength(savedState);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    code-&gt;createActivityFunc(code.get(), rawSavedState, rawSavedSize);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (rawSavedState != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        env-&gt;ReleaseByteArrayElements(savedState, rawSavedState, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (jlong)code.release();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> jstring <span class="title">getDlError_native</span><span class="params">(JNIEnv* env, jobject clazz)</span> </span>&#123;</span><br><span class="line">  jstring result = env-&gt;NewStringUTF(g_error_msg.c_str());</span><br><span class="line">  g_error_msg.clear();</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">unloadNativeCode_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"unloadNativeCode_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">delete</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onStart_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onStart_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onStart != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onStart(code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onResume_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onResume_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onResume != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onResume(code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> jbyteArray</span><br><span class="line">onSaveInstanceState_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onSaveInstanceState_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    jbyteArray <span class="built_in">array</span> = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onSaveInstanceState != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">size_t</span> len = <span class="number">0</span>;</span><br><span class="line">            jbyte* state = (jbyte*)code-&gt;callbacks.onSaveInstanceState(code, &amp;len);</span><br><span class="line">            <span class="keyword">if</span> (len &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="built_in">array</span> = env-&gt;NewByteArray(len);</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">array</span> != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                    env-&gt;SetByteArrayRegion(<span class="built_in">array</span>, <span class="number">0</span>, len, state);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (state != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                <span class="built_in">free</span>(state);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">array</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onPause_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onPause_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onPause != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onPause(code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onStop_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onStop_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onStop != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onStop(code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onConfigurationChanged_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onConfigurationChanged_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onConfigurationChanged != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onConfigurationChanged(code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onLowMemory_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onLowMemory_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onLowMemory != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onLowMemory(code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onWindowFocusChanged_native(JNIEnv* env, jobject clazz, jlong handle, jboolean focused)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onWindowFocusChanged_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onWindowFocusChanged != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onWindowFocusChanged(code, focused ? <span class="number">1</span> : <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onSurfaceCreated_native(JNIEnv* env, jobject clazz, jlong handle, jobject surface)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onSurfaceCreated_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        code-&gt;setSurface(surface);</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;nativeWindow != <span class="literal">NULL</span> &amp;&amp; code-&gt;callbacks.onNativeWindowCreated != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onNativeWindowCreated(code,</span><br><span class="line">                    code-&gt;nativeWindow.get());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> int32_t <span class="title">getWindowProp</span><span class="params">(ANativeWindow* window, <span class="keyword">int</span> what)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">int</span> res = window-&gt;query(window, what, &amp;value);</span><br><span class="line">    <span class="keyword">return</span> res &lt; <span class="number">0</span> ? res : value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onSurfaceChanged_native(JNIEnv* env, jobject clazz, jlong handle, jobject surface,</span><br><span class="line">        jint format, jint width, jint height)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onSurfaceChanged_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        sp&lt;ANativeWindow&gt; oldNativeWindow = code-&gt;nativeWindow;</span><br><span class="line">        code-&gt;setSurface(surface);</span><br><span class="line">        <span class="keyword">if</span> (oldNativeWindow != code-&gt;nativeWindow) &#123;</span><br><span class="line">            <span class="keyword">if</span> (oldNativeWindow != <span class="literal">NULL</span> &amp;&amp; code-&gt;callbacks.onNativeWindowDestroyed != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                code-&gt;callbacks.onNativeWindowDestroyed(code,</span><br><span class="line">                        oldNativeWindow.get());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (code-&gt;nativeWindow != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (code-&gt;callbacks.onNativeWindowCreated != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                    code-&gt;callbacks.onNativeWindowCreated(code,</span><br><span class="line">                            code-&gt;nativeWindow.get());</span><br><span class="line">                &#125;</span><br><span class="line">                code-&gt;lastWindowWidth = getWindowProp(code-&gt;nativeWindow.get(),</span><br><span class="line">                        NATIVE_WINDOW_WIDTH);</span><br><span class="line">                code-&gt;lastWindowHeight = getWindowProp(code-&gt;nativeWindow.get(),</span><br><span class="line">                        NATIVE_WINDOW_HEIGHT);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Maybe it resized?</span></span><br><span class="line">            <span class="keyword">int32_t</span> newWidth = getWindowProp(code-&gt;nativeWindow.get(),</span><br><span class="line">                    NATIVE_WINDOW_WIDTH);</span><br><span class="line">            <span class="keyword">int32_t</span> newHeight = getWindowProp(code-&gt;nativeWindow.get(),</span><br><span class="line">                    NATIVE_WINDOW_HEIGHT);</span><br><span class="line">            <span class="keyword">if</span> (newWidth != code-&gt;lastWindowWidth</span><br><span class="line">                    || newHeight != code-&gt;lastWindowHeight) &#123;</span><br><span class="line">                <span class="keyword">if</span> (code-&gt;callbacks.onNativeWindowResized != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                    code-&gt;callbacks.onNativeWindowResized(code,</span><br><span class="line">                            code-&gt;nativeWindow.get());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onSurfaceRedrawNeeded_native(JNIEnv* env, jobject clazz, jlong handle)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onSurfaceRedrawNeeded_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;nativeWindow != <span class="literal">NULL</span> &amp;&amp; code-&gt;callbacks.onNativeWindowRedrawNeeded != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onNativeWindowRedrawNeeded(code, code-&gt;nativeWindow.get());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onSurfaceDestroyed_native(JNIEnv* env, jobject clazz, jlong handle, jobject surface)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onSurfaceDestroyed_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;nativeWindow != <span class="literal">NULL</span> &amp;&amp; code-&gt;callbacks.onNativeWindowDestroyed != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            code-&gt;callbacks.onNativeWindowDestroyed(code,</span><br><span class="line">                    code-&gt;nativeWindow.get());</span><br><span class="line">        &#125;</span><br><span class="line">        code-&gt;setSurface(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onInputQueueCreated_native(JNIEnv* env, jobject clazz, jlong handle, jlong queuePtr)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onInputChannelCreated_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onInputQueueCreated != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            AInputQueue* <span class="built_in">queue</span> = <span class="keyword">reinterpret_cast</span>&lt;AInputQueue*&gt;(queuePtr);</span><br><span class="line">            code-&gt;callbacks.onInputQueueCreated(code, <span class="built_in">queue</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onInputQueueDestroyed_native(JNIEnv* env, jobject clazz, jlong handle, jlong queuePtr)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onInputChannelDestroyed_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onInputQueueDestroyed != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            AInputQueue* <span class="built_in">queue</span> = <span class="keyword">reinterpret_cast</span>&lt;AInputQueue*&gt;(queuePtr);</span><br><span class="line">            code-&gt;callbacks.onInputQueueDestroyed(code, <span class="built_in">queue</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">onContentRectChanged_native(JNIEnv* env, jobject clazz, jlong handle,</span><br><span class="line">        jint x, jint y, jint w, jint h)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"onContentRectChanged_native"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="number">0</span>) &#123;</span><br><span class="line">        NativeCode* code = (NativeCode*)handle;</span><br><span class="line">        <span class="keyword">if</span> (code-&gt;callbacks.onContentRectChanged != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            ARect rect;</span><br><span class="line">            rect.left = x;</span><br><span class="line">            rect.top = y;</span><br><span class="line">            rect.right = x+w;</span><br><span class="line">            rect.bottom = y+h;</span><br><span class="line">            code-&gt;callbacks.onContentRectChanged(code, &amp;rect);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> JNINativeMethod g_methods[] = &#123;</span><br><span class="line">    &#123; <span class="string">"loadNativeCode"</span>,</span><br><span class="line">        <span class="string">"(Ljava/lang/String;Ljava/lang/String;Landroid/os/MessageQueue;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILandroid/content/res/AssetManager;[BLjava/lang/ClassLoader;Ljava/lang/String;)J"</span>,</span><br><span class="line">        (<span class="keyword">void</span>*)loadNativeCode_native &#125;,</span><br><span class="line">    &#123; <span class="string">"getDlError"</span>, <span class="string">"()Ljava/lang/String;"</span>, (<span class="keyword">void</span>*) getDlError_native &#125;,</span><br><span class="line">    &#123; <span class="string">"unloadNativeCode"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)unloadNativeCode_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onStartNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onStart_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onResumeNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onResume_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onSaveInstanceStateNative"</span>, <span class="string">"(J)[B"</span>, (<span class="keyword">void</span>*)onSaveInstanceState_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onPauseNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onPause_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onStopNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onStop_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onConfigurationChangedNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onConfigurationChanged_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onLowMemoryNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onLowMemory_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onWindowFocusChangedNative"</span>, <span class="string">"(JZ)V"</span>, (<span class="keyword">void</span>*)onWindowFocusChanged_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onSurfaceCreatedNative"</span>, <span class="string">"(JLandroid/view/Surface;)V"</span>, (<span class="keyword">void</span>*)onSurfaceCreated_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onSurfaceChangedNative"</span>, <span class="string">"(JLandroid/view/Surface;III)V"</span>, (<span class="keyword">void</span>*)onSurfaceChanged_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onSurfaceRedrawNeededNative"</span>, <span class="string">"(JLandroid/view/Surface;)V"</span>, (<span class="keyword">void</span>*)onSurfaceRedrawNeeded_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onSurfaceDestroyedNative"</span>, <span class="string">"(J)V"</span>, (<span class="keyword">void</span>*)onSurfaceDestroyed_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onInputQueueCreatedNative"</span>, <span class="string">"(JJ)V"</span>,</span><br><span class="line">        (<span class="keyword">void</span>*)onInputQueueCreated_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onInputQueueDestroyedNative"</span>, <span class="string">"(JJ)V"</span>,</span><br><span class="line">        (<span class="keyword">void</span>*)onInputQueueDestroyed_native &#125;,</span><br><span class="line">    &#123; <span class="string">"onContentRectChangedNative"</span>, <span class="string">"(JIIII)V"</span>, (<span class="keyword">void</span>*)onContentRectChanged_native &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>loadNativeCode_native加载Native库，获取handle，在Activity生命周期中，生命周期方法通过NativeCode* code = (NativeCode*)handle; 交由Native代码执行，上文中直接使用 <a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/native_app_glue/android_native_app_glue.c" target="_blank" rel="noopener">android_native_app_glue.c</a> , 里面已经实现了Native生命周期方法，也可自己写。</p>
+<p>在loadNativeCode_native时：</p>
+<ol>
+<li><p>首先是通过OpenNativeLibrary来获取handle</p>
+</li>
+<li><p>通过设定的funcname来获取Activity创建方法 createActivityFunc</p>
+</li>
+<li><p>设置messageQueue</p>
+</li>
+<li><p>在messageQueue中设置主进程回调</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">code-&gt;messageQueue-&gt;getLooper()-&gt;addFd(</span><br><span class="line">            code-&gt;mainWorkRead, <span class="number">0</span>, ALOOPER_EVENT_INPUT, mainWorkCallback, code.get());</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">mainWorkCallback</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">int</span> events, <span class="keyword">void</span>* data)</span> </span>&#123;</span><br><span class="line">    NativeCode* code = (NativeCode*)data;</span><br><span class="line">    <span class="keyword">if</span> ((events &amp; POLLIN) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ActivityWork work;</span><br><span class="line">    <span class="keyword">if</span> (!read_work(code-&gt;mainWorkRead, &amp;work)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (kLogTrace) &#123;</span><br><span class="line">        ALOGD(<span class="string">"mainWorkCallback: cmd=%d"</span>, work.cmd);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">switch</span> (work.cmd) &#123;</span><br><span class="line">        <span class="keyword">case</span> CMD_FINISH: &#123;</span><br><span class="line">            code-&gt;env-&gt;CallVoidMethod(code-&gt;clazz, gNativeActivityClassInfo.finish);</span><br><span class="line">            code-&gt;messageQueue-&gt;raiseAndClearException(code-&gt;env, <span class="string">"finish"</span>);</span><br><span class="line">        &#125; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> CMD_SET_WINDOW_FORMAT: &#123;</span><br><span class="line">            code-&gt;env-&gt;CallVoidMethod(code-&gt;clazz,</span><br><span class="line">                    gNativeActivityClassInfo.setWindowFormat, work.arg1);</span><br><span class="line">            code-&gt;messageQueue-&gt;raiseAndClearException(code-&gt;env, <span class="string">"setWindowFormat"</span>);</span><br><span class="line">        &#125; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> CMD_SET_WINDOW_FLAGS: &#123;</span><br><span class="line">            code-&gt;env-&gt;CallVoidMethod(code-&gt;clazz,</span><br><span class="line">                    gNativeActivityClassInfo.setWindowFlags, work.arg1, work.arg2);</span><br><span class="line">            code-&gt;messageQueue-&gt;raiseAndClearException(code-&gt;env, <span class="string">"setWindowFlags"</span>);</span><br><span class="line">        &#125; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> CMD_SHOW_SOFT_INPUT: &#123;</span><br><span class="line">            code-&gt;env-&gt;CallVoidMethod(code-&gt;clazz,</span><br><span class="line">                    gNativeActivityClassInfo.showIme, work.arg1);</span><br><span class="line">            code-&gt;messageQueue-&gt;raiseAndClearException(code-&gt;env, <span class="string">"showIme"</span>);</span><br><span class="line">        &#125; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> CMD_HIDE_SOFT_INPUT: &#123;</span><br><span class="line">            code-&gt;env-&gt;CallVoidMethod(code-&gt;clazz,</span><br><span class="line">                    gNativeActivityClassInfo.hideIme, work.arg1);</span><br><span class="line">            code-&gt;messageQueue-&gt;raiseAndClearException(code-&gt;env, <span class="string">"hideIme"</span>);</span><br><span class="line">        &#125; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            ALOGW(<span class="string">"Unknown work command: %d"</span>, work.cmd);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>getLooper()-&gt;addFd() 方法见： /<a href="http://androidxref.com/9.0.0_r3/xref/system/" target="_blank" rel="noopener">system</a>/<a href="http://androidxref.com/9.0.0_r3/xref/system/core/" target="_blank" rel="noopener">core</a>/<a href="http://androidxref.com/9.0.0_r3/xref/system/core/libutils/" target="_blank" rel="noopener">libutils</a>/<a href="http://androidxref.com/9.0.0_r3/xref/system/core/libutils/Looper.cpp" target="_blank" rel="noopener">Looper.cpp</a></p>
+<p>数据通信通过管道进行。</p>
+</li>
+<li><p>设置JavaVM给NativeCode</p>
+</li>
+<li><p>设置internalDataPath、externalDataPath、javaAssetManager、obbPath</p>
+</li>
+<li><p>获取rawSavedState，并执行createActivityFunc</p>
+</li>
+<li><p>释放资源</p>
+</li>
+</ol>
+<p>至此，完成Activity创建。</p>
+<p>可简单看一下OpenNativeLibrary代码，OpenNativeLibrary方法也是Android加载JNI库时，实际使用的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.loadLibrary(<span class="string">"native-lib"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>/<a href="http://androidxref.com/9.0.0_r3/xref/system/" target="_blank" rel="noopener">system</a>/<a href="http://androidxref.com/9.0.0_r3/xref/system/core/" target="_blank" rel="noopener">core</a>/<a href="http://androidxref.com/9.0.0_r3/xref/system/core/libnativeloader/" target="_blank" rel="noopener">libnativeloader</a>/<a href="http://androidxref.com/9.0.0_r3/xref/system/core/libnativeloader/native_loader.cpp" target="_blank" rel="noopener">native_loader.cpp</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">OpenNativeLibrary</span><span class="params">(JNIEnv* env,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">int32_t</span> target_sdk_version,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">const</span> <span class="keyword">char</span>* path,</span></span></span><br><span class="line"><span class="function"><span class="params">                        jobject class_loader,</span></span></span><br><span class="line"><span class="function"><span class="params">                        jstring library_path,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">bool</span>* needs_native_bridge,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="built_in">std</span>::<span class="built_in">string</span>* error_msg)</span> </span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(__ANDROID__)</span></span><br><span class="line">  UNUSED(target_sdk_version);</span><br><span class="line">  <span class="keyword">if</span> (class_loader == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">    *needs_native_bridge = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">return</span> dlopen(path, RTLD_NOW);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; guard(g_namespaces_mutex);</span><br><span class="line">  NativeLoaderNamespace ns;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!g_namespaces-&gt;FindNamespaceByClassLoader(env, class_loader, &amp;ns)) &#123;</span><br><span class="line">    <span class="comment">// This is the case where the classloader was not created by ApplicationLoaders</span></span><br><span class="line">    <span class="comment">// In this case we create an isolated not-shared namespace for it.</span></span><br><span class="line">    <span class="keyword">if</span> (!g_namespaces-&gt;Create(env,</span><br><span class="line">                              target_sdk_version,</span><br><span class="line">                              class_loader,</span><br><span class="line">                              <span class="literal">false</span> <span class="comment">/* is_shared */</span>,</span><br><span class="line">                              <span class="literal">false</span> <span class="comment">/* is_for_vendor */</span>,</span><br><span class="line">                              library_path,</span><br><span class="line">                              <span class="literal">nullptr</span>,</span><br><span class="line">                              &amp;ns,</span><br><span class="line">                              error_msg)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (ns.is_android_namespace()) &#123;</span><br><span class="line">    android_dlextinfo extinfo;</span><br><span class="line">    extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;</span><br><span class="line">    extinfo.library_namespace = ns.get_android_ns();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span>* handle = android_dlopen_ext(path, RTLD_NOW, &amp;extinfo);</span><br><span class="line">    <span class="keyword">if</span> (handle == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">      *error_msg = dlerror();</span><br><span class="line">    &#125;</span><br><span class="line">    *needs_native_bridge = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">return</span> handle;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">void</span>* handle = NativeBridgeLoadLibraryExt(path, RTLD_NOW, ns.get_native_bridge_ns());</span><br><span class="line">    <span class="keyword">if</span> (handle == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">      *error_msg = NativeBridgeGetError();</span><br><span class="line">    &#125;</span><br><span class="line">    *needs_native_bridge = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> handle;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">  UNUSED(env, target_sdk_version, class_loader);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Do some best effort to emulate library-path support. It will not</span></span><br><span class="line">  <span class="comment">// work for dependencies.</span></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="comment">// Note: null has a special meaning and must be preserved.</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> c_library_path;  <span class="comment">// Empty string by default.</span></span><br><span class="line">  <span class="keyword">if</span> (library_path != <span class="literal">nullptr</span> &amp;&amp; path != <span class="literal">nullptr</span> &amp;&amp; path[<span class="number">0</span>] != <span class="string">'/'</span>) &#123;</span><br><span class="line">    <span class="function">ScopedUtfChars <span class="title">library_path_utf_chars</span><span class="params">(env, library_path)</span></span>;</span><br><span class="line">    c_library_path = library_path_utf_chars.c_str();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; library_paths = base::Split(c_library_path, <span class="string">":"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; lib_path : library_paths) &#123;</span><br><span class="line">    *needs_native_bridge = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* path_arg;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> complete_path;</span><br><span class="line">    <span class="keyword">if</span> (path == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">      <span class="comment">// Preserve null.</span></span><br><span class="line">      path_arg = <span class="literal">nullptr</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      complete_path = lib_path;</span><br><span class="line">      <span class="keyword">if</span> (!complete_path.empty()) &#123;</span><br><span class="line">        complete_path.append(<span class="string">"/"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      complete_path.append(path);</span><br><span class="line">      path_arg = complete_path.c_str();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span>* handle = dlopen(path_arg, RTLD_NOW);</span><br><span class="line">    <span class="keyword">if</span> (handle != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> handle;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (NativeBridgeIsSupported(path_arg)) &#123;</span><br><span class="line">      *needs_native_bridge = <span class="literal">true</span>;</span><br><span class="line">      handle = NativeBridgeLoadLibrary(path_arg, RTLD_NOW);</span><br><span class="line">      <span class="keyword">if</span> (handle != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> handle;</span><br><span class="line">      &#125;</span><br><span class="line">      *error_msg = NativeBridgeGetError();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      *error_msg = dlerror();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段主要是加载Native库的代码。可参考：</p>
+<p><a href="https://cloud.tencent.com/developer/article/1034856" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1034856</a></p>
+<p><a href="https://blog.csdn.net/edonlii/article/details/8445239" target="_blank" rel="noopener">https://blog.csdn.net/edonlii/article/details/8445239</a></p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>Android在启动AndroidManifest.xml中配置的android.app.NativeActivity后，主要完成了一下工作：</p>
+<ol>
+<li>通过libname获取NativeCode，并将android.app.NativeActivity的生命周期方法交给NativeCode处理，并托管Surface、InputQueue给Native</li>
+<li>在加载NativeCode对应的库时，通过OpenNativeLibrary加载Native库，进行一些列设置后，执行Native库中funcname对于的方法，用来创建原生的Native App。</li>
+</ol>
+<p>/<a href="http://androidxref.com/9.0.0_r3/xref/external/" target="_blank" rel="noopener">external</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/skia/" target="_blank" rel="noopener">skia</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/skia/tools/" target="_blank" rel="noopener">tools</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/skia/tools/sk_app/" target="_blank" rel="noopener">sk_app</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/skia/tools/sk_app/android/" target="_blank" rel="noopener">android</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/skia/tools/sk_app/android/main_android.cpp" target="_blank" rel="noopener">main_android.cpp</a></p>
+<p>/<a href="http://androidxref.com/9.0.0_r3/xref/external/" target="_blank" rel="noopener">external</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/flatbuffers/" target="_blank" rel="noopener">flatbuffers</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/flatbuffers/android/" target="_blank" rel="noopener">android</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/flatbuffers/android/jni/" target="_blank" rel="noopener">jni</a>/<a href="http://androidxref.com/9.0.0_r3/xref/external/flatbuffers/android/jni/main.cpp" target="_blank" rel="noopener">main.cpp</a></p>
+<p>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/" target="_blank" rel="noopener">prebuilts</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/" target="_blank" rel="noopener">ndk</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/" target="_blank" rel="noopener">current</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/" target="_blank" rel="noopener">sources</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/" target="_blank" rel="noopener">android</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/native_app_glue/" target="_blank" rel="noopener">native_app_glue</a>/<a href="http://androidxref.com/9.0.0_r3/xref/prebuilts/ndk/current/sources/android/native_app_glue/android_native_app_glue.c" target="_blank" rel="noopener">android_native_app_glue.c</a></p>
+<h3 id="0x04-附录：CMake简单实用"><a href="#0x04-附录：CMake简单实用" class="headerlink" title="0x04 附录：CMake简单实用"></a>0x04 附录：CMake简单实用</h3>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/JNI/" rel="tag"># JNI</a>
+          
+            <a href="/tags/Native/" rel="tag"># Native</a>
+          
+            <a href="/tags/CMake/" rel="tag"># CMake</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/06/Flutter-Engine-编译/" rel="next" title="Flutter Engine 编译">
+                <i class="fa fa-chevron-left"></i> Flutter Engine 编译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/17/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zauther</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zauther" title="GitHub &rarr; https://github.com/zauther" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Native开发"><span class="nav-number">1.</span> <span class="nav-text">Android Native开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-JNI-开发"><span class="nav-number">1.1.</span> <span class="nav-text">0x01 JNI 开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Demo"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. Demo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Java-Native-Interface-Jni-："><span class="nav-number">1.1.2.</span> <span class="nav-text">2.  Java Native Interface(Jni)：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-NDK-开发"><span class="nav-number">1.2.</span> <span class="nav-text">0x02 NDK 开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x03-NDK-Native-调用原理"><span class="nav-number">1.3.</span> <span class="nav-text">0x03 NDK Native 调用原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">1.3.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x04-附录：CMake简单实用"><span class="nav-number">1.4.</span> <span class="nav-text">0x04 附录：CMake简单实用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="Symbols count total">128k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="Reading time total">1:57</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'WDh3rxTlsW2r9MQLCtoBPsDL-MdYXbMMI',
+    appKey: 'Gijp3f1mwLxWWns2wdXATsEv',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: '' || 'zh-cn'
+  });
+
+  //新增以下代码即可，可以移除.info下所有子节点。
+var infoEle = document.querySelector('#comments .info');
+if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
+  infoEle.childNodes.forEach(function(item) {
+    item.parentNode.removeChild(item);
+  });
+}
+
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+<script>
+  $('.highlight').not('.gist .highlight').each(function(i, e) {
+    var $wrap = $('<div>').addClass('highlight-wrap');
+    $(e).after($wrap);
+    $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function(e) {
+      var code = $(this).parent().find('.code').find('.line').map(function(i, e) {
+        return $(e).text();
+      }).toArray().join('\n');
+      var ta = document.createElement('textarea');
+      var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+      ta.style.top = yPosition + 'px'; // Prevent page scroll
+      ta.style.position = 'absolute';
+      ta.style.opacity = '0';
+      ta.readOnly = true;
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, code.length);
+      ta.readOnly = false;
+      var result = document.execCommand('copy');
+      
+        if (result) $(this).text('Copied');
+        else $(this).text('Copy failed');
+      
+      ta.blur(); // For iOS
+      $(this).blur();
+    })).on('mouseleave', function(e) {
+      var $b = $(this).find('.copy-btn');
+      setTimeout(function() {
+        $b.text('Copy');
+      }, 300);
+    }).append(e);
+  })
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

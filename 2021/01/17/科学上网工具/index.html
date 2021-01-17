@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+
+  <meta name="description" content="V2Ray（ubutnu：websocket+ssl+cdn）0x01 设置时区v2ray 对时间要求比较严格，服务器时间与本地时间相差在90s内 12dpkg-reconfigure tzdata  # 选择时区hwclock -w # 将当前时区写入bios  0x02 安装1bash &amp;lt;(curl -L -s https://install.direct/go.sh)  此脚本会自动安">
+<meta name="keywords" content="工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="科学上网工具">
+<meta property="og:url" content="https://www.cwiki.cn/2021/01/17/科学上网工具/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="V2Ray（ubutnu：websocket+ssl+cdn）0x01 设置时区v2ray 对时间要求比较严格，服务器时间与本地时间相差在90s内 12dpkg-reconfigure tzdata  # 选择时区hwclock -w # 将当前时区写入bios  0x02 安装1bash &amp;lt;(curl -L -s https://install.direct/go.sh)  此脚本会自动安">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200208210956.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/image-20200208203655760.png">
+<meta property="og:updated_time" content="2021-01-17T13:27:02.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="科学上网工具">
+<meta name="twitter:description" content="V2Ray（ubutnu：websocket+ssl+cdn）0x01 设置时区v2ray 对时间要求比较严格，服务器时间与本地时间相差在90s内 12dpkg-reconfigure tzdata  # 选择时区hwclock -w # 将当前时区写入bios  0x02 安装1bash &amp;lt;(curl -L -s https://install.direct/go.sh)  此脚本会自动安">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200208210956.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.cwiki.cn/2021/01/17/科学上网工具/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>科学上网工具 | 个人博客</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-97381903-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/科学上网工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">科学上网工具
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-17 21:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T21:27:02+08:00">2021-01-17</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/17/科学上网工具/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/科学上网工具/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/17/科学上网工具/" class="leancloud_visitors" data-flag-title="科学上网工具">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">6k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">5 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="V2Ray（ubutnu：websocket-ssl-cdn）"><a href="#V2Ray（ubutnu：websocket-ssl-cdn）" class="headerlink" title="V2Ray（ubutnu：websocket+ssl+cdn）"></a>V2Ray（ubutnu：websocket+ssl+cdn）</h3><h4 id="0x01-设置时区"><a href="#0x01-设置时区" class="headerlink" title="0x01 设置时区"></a>0x01 设置时区</h4><p>v2ray 对时间要求比较严格，服务器时间与本地时间相差在<code>90s</code>内</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata  # 选择时区</span><br><span class="line">hwclock -w # 将当前时区写入bios</span><br></pre></td></tr></table></figure>
+
+<h4 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -L -s https://install.direct/go.sh)</span><br></pre></td></tr></table></figure>
+
+<p>此脚本会自动安装以下文件：</p>
+<ul>
+<li><code>/usr/bin/v2ray/v2ray</code>：V2Ray 程序；</li>
+<li><code>/usr/bin/v2ray/v2ctl</code>：V2Ray 工具；</li>
+<li><code>/etc/v2ray/config.json</code>：配置文件；</li>
+<li><code>/usr/bin/v2ray/geoip.dat</code>：IP 数据文件</li>
+<li><code>/usr/bin/v2ray/geosite.dat</code>：域名数据文件</li>
+</ul>
+<p>此脚本会配置自动运行脚本。自动运行脚本会在系统重启之后，自动运行 V2Ray。目前自动运行脚本只支持带有 Systemd 的系统，以及 Debian / Ubuntu 全系列。</p>
+<a id="more"></a>
+
+<p>运行脚本位于系统的以下位置：</p>
+<ul>
+<li><code>/etc/systemd/system/v2ray.service</code>: Systemd</li>
+<li><code>/etc/init.d/v2ray</code>: SysV</li>
+</ul>
+<p>脚本运行完成后，你需要：</p>
+<ol>
+<li>编辑 /etc/v2ray/config.json 文件来配置你需要的代理方式；</li>
+<li>运行 service v2ray start 来启动 V2Ray 进程；</li>
+<li>之后可以使用 service v2ray start|stop|status|reload|restart|force-reload 控制 V2Ray 的运行。</li>
+</ol>
+<p>问题：</p>
+<ol>
+<li><p><code>main: failed to load config:  &gt; v2ray.com/core/main/confloader/external: config file not readable &gt; open : no such file or directory</code><br>此问题是<code>/etc/v2ray/config.json</code>  配置文件缺失，将<code>/usr/bin/v2ray/config.json</code>中的文件拷贝至<code>/etc/v2ray/</code>。</p>
+<p>而事实上仅仅拷贝只是默认配置，需要根据自己的服务来配置。</p>
+</li>
+</ol>
+<h4 id="0x03-配置-WebSocket-TLS-Web"><a href="#0x03-配置-WebSocket-TLS-Web" class="headerlink" title="0x03 配置(WebSocket+TLS+Web)"></a>0x03 配置(WebSocket+TLS+Web)</h4><h5 id="服务器-V2Ray-配置-etc-v2ray-config-json"><a href="#服务器-V2Ray-配置-etc-v2ray-config-json" class="headerlink" title="服务器 V2Ray 配置(/etc/v2ray/config.json)"></a>服务器 V2Ray 配置(/etc/v2ray/config.json)</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"inbounds"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      "port": 10000,  // 服务器监听端口</span><br><span class="line">      "listen":"127.0.0.1",//只监听 127.0.0.1，避免除本机外的机器探测到开放了 10000 端口</span><br><span class="line">      "protocol": "vmess",</span><br><span class="line">      "settings": &#123;</span><br><span class="line">        "clients": [</span><br><span class="line">          &#123;</span><br><span class="line">            "id": "UUID", // https://www.uuidgenerator.net/ 可在这个网站上随机生成</span><br><span class="line">            "alterId": 64</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      "streamSettings": &#123;</span><br><span class="line">        "network": "ws",</span><br><span class="line">        "wsSettings": &#123;</span><br><span class="line">        "path": "/path"  // 客户端连接时的地址</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  "outbounds": [</span><br><span class="line">    &#123;</span><br><span class="line">      "protocol": "freedom",  //允许所有协议</span><br><span class="line">      "settings": &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h5><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span>  <span class="number">443</span> ssl;</span><br><span class="line">  <span class="attribute">ssl</span> <span class="literal">on</span>;</span><br><span class="line">  <span class="attribute">ssl_certificate</span>       /etc/v2ray/v2ray.crt;</span><br><span class="line">  <span class="attribute">ssl_certificate_key</span>   /etc/v2ray/v2ray.key;</span><br><span class="line">  <span class="attribute">ssl_protocols</span>         TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">  <span class="attribute">ssl_ciphers</span>           HIGH:!aNULL:!MD5;</span><br><span class="line">  <span class="attribute">server_name</span>           mydomain.me;  <span class="comment"># 你的域名</span></span><br><span class="line">  <span class="attribute">location</span> /path &#123;  <span class="comment"># 与 V2Ray 配置中的 path 保持一致</span></span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:10000; <span class="comment">#假设WebSocket监听在环回地址的10000端口上</span></span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">"upgrade"</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Show realip in v2ray access.log</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"dns"</span> : &#123;</span><br><span class="line">    <span class="attr">"servers"</span> : [</span><br><span class="line">      <span class="string">"localhost"</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"inbounds"</span> : [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"listen"</span> : <span class="string">"127.0.0.1"</span>,</span><br><span class="line">      <span class="attr">"port"</span> : <span class="number">1081</span>,</span><br><span class="line">      <span class="attr">"protocol"</span> : <span class="string">"socks"</span>,</span><br><span class="line">      <span class="attr">"tag"</span> : <span class="string">"socksinbound"</span>,</span><br><span class="line">      <span class="attr">"settings"</span> : &#123;</span><br><span class="line">        <span class="attr">"auth"</span> : <span class="string">"noauth"</span>,</span><br><span class="line">        <span class="attr">"udp"</span> : <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"ip"</span> : <span class="string">"127.0.0.1"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"listen"</span> : <span class="string">"127.0.0.1"</span>,</span><br><span class="line">      <span class="attr">"port"</span> : <span class="number">8001</span>,</span><br><span class="line">      <span class="attr">"protocol"</span> : <span class="string">"http"</span>,</span><br><span class="line">      <span class="attr">"tag"</span> : <span class="string">"httpinbound"</span>,</span><br><span class="line">      <span class="attr">"settings"</span> : &#123;</span><br><span class="line">        <span class="attr">"timeout"</span> : <span class="number">0</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"outbounds"</span> : [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"sendThrough"</span> : <span class="string">"0.0.0.0"</span>,</span><br><span class="line">      <span class="attr">"mux"</span> : &#123;</span><br><span class="line">        <span class="attr">"enabled"</span> : <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"concurrency"</span> : <span class="number">8</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"protocol"</span> : <span class="string">"vmess"</span>,</span><br><span class="line">      <span class="attr">"settings"</span> : &#123;</span><br><span class="line">        <span class="attr">"vnext"</span> : [</span><br><span class="line">          &#123;</span><br><span class="line">            "address" : "mydomain.me",  //mydomain.me，你的域名</span><br><span class="line">            "users" : [</span><br><span class="line">              &#123;</span><br><span class="line">                "id" : "UUID",  //你的uuid</span><br><span class="line">                "alterId" : 64,</span><br><span class="line">                "security" : "auto",</span><br><span class="line">                "level" : 0</span><br><span class="line">              &#125;</span><br><span class="line">            ],</span><br><span class="line">            "port" : 443</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      "tag" : "Server Name",</span><br><span class="line">      "streamSettings" : &#123;</span><br><span class="line">        "network" : "ws",</span><br><span class="line">        "wsSettings" : &#123;</span><br><span class="line">          "path" : "\/path"  // 对于服务器/path</span><br><span class="line">        &#125;,</span><br><span class="line">        "security" : "tls"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  "routing" : &#123;</span><br><span class="line">    "name" : "all_to_main",</span><br><span class="line">    "domainStrategy" : "AsIs",</span><br><span class="line">    "rules" : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"type"</span> : <span class="string">"field"</span>,</span><br><span class="line">        <span class="attr">"outboundTag"</span> : <span class="string">"Server Jupyter"</span>,</span><br><span class="line">        <span class="attr">"port"</span> : <span class="string">"0-65535"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  "log" : &#123;</span><br><span class="line">    "error" : "\/var\/folders\/q5\/0000gn\/T\/cenmrev.v2rayx.log\/error.log",</span><br><span class="line">    "loglevel" : "error",</span><br><span class="line">    "access" : "\/var\/folders\/q5\/0000gn\/T\/cenmrev.v2rayx.log\/access.log"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(<a href="https://github.com/Cenmrev/V2RayX" target="_blank" rel="noopener">V2RayX 客户端下载</a>)</p>
+<p><strong>以上可实现websoket + ssl 实现代理</strong></p>
+<h4 id="0x04-与网站流量混淆配置（WebSocket-TLS-Web）"><a href="#0x04-与网站流量混淆配置（WebSocket-TLS-Web）" class="headerlink" title="0x04 与网站流量混淆配置（WebSocket+TLS+Web）"></a>0x04 与网站流量混淆配置（WebSocket+TLS+Web）</h4><p>将代理流量与网站流量进行混淆，防干扰能力更好。</p>
+<h5 id="将链接混入网站中"><a href="#将链接混入网站中" class="headerlink" title="将链接混入网站中"></a>将链接混入网站中</h5><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">server_name</span>           mydomain.me;  <span class="comment"># 你的域名</span></span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span>;</span><br><span class="line">    <span class="attribute">ssl</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_certificate</span> 			/etc/v2ray/v2ray.crt;  <span class="comment"># ssl证书配置</span></span><br><span class="line">    <span class="attribute">ssl_certificate_key</span>   /etc/v2ray/v2ray.key;  <span class="comment"># ssl证书配置</span></span><br><span class="line">    <span class="attribute">ssl_protocols</span>         TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span>           HIGH:!aNULL:!MD5;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attribute">rewrite</span> <span class="string">'/site/path'</span>  /path <span class="literal">last</span>;  <span class="comment"># /site/path 网站中的某个地址  /path v2ray地址</span></span><br><span class="line">    <span class="attribute">location</span> / &#123;  <span class="comment"># 网站配置</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8888/; <span class="comment"># 网站的端口地址        </span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">"upgrade"</span>;</span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">if</span> ( <span class="variable">$uri</span> = <span class="string">'/site/path'</span> ) &#123;   <span class="comment"># /site/path 网站中的某个地址</span></span><br><span class="line">            <span class="attribute">rewrite</span> <span class="variable">$uri</span> /path <span class="literal">break</span>; <span class="comment"># /path v2ray地址</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="attribute">location</span> /path &#123; <span class="comment"># 与 V2Ray 配置中的 path 保持一致</span></span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:10000;<span class="comment">#假设WebSocket监听在环回地址的10000端口上</span></span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">"upgrade"</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Show realip in v2ray access.log</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">   <span class="comment">#     proxy_set_header Host $host;</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 其中主要步骤是:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">rewrite</span> <span class="string">'/site/path'</span>  /path <span class="literal">last</span>;  <span class="comment"># /site/path 网站中的某个地址  /path v2ray地址</span></span><br></pre></td></tr></table></figure>
+
+<p>制造一个与网站相似的链接，重写到真实地址上。</p>
+<p>v2ry的服务器配置不变，客户端配置只需要将<code>/path</code>改为<code>/site/path</code> ,即你的混淆的网站地址。这时，你的代理请求会”变为网站中的一个websocket”。</p>
+<h4 id="0x05-与网站流量混淆配置（WebSocket-TLS-Web-CDN）"><a href="#0x05-与网站流量混淆配置（WebSocket-TLS-Web-CDN）" class="headerlink" title="0x05 与网站流量混淆配置（WebSocket+TLS+Web+CDN）"></a>0x05 与网站流量混淆配置（WebSocket+TLS+Web+CDN）</h4><p><strong>核心：通过cloudflare来分发websocket流量，从而隐藏自己真实IP</strong></p>
+<ol>
+<li><p>在 (<a href="https://cloudflare.com" target="_blank" rel="noopener">cloudflare.com</a>) 注册，并添加自己的网址</p>
+</li>
+<li><p>在DNS记录中添加A记录，指向服务器<br><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200208210956.png" alt></p>
+</li>
+<li><p>在Network中打开，websockets代理</p>
+<p><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/image-20200208203655760.png" alt></p>
+</li>
+</ol>
+<h4 id="Done"><a href="#Done" class="headerlink" title="Done."></a>Done.</h4><iframe src="https://qiyukf.com/sdk/res/delegate.html?1559402955156" style="border: 0px; margin: 0px; padding: 0px; cursor: default !important; height: 0px; width: 0px;"></iframe>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工具/" rel="tag"># 工具</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/17/MAC 下 V8 Android编译指墙/" rel="next" title="MAC 下 V8 Android编译指墙">
+                <i class="fa fa-chevron-left"></i> MAC 下 V8 Android编译指墙
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zauther</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zauther" title="GitHub &rarr; https://github.com/zauther" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#V2Ray（ubutnu：websocket-ssl-cdn）"><span class="nav-number">1.</span> <span class="nav-text">V2Ray（ubutnu：websocket+ssl+cdn）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-设置时区"><span class="nav-number">1.1.</span> <span class="nav-text">0x01 设置时区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-安装"><span class="nav-number">1.2.</span> <span class="nav-text">0x02 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x03-配置-WebSocket-TLS-Web"><span class="nav-number">1.3.</span> <span class="nav-text">0x03 配置(WebSocket+TLS+Web)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#服务器-V2Ray-配置-etc-v2ray-config-json"><span class="nav-number">1.3.1.</span> <span class="nav-text">服务器 V2Ray 配置(/etc/v2ray/config.json)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Nginx-配置"><span class="nav-number">1.3.2.</span> <span class="nav-text">Nginx 配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#客户端配置"><span class="nav-number">1.3.3.</span> <span class="nav-text">客户端配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x04-与网站流量混淆配置（WebSocket-TLS-Web）"><span class="nav-number">1.4.</span> <span class="nav-text">0x04 与网站流量混淆配置（WebSocket+TLS+Web）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#将链接混入网站中"><span class="nav-number">1.4.1.</span> <span class="nav-text">将链接混入网站中</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x05-与网站流量混淆配置（WebSocket-TLS-Web-CDN）"><span class="nav-number">1.5.</span> <span class="nav-text">0x05 与网站流量混淆配置（WebSocket+TLS+Web+CDN）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Done"><span class="nav-number">1.6.</span> <span class="nav-text">Done.</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="Symbols count total">128k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="Reading time total">1:57</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'WDh3rxTlsW2r9MQLCtoBPsDL-MdYXbMMI',
+    appKey: 'Gijp3f1mwLxWWns2wdXATsEv',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: '' || 'zh-cn'
+  });
+
+  //新增以下代码即可，可以移除.info下所有子节点。
+var infoEle = document.querySelector('#comments .info');
+if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
+  infoEle.childNodes.forEach(function(item) {
+    item.parentNode.removeChild(item);
+  });
+}
+
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+<script>
+  $('.highlight').not('.gist .highlight').each(function(i, e) {
+    var $wrap = $('<div>').addClass('highlight-wrap');
+    $(e).after($wrap);
+    $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function(e) {
+      var code = $(this).parent().find('.code').find('.line').map(function(i, e) {
+        return $(e).text();
+      }).toArray().join('\n');
+      var ta = document.createElement('textarea');
+      var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+      ta.style.top = yPosition + 'px'; // Prevent page scroll
+      ta.style.position = 'absolute';
+      ta.style.opacity = '0';
+      ta.readOnly = true;
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, code.length);
+      ta.readOnly = false;
+      var result = document.execCommand('copy');
+      
+        if (result) $(this).text('Copied');
+        else $(this).text('Copy failed');
+      
+      ta.blur(); // For iOS
+      $(this).blur();
+    })).on('mouseleave', function(e) {
+      var $b = $(this).find('.copy-btn');
+      setTimeout(function() {
+        $b.text('Copy');
+      }, 300);
+    }).append(e);
+  })
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

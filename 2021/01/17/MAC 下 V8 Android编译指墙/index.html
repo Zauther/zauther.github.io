@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+
+  <meta name="description" content="1. V8编译历程1.1 前言 编译V8第一步就是保证能访问Google，当然不仅仅是为了查阅资料，最最重要的是V8源码下载的需要。 访问 https://v8.dev/docs ，V8官网可查看到Building V8 from source 根据所写一步步来就好。  1.2 编译环境搭建V8源码通过depot_tools工具来管理，首先下载这个工具，作者以/Users/*/Documents/">
+<meta name="keywords" content="Android,V8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MAC 下 V8 Android编译指墙">
+<meta property="og:url" content="https://www.cwiki.cn/2021/01/17/MAC 下 V8 Android编译指墙/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="1. V8编译历程1.1 前言 编译V8第一步就是保证能访问Google，当然不仅仅是为了查阅资料，最最重要的是V8源码下载的需要。 访问 https://v8.dev/docs ，V8官网可查看到Building V8 from source 根据所写一步步来就好。  1.2 编译环境搭建V8源码通过depot_tools工具来管理，首先下载这个工具，作者以/Users/*/Documents/">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-01-17T13:27:02.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MAC 下 V8 Android编译指墙">
+<meta name="twitter:description" content="1. V8编译历程1.1 前言 编译V8第一步就是保证能访问Google，当然不仅仅是为了查阅资料，最最重要的是V8源码下载的需要。 访问 https://v8.dev/docs ，V8官网可查看到Building V8 from source 根据所写一步步来就好。  1.2 编译环境搭建V8源码通过depot_tools工具来管理，首先下载这个工具，作者以/Users/*/Documents/">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.cwiki.cn/2021/01/17/MAC 下 V8 Android编译指墙/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MAC 下 V8 Android编译指墙 | 个人博客</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-97381903-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/MAC 下 V8 Android编译指墙/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MAC 下 V8 Android编译指墙
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-17 21:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T21:27:02+08:00">2021-01-17</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/17/MAC 下 V8 Android编译指墙/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/MAC 下 V8 Android编译指墙/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/17/MAC 下 V8 Android编译指墙/" class="leancloud_visitors" data-flag-title="MAC 下 V8 Android编译指墙">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">6.4k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">6 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-V8编译历程"><a href="#1-V8编译历程" class="headerlink" title="1. V8编译历程"></a>1. V8编译历程</h3><h4 id="1-1-前言"><a href="#1-1-前言" class="headerlink" title="1.1 前言"></a>1.1 前言</h4><ol>
+<li>编译V8第一步就是保证能访问Google，当然不仅仅是为了查阅资料，最最重要的是V8源码下载的需要。</li>
+<li>访问 <a href="https://v8.dev/docs" target="_blank" rel="noopener">https://v8.dev/docs</a> ，V8官网可查看到<a href="https://v8.dev/docs/build" target="_blank" rel="noopener">Building V8 from source</a> 根据所写一步步来就好。</li>
+</ol>
+<h4 id="1-2-编译环境搭建"><a href="#1-2-编译环境搭建" class="headerlink" title="1.2 编译环境搭建"></a>1.2 编译环境搭建</h4><p>V8源码通过depot_tools工具来管理，首先下载这个工具，作者以<code>/Users/*/Documents/test/v8</code> 目录为工作目录。</p>
+<p>由于需要访问国外站，在获取depot_tools前需要做一些不可描述的事情：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> http_proxy=<span class="string">"http://127.0.0.1:8001"</span>; <span class="built_in">export</span> HTTP_PROXY=<span class="string">"http://127.0.0.1:8001"</span>; <span class="built_in">export</span> https_proxy=<span class="string">"http://127.0.0.1:8001"</span>; <span class="built_in">export</span> HTTPS_PROXY=<span class="string">"http://127.0.0.1:8001"</span></span></span><br></pre></td></tr></table></figure>
+
+<p>开启代理后，将其假如环境变量。</p>
+<p>进入<code>/Users/*/Documents/test/v8</code> 目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://chromium.googlesource.com/chromium/tools/depot_tools.git</span></span><br></pre></td></tr></table></figure>
+
+<p>通过git下载<code>depot_tools</code> 。</p>
+<p>将工具集假如环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/Users/*/Documents/<span class="built_in">test</span>/v8/depot_tools</span></span><br></pre></td></tr></table></figure>
+
+<p>fetch V8源码，并同步，fetch命令即depot_tools中的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> fetch v8</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> gclient sync</span></span><br></pre></td></tr></table></figure>
+
+<p>详见:<br><a href="https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up" target="_blank" rel="noopener">https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up</a></p>
+<p>作者使用Mac，Xcode 为10.2.1，Xcode在10以后不支持32位的编译，一次需要同时安装10一下的版本。</p>
+<p>到苹果下载官网 <a href="https://developer.apple.com/download/more/" target="_blank" rel="noopener">https://developer.apple.com/download/more/</a> 找到Xcode 10一下的版本并下载，我采用的是9.4.1。由于Xcode 体积比较大，通过浏览器下载比较慢。直接复制下载地址到下载器无法下载，需要将下载地址的请求头一并复制：打开chrome 开发者工具，点击下载后在Network可看到下载地址，右键下载地址，选择Copy-Copy as cURL，在终端粘贴后假如 <code>-O</code> 即可通过curl下载。</p>
+<p>笔者将Xcode9.4.1 安装到：<code>/Applications/Xcode9.4.1/Xcode.app</code> </p>
+<p>查看xcode的版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcode-select -p</span></span><br><span class="line">/Applications/Xcode.app/Contents/Developer</span><br></pre></td></tr></table></figure>
+
+<p>切换xcode的版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo xcode-select -s /Applications/Xcode9.4.1/Xcode.app/Contents/Developer</span></span><br></pre></td></tr></table></figure>
+
+<p>接下来进入编译的坑。</p>
+<a id="more"></a>
+
+<h4 id="1-3-编译"><a href="#1-3-编译" class="headerlink" title="1.3 编译"></a>1.3 编译</h4><h5 id="1-3-1-编译V8可执行文件"><a href="#1-3-1-编译V8可执行文件" class="headerlink" title="1.3.1 编译V8可执行文件"></a>1.3.1 编译V8可执行文件</h5><p>通过 <a href="https://v8.dev/docs/cross-compile-arm" target="_blank" rel="noopener">https://v8.dev/docs/cross-compile-arm</a> 官网介绍的，在<code>.gclient</code> 中添加<code>target_os = [&#39;android&#39;]</code> ，再次执行<code>gclient sync</code> ，拉取与Android编译想过的模块，主要是NDK，如果本地有ndk，可以不用添加<code>target_os = [&#39;android&#39;]</code> ，以节约时间。即是加上，拉下来的NDK也是linux的，里面缺少很多Mac下的工具，因此，我单独自己下载的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /Users/*/Documents/<span class="built_in">test</span>/v8</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -O https://dl.google.com/android/repository/android-ndk-r19c-darwin-x86_64.zip</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> unzip android-ndk-r19c-darwin-x86_64.zip -d ndkr19c</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> ANDROID_NDK_HOME=`<span class="built_in">pwd</span>`/ndkr19c/android-ndk-r19c</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> v8</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir third_party/android_tools</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ln -s <span class="variable">$ANDROID_NDK_HOME</span> third_party/android_tools/ndk</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ln -s <span class="variable">$ANDROID_NDK_HOME</span> third_party/android_ndk</span></span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>gm</code> 工具编译</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> v8  <span class="comment"># 进入v8代码目录</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> gm=/Users/*/Documents/<span class="built_in">test</span>/v8/v8/tools/dev/gm.py</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> gm android_arm.release.check</span></span><br></pre></td></tr></table></figure>
+
+<p>执行完后，会生成 <code>unittests cctest d8</code> 三个执行文件，并需要电脑通过ADB连接Android手机，以测试生存文件是否存在问题。这里有个巨坑，在生成d8的最后一步，需要用到一个工具eu-strip，这个工具是linux的，导致最后一步无法通过。除此之外，在构建静态库时，需要用到llvm-ar工具，但是v8工具库里缺少这个文件，需要从ndk中拷贝一份。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /Users/*/Documents/<span class="built_in">test</span>/v8</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp ndkr19c/android-ndk-r19c/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ar v8/third_party/llvm-build/Release+Asserts/bin/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp ndkr19c/android-ndk-r19c/toolchains/llvm/prebuilt/darwin-x86_64/bin/ld.lld v8/third_party/llvm-build/Release+Asserts/bin/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mv v8/buildtools/third_party/eu-strip/bin/eu-strip v8/buildtools/third_party/eu-strip/bin/eu-strip.bak </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp ndkr19c/android-ndk-r19c/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-strip v8/buildtools/third_party/eu-strip/bin/eu-strip</span></span><br></pre></td></tr></table></figure>
+
+<p>在链接过程中可能会报<code>clang: error: invalid linker name in argument &#39;-fuse-ld=lld&#39;</code> 这是因为缺少<code>ld.lld</code> 文件。</p>
+<p>编译完成后，会自动通过adb下载到手机做测试。如果不想测试执行<code>gm android_arm.release</code> ，另外<code>gm</code> 命令会自动上传编译报告给google，如果link完后，提示<code>ninjalog_uploader_wrapper.py</code> 相关的错误可能时代理没设置，不过没关系，前面的那步一脚编译完成。</p>
+<p>如果需要测试v8编译是否成功，可参考官方文档 <a href="https://v8.dev/docs/cross-compile-arm" target="_blank" rel="noopener">https://v8.dev/docs/cross-compile-arm</a> 自己上传d8及需要的文件至手机测试。</p>
+<p>如果自定测试提示adb未找到，需要将adb添加到下面目录（v8下载的android_tools中的adb为linux版的）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/*/Documents/test/v8/v8/third_party/android_tools/sdk/platform-tools/adb</span><br></pre></td></tr></table></figure>
+
+<p>如果不行，直接改代码</p>
+<p> /Users/*/Documents/test/v8/v8/third_party/catapult/devil/devil/android/sdk/adb_wrapper.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_FindAdb</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> os.path.join(<span class="string">"/Users/*/Documents/test/v8/v8/third_party/android_tools/sdk/platform-tools/adb"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>自己简单测一下；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">adb shell 'mkdir -p /data/local/tmp/v8/bin'</span><br><span class="line">adb push out.gn/arm.release/d8 /data/local/tmp/v8/bin</span><br><span class="line">adb push out.gn/arm.release/icudtl.dat /data/local/tmp/v8/bin</span><br><span class="line">adb push out.gn/arm.release/natives_blob.bin /data/local/tmp/v8/bin</span><br><span class="line">adb push out.gn/arm.release/snapshot_blob.bin /data/local/tmp/v8/bin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">rebuffat:~/src/v8$ adb shell</span><br><span class="line">bullhead:/ $ cd /data/local/tmp/v8/bin</span><br><span class="line">bullhead:/data/local/tmp/v8/bin $ ls</span><br><span class="line">v8 natives_blob.bin snapshot_blob.bin</span><br><span class="line">bullhead:/data/local/tmp/v8/bin $ ./d8</span><br><span class="line">V8 version 5.8.0 (candidate)</span><br><span class="line"><span class="meta">d8&gt;</span><span class="bash"> <span class="string">'w00t!'</span></span></span><br><span class="line">"w00t!"</span><br><span class="line"><span class="meta">d8&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+
+<h5 id="1-3-2-编译配置"><a href="#1-3-2-编译配置" class="headerlink" title="1.3.2 编译配置"></a>1.3.2 编译配置</h5><p>可按自己的需求修改编译配置，通过v8gen.py工具可查看内置默认编译配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /Users/*/Documents/<span class="built_in">test</span>/v8/v8</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tools/dev/v8gen.py list</span></span><br><span class="line">android.arm.debug</span><br><span class="line">android.arm.optdebug</span><br><span class="line">android.arm.release</span><br><span class="line">arm.debug</span><br><span class="line">arm.optdebug</span><br><span class="line">arm.release</span><br><span class="line">arm64.debug</span><br><span class="line">arm64.optdebug</span><br><span class="line">arm64.release</span><br><span class="line">ia32.debug</span><br><span class="line">ia32.optdebug</span><br><span class="line">ia32.release</span><br><span class="line">mips64el.debug</span><br><span class="line">mips64el.optdebug</span><br><span class="line">mips64el.release</span><br><span class="line">mipsel.debug</span><br><span class="line">mipsel.optdebug</span><br><span class="line">mipsel.release</span><br><span class="line">ppc64.debug</span><br><span class="line">ppc64.debug.sim</span><br><span class="line">ppc64.optdebug</span><br><span class="line">ppc64.optdebug.sim</span><br><span class="line">ppc64.release</span><br><span class="line">ppc64.release.sim</span><br><span class="line">s390x.debug</span><br><span class="line">s390x.debug.sim</span><br><span class="line">s390x.optdebug</span><br><span class="line">s390x.optdebug.sim</span><br><span class="line">s390x.release</span><br><span class="line">s390x.release.sim</span><br><span class="line">x64.debug</span><br><span class="line">x64.optdebug</span><br><span class="line">x64.release</span><br><span class="line">x64.release.sample</span><br><span class="line"><span class="meta">$</span><span class="bash"> tools/dev/v8gen.py arm.release</span></span><br></pre></td></tr></table></figure>
+
+<p>通过<code>tools/dev/v8gen.py arm.release</code> 命令可以生存对应的问价，文件在 <code>out.gn</code> 目录内，通过<code>gm</code> 生成的文件在 <code>out</code> 内。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">is_component_build = false</span><br><span class="line">is_debug = false</span><br><span class="line">target_cpu = "arm"</span><br><span class="line">v8_target_cpu = "arm"</span><br><span class="line">target_os = "android"</span><br><span class="line">use_goma = false</span><br><span class="line">goma_dir = "None"</span><br><span class="line">v8_enable_backtrace = true</span><br><span class="line">v8_enable_disassembler = true</span><br><span class="line">v8_enable_object_print = true</span><br><span class="line">v8_enable_verify_heap = true</span><br><span class="line">v8_use_snapshot=true</span><br><span class="line">v8_enable_embedded_builtins=true </span><br><span class="line">is_official_build=true </span><br><span class="line">use_thin_lto=false </span><br><span class="line">v8_enable_i18n_support=true</span><br><span class="line">symbol_level=0</span><br><span class="line">v8_android_log_stdout=true</span><br></pre></td></tr></table></figure>
+
+<p><code>is_component_build</code> true 生存动态库，false 生成可执行文件</p>
+<p><code>v8_static_library=true</code> 生成静态库</p>
+<p><code>v8_enable_i18n_support=false</code> 是否支持i18n</p>
+<h5 id="1-3-3-编译静态库"><a href="#1-3-3-编译静态库" class="headerlink" title="1.3.3 编译静态库"></a>1.3.3 编译静态库</h5><p>出了通过配置编译外，还可以自己通过llvm-ar 命令来生存静态库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /Users/*/Documents/<span class="built_in">test</span>/v8/v8/out/android_arm.release/obj</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> armar=<span class="variable">$ANDROID_NDK_HOME</span>/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/arm-linux-androideabi/bin/ar</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="variable">$armar</span> r libv8all.a  v8_libsampler/*.o v8_libplatform/*.o v8_libbase/*.o v8_external_snapshot/*.o v8_compiler/*.o v8_base_without_compiler/*.o torque_generated_definitions/*.o third_party/icu/icui18n/*.o third_party/icu/icuuc/*.o third_party/inspector_protocol/encoding/*.o buildtools/third_party/libc++/libc++/*.o buildtools/third_party/libc++abi/libc++abi/*.o</span></span><br></pre></td></tr></table></figure>
+
+<p>得到的libv8all.a 即为链接了所有.o 的静态库。</p>
+<h5 id="1-3-4-其他问题"><a href="#1-3-4-其他问题" class="headerlink" title="1.3.4 其他问题"></a>1.3.4 其他问题</h5><ol>
+<li><p><code>“stddef.h: No such file or directory”</code></p>
+<p>这个是clang++ 的一个bug，在拷贝llvm-ar时，确保 <code>v8/third_party/llvm-build/Release+Asserts/bin/</code> 目录中的clang++ 没被替换，用v8自己的。</p>
+</li>
+<li><p>在Android项目中引入v8静态库做开发时，出现 <code>std::__ndk1::</code> 想关错误</p>
+<blockquote>
+<ol>
+<li>NDK的libc++的C++11命名空间为std::__ndk1</li>
+<li>NDK的gnustl的C++11命名空间为std</li>
+<li>安卓系统的libc++的C++11命名空间为std::__1</li>
+</ol>
+</blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/31025055" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/31025055</a></p>
+<p>需要将obj下的libc++相关的库一起引入，通过ar命令打包时，需要一起打包。</p>
+</li>
+<li><p>发现v8下的内容被玩坏了？</p>
+<p>删掉对应内容的git仓库，<code>gclient sync</code> 一下 。<code>gclient sync</code> 提示其他库有内容未提交，删掉其他库，一起<code>gclient sync</code> 😋。</p>
+</li>
+<li><p>怎么都不行？</p>
+<p><strong>请使用ubuntu!!!</strong></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/V8/" rel="tag"># V8</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/17/Flutter-基本使用/" rel="next" title="Flutter 基本使用">
+                <i class="fa fa-chevron-left"></i> Flutter 基本使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/17/科学上网工具/" rel="prev" title="科学上网工具">
+                科学上网工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zauther</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zauther" title="GitHub &rarr; https://github.com/zauther" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-V8编译历程"><span class="nav-number">1.</span> <span class="nav-text">1. V8编译历程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-前言"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-编译环境搭建"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 编译环境搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-编译"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 编译</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-1-编译V8可执行文件"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.3.1 编译V8可执行文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-2-编译配置"><span class="nav-number">1.3.2.</span> <span class="nav-text">1.3.2 编译配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-3-编译静态库"><span class="nav-number">1.3.3.</span> <span class="nav-text">1.3.3 编译静态库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-4-其他问题"><span class="nav-number">1.3.4.</span> <span class="nav-text">1.3.4 其他问题</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="Symbols count total">128k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="Reading time total">1:57</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'WDh3rxTlsW2r9MQLCtoBPsDL-MdYXbMMI',
+    appKey: 'Gijp3f1mwLxWWns2wdXATsEv',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: '' || 'zh-cn'
+  });
+
+  //新增以下代码即可，可以移除.info下所有子节点。
+var infoEle = document.querySelector('#comments .info');
+if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
+  infoEle.childNodes.forEach(function(item) {
+    item.parentNode.removeChild(item);
+  });
+}
+
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+<script>
+  $('.highlight').not('.gist .highlight').each(function(i, e) {
+    var $wrap = $('<div>').addClass('highlight-wrap');
+    $(e).after($wrap);
+    $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function(e) {
+      var code = $(this).parent().find('.code').find('.line').map(function(i, e) {
+        return $(e).text();
+      }).toArray().join('\n');
+      var ta = document.createElement('textarea');
+      var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+      ta.style.top = yPosition + 'px'; // Prevent page scroll
+      ta.style.position = 'absolute';
+      ta.style.opacity = '0';
+      ta.readOnly = true;
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, code.length);
+      ta.readOnly = false;
+      var result = document.execCommand('copy');
+      
+        if (result) $(this).text('Copied');
+        else $(this).text('Copy failed');
+      
+      ta.blur(); // For iOS
+      $(this).blur();
+    })).on('mouseleave', function(e) {
+      var $b = $(this).find('.copy-btn');
+      setTimeout(function() {
+        $b.text('Copy');
+      }, 300);
+    }).append(e);
+  })
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
