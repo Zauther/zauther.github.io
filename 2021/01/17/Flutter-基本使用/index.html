@@ -95,29 +95,17 @@
 
 
 
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-1870807591456075",
-    enable_page_level_ads: true
-});
-</script>
 
-
-
-
-
-  <meta name="description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构 2. Flutter 开发环境配置Flutter环境 123$ cd ~/development$ unzip ~/Downloads/flutter_macos_v1.9.1+hotfix.4-stable.zip$ export PATH=&quot;$PATH:`pwd`/flutter/bin&quot;  Android">
+  <meta name="description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构">
 <meta name="keywords" content="Flutter,ReactNative">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flutter 基本使用">
 <meta property="og:url" content="https://www.cwiki.cn/2021/01/17/Flutter-基本使用/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构 2. Flutter 开发环境配置Flutter环境 123$ cd ~/development$ unzip ~/Downloads/flutter_macos_v1.9.1+hotfix.4-stable.zip$ export PATH=&quot;$PATH:`pwd`/flutter/bin&quot;  Android">
+<meta property="og:description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/flutter.svg">
 <meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209195127.png">
-<meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Documents/Blogs/gitpage/source/_drafts/flutter-基本使用/image-20191024191704266.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209195909.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209200427.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209200549.png">
@@ -125,10 +113,10 @@
 <meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Library/Application%20Support/typora-user-images/image-20191024200900434.png">
 <meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Library/Application%20Support/typora-user-images/image-20191024201205498.png">
 <meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Library/Application%20Support/typora-user-images/image-20191024193810095.png">
-<meta property="og:updated_time" content="2021-01-17T13:43:09.288Z">
+<meta property="og:updated_time" content="2021-01-21T14:36:15.635Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter 基本使用">
-<meta name="twitter:description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构 2. Flutter 开发环境配置Flutter环境 123$ cd ~/development$ unzip ~/Downloads/flutter_macos_v1.9.1+hotfix.4-stable.zip$ export PATH=&quot;$PATH:`pwd`/flutter/bin&quot;  Android">
+<meta name="twitter:description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/flutter.svg">
 
 
@@ -400,12 +388,24 @@
                 
               
 
-              <time title="Created: 2021-01-17 21:27:02 / Modified: 21:43:09" itemprop="dateCreated datePublished" datetime="2021-01-17T21:27:02+08:00">2021-01-17</time>
+              <time title="Created: 2021-01-17 21:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T21:27:02+08:00">2021-01-17</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2021-01-21 22:36:15" itemprop="dateModified" datetime="2021-01-21T22:36:15+08:00">2021-01-21</time>
               
             
           </span>
@@ -493,6 +493,9 @@
       
         <h3 id="一、-Flutter-混合开发"><a href="#一、-Flutter-混合开发" class="headerlink" title="一、 Flutter 混合开发"></a>一、 Flutter 混合开发</h3><p>Flutter 环境配置</p>
 <h4 id="1-Flutter-整体架构"><a href="#1-Flutter-整体架构" class="headerlink" title="1. Flutter 整体架构"></a>1. Flutter 整体架构</h4><p><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/flutter.svg" alt="flutter"></p>
+<a id="more"></a>
+
+
 <h4 id="2-Flutter-开发环境配置"><a href="#2-Flutter-开发环境配置" class="headerlink" title="2. Flutter 开发环境配置"></a>2. Flutter 开发环境配置</h4><p>Flutter环境</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/development</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> unzip ~/Downloads/flutter_macos_v1.9.1+hotfix.4-stable.zip</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> PATH=<span class="string">"<span class="variable">$PATH</span>:`pwd`/flutter/bin"</span></span></span><br></pre></td></tr></table></figure>
 
@@ -516,10 +519,6 @@
 
 <h5 id="4-2-Flutter应用开发"><a href="#4-2-Flutter应用开发" class="headerlink" title="4.2 Flutter应用开发"></a>4.2 Flutter应用开发</h5><p>Flutter应用开发，可直接运行，适合开发新的APP。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter create --org com.exemple --template=app someapp</span></span><br></pre></td></tr></table></figure>
-
-<img src="/Users/zauther/Documents/Blogs/gitpage/source/_drafts/flutter-基本使用/image-20191024191704266.png" alt="image-20191024191704266" style="zoom: 50%;">
-
-
 
 <p>从目录结构可以看出，此工程中有3个目录：android、ios、lib，android目录下是与Android平台相关的代码及配置，ios目录下是与iOS平台相关的代码及配置，lib目录下为flutter平台相关的代码。</p>
 <p>pubspec.yaml为flutter工程相关的配置，包含依赖的插件、资源等。.flutter-plugins 文件为flutter插件路径映射文件。</p>
@@ -1250,4 +1249,15 @@ if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
   
 
 </body>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
 </html>
