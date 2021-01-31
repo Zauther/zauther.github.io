@@ -376,7 +376,7 @@
                 
               
 
-              <time title="Created: 2021-01-31 22:01:12 / Modified: 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T22:01:12+00:00">2021-01-31</time>
+              <time title="Created: 2021-01-31 22:01:12 / Modified: 14:06:30" itemprop="dateCreated datePublished" datetime="2021-01-31T22:01:12+00:00">2021-01-31</time>
             
 
             
@@ -468,8 +468,7 @@
 
       
         
-          
-            <h2 id="Linux-内核编译"><a href="#Linux-内核编译" class="headerlink" title="Linux 内核编译"></a>Linux 内核编译</h2><h5 id="准备Linux-kernel-源码"><a href="#准备Linux-kernel-源码" class="headerlink" title="准备Linux kernel 源码"></a>准备Linux kernel 源码</h5><p>下载地址：</p>
+          <h2 id="Linux-内核编译"><a href="#Linux-内核编译" class="headerlink" title="Linux 内核编译"></a>Linux 内核编译</h2><h5 id="准备Linux-kernel-源码"><a href="#准备Linux-kernel-源码" class="headerlink" title="准备Linux kernel 源码"></a>准备Linux kernel 源码</h5><p>下载地址：</p>
 <p> <a href="https://www.kernel.org/" target="_blank" rel="noopener">https://www.kernel.org/</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xz -d linux-5.10.12.tar.xz</span><br><span class="line">tar xvf linux-5.10.12.tar</span><br><span class="line">cd linux-5.10.12</span><br></pre></td></tr></table></figure>
 
@@ -488,54 +487,226 @@
 <p>vmlinuz应该是由ELF文件vmlinux经过OBJCOPY后，并经过压缩后的文件</p>
 <p>zImage是vmlinuz经过gzip压缩后的文件，适用于小内核</p>
 </blockquote>
-<h2 id="BusyBox编译"><a href="#BusyBox编译" class="headerlink" title="BusyBox编译"></a>BusyBox编译</h2><p>在内核加载时，需要为内核准备文件系统，以及各种基本的工具。而BusyBox整合了很多常用的Linux工具。</p>
-<h5 id="准备busybox源码"><a href="#准备busybox源码" class="headerlink" title="准备busybox源码"></a>准备busybox源码</h5><p>下载地址： <a href="https://busybox.net/" target="_blank" rel="noopener">https://busybox.net/</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvjf busybox-1.32.1.tar.bz2</span><br><span class="line">cd busybox-1.32.1</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2021/01/31/从qemu启动Linux内核看linux/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
 
-<h5 id="编译源码-1"><a href="#编译源码-1" class="headerlink" title="编译源码"></a>编译源码</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make install -j 8</span><br></pre></td></tr></table></figure>
+    
 
-<p><code>make menuconfig</code> 对busybox编译参数进行设置，类似于linux kernel设置。由于我们前面编译的linux kernel只有一个内核文件，并且linux 程序执行的所需的依赖库，我们暂时是不打算装的，因此在编译busybox时，我们选择将busybox编译为一个静态二进制文件。</p>
-<p>设置的路径如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings—&gt;</span><br><span class="line">	Build Options—&gt;</span><br><span class="line">  		 Build Busybox as a static binary(no shared libs)</span><br></pre></td></tr></table></figure>
+    
+    
+    
 
-<p><code>make install -j 8</code> 在执行后，会在当前目录生成<code>_install</code> 目录，这个目录里面包含busybox所有工具。我们可以看到，比如<code>bin</code> 目录中的程序，除了busybox外都是链接到busybox的软链。具体的调用都是busybox通过argv[0]来识别到调用名，在busybox内部来调用的。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[] )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span> ; i &lt; argc ; i++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"argv[%d] = %s\n"</span>, i, argv[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
 
-<h2 id="制作文件系统"><a href="#制作文件系统" class="headerlink" title="制作文件系统"></a>制作文件系统</h2><h5 id="补全目录"><a href="#补全目录" class="headerlink" title="补全目录"></a>补全目录</h5><p>进入busybox的_install目录，补充完linux缺失的目录和文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir root dev etc bin sbin mnt sys proc lib home tmp var usr</span><br><span class="line">mkdir usr/sbin usr/bin usr/lib usr/modules</span><br><span class="line">mkdir mnt/usb mnt/nfs mnt/etc mnt/etc/init.d</span><br><span class="line">mkdir lib/modules</span><br><span class="line">chmod 1777 tmp</span><br></pre></td></tr></table></figure>
+    
+      
+    
+    
 
-<h5 id="创建设备文件"><a href="#创建设备文件" class="headerlink" title="创建设备文件"></a>创建设备文件</h5><p>进入dev目录执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mknod -m 660 console c 5 1</span><br><span class="line">sudo mknod -m 660 null c 1 3</span><br></pre></td></tr></table></figure>
+    
 
-<h5 id="配置磁盘分区"><a href="#配置磁盘分区" class="headerlink" title="配置磁盘分区"></a>配置磁盘分区</h5><p>进入etc目录，创建并编辑fstab文件，输入以下内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">proc    /proc   proc    defaults    0   0</span><br><span class="line">none    /tmp    ramfs   defaults    0   0</span><br><span class="line">mdev    /dev    ramfs   defaults    0   0</span><br><span class="line">sysfs   /sys    sysfs   defaults    0   0</span><br></pre></td></tr></table></figure>
+    <footer class="post-footer">
+      
 
-<h5 id="配置初始化操作"><a href="#配置初始化操作" class="headerlink" title="配置初始化操作"></a>配置初始化操作</h5><p>在etc下创建init.d目录，并在init.d目录下编辑rcS文件且加上可执行权限，输入以下内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/sh</span></span><br><span class="line">/bin/mount -a</span><br></pre></td></tr></table></figure>
+      
 
-<p>在etc下编辑inittab，输入以下内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/etc/init.d/rcS</span><br><span class="line">::respawn:-/bin/sh</span><br><span class="line">::restart:/sbin/init</span><br><span class="line">::ctrlaltdel:/bin/umount -a -r</span><br><span class="line">::shutdown:/bin/umount -a -r</span><br><span class="line">::shutdown:/sbin/swapoff –a</span><br></pre></td></tr></table></figure>
+      
 
-<h5 id="打包文件系统"><a href="#打包文件系统" class="headerlink" title="打包文件系统"></a>打包文件系统</h5><p>在_install目录下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; ./rootfs.img</span><br></pre></td></tr></table></figure>
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
 
-<p>这个时候会生成<code>rootfs.img</code> 文件</p>
-<h2 id="Qemu-编译及运行"><a href="#Qemu-编译及运行" class="headerlink" title="Qemu 编译及运行"></a>Qemu 编译及运行</h2><p>我自己在ubuntu20.04上通过<code>sudo apt-get install qemu</code> 安装qemu，显示安装成功了，但是却找不到相关文件，因此后面是源码安装的。</p>
-<h5 id="准备源码"><a href="#准备源码" class="headerlink" title="准备源码"></a>准备源码</h5><p>源码地址：<a href="https://www.qemu.org/" target="_blank" rel="noopener">https://www.qemu.org/</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xz -d qemu-5.2.0.tar.xz</span><br><span class="line">tar xvf qemu-5.2.0.tar.xz</span><br><span class="line">cd qemu-5.2.0</span><br></pre></td></tr></table></figure>
 
-<h5 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure </span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+    
+      
 
-<p><code>./configure</code> 后面可以指定安装路径，默然qemu会安装到/usr/local/bin中:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure  --prefix=/usr/bin/qemu --localstatedir=/var --sysconfdir=/etc</span><br></pre></td></tr></table></figure>
+  
 
-<h5 id="加载并运行linux"><a href="#加载并运行linux" class="headerlink" title="加载并运行linux"></a>加载并运行linux</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -kernel ./bzImage -initrd  ./rootfs.img -nographic -append "console=ttyS0"</span><br></pre></td></tr></table></figure>
+  
+  
+  
 
-<h2 id="Linux-启动"><a href="#Linux-启动" class="headerlink" title="Linux 启动"></a>Linux 启动</h2><p>TODO : 启动分析</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.sunxiaokong.xyz/2020-01-14/lzx-linuxkernel-qemuinit/" target="_blank" rel="noopener">https://www.sunxiaokong.xyz/2020-01-14/lzx-linuxkernel-qemuinit/</a>  试了博主的方式，会提示<code>physical kaslr disabled</code> 而无法启动内核</p>
-<p><a href="https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e" target="_blank" rel="noopener">https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e</a></p>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/Android-Native开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2021/01/31/Android-Native开发/" class="post-title-link" itemprop="url">Android Native开发</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-31 14:06:30" itemprop="dateCreated datePublished" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
+            
+
+            
+          </span>
 
           
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/31/Android-Native开发/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/Android-Native开发/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/31/Android-Native开发/" class="leancloud_visitors" data-flag-title="Android Native开发">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">48k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">44 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Android-Native开发"><a href="#Android-Native开发" class="headerlink" title="Android Native开发"></a>Android Native开发</h2><p>Android 从</p>
+<h3 id="0x01-JNI-开发"><a href="#0x01-JNI-开发" class="headerlink" title="0x01 JNI 开发"></a>0x01 JNI 开发</h3><h4 id="1-Demo"><a href="#1-Demo" class="headerlink" title="1. Demo"></a>1. Demo</h4><p>我们现来看一个例子。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloJni</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">"native-lib"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> String <span class="title">stringFromJNI</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_cn_cwiki_someapp_test_HelloJni_stringFromJNI(JNIEnv *env, jclass type) &#123;</span><br><span class="line">    <span class="comment">// TODO</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"Hello, Java Native Interface!"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_cn_cwiki_someapp_test_HelloJni_test(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    <span class="comment">// TODO</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"test"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20190628232500731.webp" alt="image-20190628232500731"></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span>.<span class="number">1</span>)</span><br><span class="line"><span class="keyword">add_library</span>(</span><br><span class="line">        native-lib SHARED</span><br><span class="line">        src/main/cpp/native-lib.cpp</span><br><span class="line">)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(</span><br><span class="line">        native-lib</span><br><span class="line">        src/main/cpp/native-lib.cpp</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">            path <span class="string">"CMakeLists.txt"</span>  <span class="comment">//CMakeLists.txt的路径</span></span><br><span class="line">            version <span class="string">"3.10.2"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20190628233820985.webp" alt="image-20190628233820985"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String stringFromJNI = HelloJni.stringFromJNI();</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20190628234045501.webp" alt="image-20190628234045501"></p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2021/01/31/Android-Native开发/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -635,7 +806,7 @@
                 
               
 
-              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+              <time title="Created: 2021-01-31 14:06:30" itemprop="dateCreated datePublished" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
             
 
             
@@ -833,7 +1004,7 @@
                 
               
 
-              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+              <time title="Created: 2021-01-31 14:06:30" itemprop="dateCreated datePublished" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
             
 
             
@@ -1059,7 +1230,7 @@
                 
               
 
-              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+              <time title="Created: 2021-01-31 14:06:30" itemprop="dateCreated datePublished" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
             
 
             
@@ -1262,7 +1433,7 @@
                 
               
 
-              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+              <time title="Created: 2021-01-31 14:06:30" itemprop="dateCreated datePublished" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
             
 
             
@@ -1427,217 +1598,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/Android-Native开发/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zauther">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2021/01/31/Android-Native开发/" class="post-title-link" itemprop="url">Android Native开发</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/31/Android-Native开发/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/Android-Native开发/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-            <span id="/2021/01/31/Android-Native开发/" class="leancloud_visitors" data-flag-title="Android Native开发">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Views: </span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">word count: </span>
-                
-                <span title="word count">48k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">time &asymp;</span>
-                
-                <span title="time">44 mins.</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Android-Native开发"><a href="#Android-Native开发" class="headerlink" title="Android Native开发"></a>Android Native开发</h2><p>Android 从</p>
-<h3 id="0x01-JNI-开发"><a href="#0x01-JNI-开发" class="headerlink" title="0x01 JNI 开发"></a>0x01 JNI 开发</h3><h4 id="1-Demo"><a href="#1-Demo" class="headerlink" title="1. Demo"></a>1. Demo</h4><p>我们现来看一个例子。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloJni</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">"native-lib"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> String <span class="title">stringFromJNI</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_cn_cwiki_someapp_test_HelloJni_stringFromJNI(JNIEnv *env, jclass type) &#123;</span><br><span class="line">    <span class="comment">// TODO</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"Hello, Java Native Interface!"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_cn_cwiki_someapp_test_HelloJni_test(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    <span class="comment">// TODO</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"test"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/image-20190628232500731.webp" alt="image-20190628232500731"></p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span>.<span class="number">1</span>)</span><br><span class="line"><span class="keyword">add_library</span>(</span><br><span class="line">        native-lib SHARED</span><br><span class="line">        src/main/cpp/native-lib.cpp</span><br><span class="line">)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(</span><br><span class="line">        native-lib</span><br><span class="line">        src/main/cpp/native-lib.cpp</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">            path <span class="string">"CMakeLists.txt"</span>  <span class="comment">//CMakeLists.txt的路径</span></span><br><span class="line">            version <span class="string">"3.10.2"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/image-20190628233820985.webp" alt="image-20190628233820985"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String stringFromJNI = HelloJni.stringFromJNI();</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/image-20190628234045501.webp" alt="image-20190628234045501"></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2021/01/31/Android-Native开发/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2020/02/06/Flutter-Engine-编译/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1700,7 +1660,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2021-01-31 14:03:05" itemprop="dateModified" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+                <time title="Modified: 2021-01-31 14:06:30" itemprop="dateModified" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
               
             
           </span>
@@ -1937,7 +1897,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2021-01-31 14:03:05" itemprop="dateModified" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+                <time title="Modified: 2021-01-31 14:06:30" itemprop="dateModified" datetime="2021-01-31T14:06:30+00:00">2021-01-31</time>
               
             
           </span>
