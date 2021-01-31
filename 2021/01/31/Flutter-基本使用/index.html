@@ -100,7 +100,7 @@
 <meta name="keywords" content="Flutter,ReactNative">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flutter 基本使用">
-<meta property="og:url" content="https://www.cwiki.cn/2021/01/17/Flutter-基本使用/index.html">
+<meta property="og:url" content="https://www.cwiki.cn/2021/01/31/Flutter-基本使用/index.html">
 <meta property="og:site_name" content="个人博客">
 <meta property="og:description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构">
 <meta property="og:locale" content="default">
@@ -113,7 +113,7 @@
 <meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Library/Application%20Support/typora-user-images/image-20191024200900434.png">
 <meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Library/Application%20Support/typora-user-images/image-20191024201205498.png">
 <meta property="og:image" content="https://www.cwiki.cn/Users/zauther/Library/Application%20Support/typora-user-images/image-20191024193810095.png">
-<meta property="og:updated_time" content="2021-01-21T14:36:15.635Z">
+<meta property="og:updated_time" content="2021-01-31T14:03:05.437Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter 基本使用">
 <meta name="twitter:description" content="一、 Flutter 混合开发Flutter 环境配置 1. Flutter 整体架构">
@@ -125,7 +125,7 @@
 
   
   
-  <link rel="canonical" href="https://www.cwiki.cn/2021/01/17/Flutter-基本使用/">
+  <link rel="canonical" href="https://www.cwiki.cn/2021/01/31/Flutter-基本使用/">
 
 
 
@@ -345,7 +345,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/Flutter-基本使用/">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/Flutter-基本使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zauther">
@@ -388,25 +388,9 @@
                 
               
 
-              <time title="Created: 2021-01-17 13:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T13:27:02+00:00">2021-01-17</time>
+              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
             
 
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2021-01-21 14:36:15" itemprop="dateModified" datetime="2021-01-21T14:36:15+00:00">2021-01-21</time>
-              
             
           </span>
 
@@ -423,8 +407,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/17/Flutter-基本使用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/Flutter-基本使用/" itemprop="commentCount"></span>
+                <a href="/2021/01/31/Flutter-基本使用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/Flutter-基本使用/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -432,7 +416,7 @@
 
           
           
-            <span id="/2021/01/17/Flutter-基本使用/" class="leancloud_visitors" data-flag-title="Flutter 基本使用">
+            <span id="/2021/01/31/Flutter-基本使用/" class="leancloud_visitors" data-flag-title="Flutter 基本使用">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -497,19 +481,19 @@
 
 
 <h4 id="2-Flutter-开发环境配置"><a href="#2-Flutter-开发环境配置" class="headerlink" title="2. Flutter 开发环境配置"></a>2. Flutter 开发环境配置</h4><p>Flutter环境</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/development</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> unzip ~/Downloads/flutter_macos_v1.9.1+hotfix.4-stable.zip</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> PATH=<span class="string">"<span class="variable">$PATH</span>:`pwd`/flutter/bin"</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/development</span><br><span class="line"><span class="meta">$</span> unzip ~/Downloads/flutter_macos_v1.9.1+hotfix.4-stable.zip</span><br><span class="line"><span class="meta">$</span> export PATH="$PATH:`pwd`/flutter/bin"</span><br></pre></td></tr></table></figure>
 
 <p>Android SDK</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> ANDROID_HOME=/Users/*/Library/Android/sdk</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> export ANDROID_HOME=/Users/*/Library/Android/sdk</span><br></pre></td></tr></table></figure>
 
 <p>Xcode 安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer</span><br></pre></td></tr></table></figure>
 
-<h4 id="3-Flutter-常用命令"><a href="#3-Flutter-常用命令" class="headerlink" title="3. Flutter 常用命令"></a>3. Flutter 常用命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># flutter 环境诊断</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> flutter doctor  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># flutter 版本切换</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> flutter version v1.5.4-hotfix.2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># flutter 创建工程模板</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> flutter create --org com.exemple --template=[plugin,app,package，module] projectname</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-Flutter-常用命令"><a href="#3-Flutter-常用命令" class="headerlink" title="3. Flutter 常用命令"></a>3. Flutter 常用命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span># flutter 环境诊断</span><br><span class="line"><span class="meta">$</span> flutter doctor  </span><br><span class="line"><span class="meta">#</span># flutter 版本切换</span><br><span class="line"><span class="meta">$</span> flutter version v1.5.4-hotfix.2</span><br><span class="line"><span class="meta">#</span># flutter 创建工程模板</span><br><span class="line"><span class="meta">$</span> flutter create --org com.exemple --template=[plugin,app,package，module] projectname</span><br></pre></td></tr></table></figure>
 
 <h4 id="4-Flutter接入及原理"><a href="#4-Flutter接入及原理" class="headerlink" title="4. Flutter接入及原理"></a>4. Flutter接入及原理</h4><p>Flutter开发方式，目前有4种，分别是：纯的Dart库开发、Flutter应用开发、Flutter插件开发以及Flutter Module接入。下面，分别对这4种开发形式做一个介绍。</p>
 <h5 id="4-1-纯的Dart库开发"><a href="#4-1-纯的Dart库开发" class="headerlink" title="4.1 纯的Dart库开发"></a>4.1 纯的Dart库开发</h5><p>纯的Dart库开发，无客户端相关Native代码，通过命令行生成工程模板：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter create --org com.exemple --template=package somepackage</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter create --org com.exemple --template=package somepackage</span><br></pre></td></tr></table></figure>
 
 <img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209195127.png" alt="image-20191024191219392" style="zoom:50%;">
 
@@ -518,7 +502,7 @@
 
 
 <h5 id="4-2-Flutter应用开发"><a href="#4-2-Flutter应用开发" class="headerlink" title="4.2 Flutter应用开发"></a>4.2 Flutter应用开发</h5><p>Flutter应用开发，可直接运行，适合开发新的APP。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter create --org com.exemple --template=app someapp</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter create --org com.exemple --template=app someapp</span><br></pre></td></tr></table></figure>
 
 <p>从目录结构可以看出，此工程中有3个目录：android、ios、lib，android目录下是与Android平台相关的代码及配置，ios目录下是与iOS平台相关的代码及配置，lib目录下为flutter平台相关的代码。</p>
 <p>pubspec.yaml为flutter工程相关的配置，包含依赖的插件、资源等。.flutter-plugins 文件为flutter插件路径映射文件。</p>
@@ -544,7 +528,7 @@
 <li>设置flutter对应的lib所在目录，lib中包含flutter代码入口 <code>main.dart</code></li>
 </ol>
 <h5 id="4-3-Flutter-插件开发"><a href="#4-3-Flutter-插件开发" class="headerlink" title="4.3 Flutter 插件开发"></a>4.3 Flutter 插件开发</h5><p>Flutter插件类似于Java开发过程中的库，可在目前项目上直接引入已有功能。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter create --org com.exemple --template=plugin someplugin</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter create --org com.exemple --template=plugin someplugin</span><br></pre></td></tr></table></figure>
 
 <img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209195909.png" alt="image-20191019005837181" style="zoom:50%;">
 
@@ -588,7 +572,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlutterApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Activity mCurrentActivity = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FlutterApplication</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@CallSuper</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        FlutterMain.startInitialization(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Activity <span class="title">getCurrentActivity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.mCurrentActivity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentActivity</span><span class="params">(Activity mCurrentActivity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mCurrentActivity = mCurrentActivity;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>FlutterApplication中核心作用是<code>FlutterMain.startInitialization(this);</code> 初始化Flutter框架</p>
-<h3 id="新建Flutter-Module"><a href="#新建Flutter-Module" class="headerlink" title="新建Flutter Module"></a>新建Flutter Module</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter create --org com.exemple --template=plugin somemodule</span></span><br></pre></td></tr></table></figure>
+<h3 id="新建Flutter-Module"><a href="#新建Flutter-Module" class="headerlink" title="新建Flutter Module"></a>新建Flutter Module</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter create --org com.exemple --template=plugin somemodule</span><br></pre></td></tr></table></figure>
 
 <img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200209200427.png" alt="image-20191020105011609" style="zoom:50%;">
 
@@ -637,10 +621,10 @@
 
 <p>flutterExecutable为flutter命令</p>
 <p>当 buildType 为 debug 时：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter build bundle --depfile <span class="variable">$&#123;intermediateDir&#125;</span>/snapshot_blob.bin.d --debug</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter build bundle --depfile $&#123;intermediateDir&#125;/snapshot_blob.bin.d --debug</span><br></pre></td></tr></table></figure>
 
 <p>当 buildType 为 release 时:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter build aot</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> flutter build bundle --precompiled --release</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter build aot</span><br><span class="line"><span class="meta">$</span> flutter build bundle --precompiled --release</span><br></pre></td></tr></table></figure>
 
 </li>
 </ol>
@@ -648,17 +632,17 @@
 <h3 id="二、-调试工具Dart-DevTools"><a href="#二、-调试工具Dart-DevTools" class="headerlink" title="二、 调试工具Dart DevTools"></a>二、 调试工具Dart DevTools</h3><ol>
 <li>启动devtools</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pub global run devtools</span></span><br><span class="line">Serving DevTools at http://127.0.0.1:9100</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> pub global run devtools</span><br><span class="line">Serving DevTools at http://127.0.0.1:9100</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>在flutter lib同目录执行attach命令，等待App连接</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter attach</span></span><br><span class="line">Waiting for a connection from Flutter on MI 8...</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter attach</span><br><span class="line">Waiting for a connection from Flutter on MI 8...</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
 <li>重新启动app，等待</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> flutter attach</span></span><br><span class="line">Waiting for a connection from Flutter on MI 8...</span><br><span class="line">Done.</span><br><span class="line">Syncing files to device MI 8...</span><br><span class="line"> 3,832ms (!)</span><br><span class="line"></span><br><span class="line">🔥  To hot reload changes while running, press "r". To hot restart (and rebuild state), press "R".</span><br><span class="line">An Observatory debugger and profiler on MI 8 is available at: http://127.0.0.1:53469/Fv75Oo4wMEE=/</span><br><span class="line">For a more detailed help message, press "h". To detach, press "d"; to quit, press "q"</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> flutter attach</span><br><span class="line">Waiting for a connection from Flutter on MI 8...</span><br><span class="line">Done.</span><br><span class="line">Syncing files to device MI 8...</span><br><span class="line"> 3,832ms (!)</span><br><span class="line"></span><br><span class="line">🔥  To hot reload changes while running, press "r". To hot restart (and rebuild state), press "R".</span><br><span class="line">An Observatory debugger and profiler on MI 8 is available at: http://127.0.0.1:53469/Fv75Oo4wMEE=/</span><br><span class="line">For a more detailed help message, press "h". To detach, press "d"; to quit, press "q"</span><br></pre></td></tr></table></figure>
 
 <ol start="4">
 <li>打开chrome，<a href="http://127.0.0.1:9100" target="_blank" rel="noopener">http://127.0.0.1:9100</a> ，输入<code>flutter attach</code> 命令中的url <code>http://127.0.0.1:53469/Fv75Oo4wMEE=/</code></li>
@@ -787,8 +771,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/01/17/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2021/01/31/MAC 下 V8 Android编译指墙/" rel="next" title="MAC 下 V8 Android编译指墙">
+                <i class="fa fa-chevron-left"></i> MAC 下 V8 Android编译指墙
               </a>
             
           </div>
@@ -797,8 +781,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/01/17/MAC 下 V8 Android编译指墙/" rel="prev" title="MAC 下 V8 Android编译指墙">
-                MAC 下 V8 Android编译指墙 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/01/31/从qemu启动Linux内核看linux/" rel="prev" title="qemu启动Linux内核">
+                qemu启动Linux内核 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -872,7 +856,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -909,7 +893,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -953,7 +943,7 @@
     <h3 class="widget-title">标签</h3>
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/busybox/">busybox</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
@@ -1005,7 +995,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">128k</span>
+    <span title="Symbols count total">131k</span>
   
 
   
@@ -1014,7 +1004,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">1:57</span>
+    <span title="Reading time total">1:59</span>
   
 </div>
 

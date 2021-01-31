@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Linux 内核编译准备Linux kernel 源码下载地址：  https://www.kernel.org/ 123xz -d linux-5.10.12.tar.xztar xvf linux-5.10.12.tarcd linux-5.10.12  安装依赖1234567sudo apt-get install build-essentialsudo apt-get install li">
+<meta name="keywords" content="linux,busybox,qemu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="qemu启动Linux内核">
+<meta property="og:url" content="https://www.cwiki.cn/2021/01/31/从qemu启动Linux内核看linux/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="Linux 内核编译准备Linux kernel 源码下载地址：  https://www.kernel.org/ 123xz -d linux-5.10.12.tar.xztar xvf linux-5.10.12.tarcd linux-5.10.12  安装依赖1234567sudo apt-get install build-essentialsudo apt-get install li">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-01-31T14:03:05.437Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="qemu启动Linux内核">
+<meta name="twitter:description" content="Linux 内核编译准备Linux kernel 源码下载地址：  https://www.kernel.org/ 123xz -d linux-5.10.12.tar.xztar xvf linux-5.10.12.tarcd linux-5.10.12  安装依赖1234567sudo apt-get install build-essentialsudo apt-get install li">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.cwiki.cn/2021/01/31/从qemu启动Linux内核看linux/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>qemu启动Linux内核 | 个人博客</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-97381903-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/从qemu启动Linux内核看linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">qemu启动Linux内核
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-31 22:01:12 / Modified: 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T22:01:12+00:00">2021-01-31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/31/从qemu启动Linux内核看linux/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/从qemu启动Linux内核看linux/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/31/从qemu启动Linux内核看linux/" class="leancloud_visitors" data-flag-title="qemu启动Linux内核">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">3k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">3 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Linux-内核编译"><a href="#Linux-内核编译" class="headerlink" title="Linux 内核编译"></a>Linux 内核编译</h2><h5 id="准备Linux-kernel-源码"><a href="#准备Linux-kernel-源码" class="headerlink" title="准备Linux kernel 源码"></a>准备Linux kernel 源码</h5><p>下载地址：</p>
+<p> <a href="https://www.kernel.org/" target="_blank" rel="noopener">https://www.kernel.org/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xz -d linux-5.10.12.tar.xz</span><br><span class="line">tar xvf linux-5.10.12.tar</span><br><span class="line">cd linux-5.10.12</span><br></pre></td></tr></table></figure>
+
+<h5 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install libelf-dev</span><br><span class="line">sudo apt-get install libncurses-dev</span><br><span class="line">sudo apt-get install flex</span><br><span class="line">sudo apt-get install bison</span><br><span class="line">sudo apt install kernel-package build-essential libncurses5-dev fakeroot</span><br><span class="line">sudo apt install libssl-dev</span><br></pre></td></tr></table></figure>
+
+<h5 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make bzImage -j8</span><br></pre></td></tr></table></figure>
+
+<p><code>make menuconfig</code> 配置kernel编译参数，可根据自己的需求进行设置，<code>ramfs</code> 一般是默认开启的，后面通过qemu运行需要使用到这个。</p>
+<p>内存分为不同的类型，这里编译的是<code>x86_64</code> <code>bzImage</code> </p>
+<p>内核的不同类型</p>
+<blockquote>
+<p>bzImage是vmlinuz经过gzip压缩后的文件，适用于大内核</p>
+<p>vmlinux是未压缩的内核</p>
+<p>vmlinuz是vmlinux的压缩文件。</p>
+<p>vmlinux 是ELF文件，即编译出来的最原始的文件。</p>
+<p>vmlinuz应该是由ELF文件vmlinux经过OBJCOPY后，并经过压缩后的文件</p>
+<p>zImage是vmlinuz经过gzip压缩后的文件，适用于小内核</p>
+</blockquote>
+<h2 id="BusyBox编译"><a href="#BusyBox编译" class="headerlink" title="BusyBox编译"></a>BusyBox编译</h2><p>在内核加载时，需要为内核准备文件系统，以及各种基本的工具。而BusyBox整合了很多常用的Linux工具。</p>
+<h5 id="准备busybox源码"><a href="#准备busybox源码" class="headerlink" title="准备busybox源码"></a>准备busybox源码</h5><p>下载地址： <a href="https://busybox.net/" target="_blank" rel="noopener">https://busybox.net/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvjf busybox-1.32.1.tar.bz2</span><br><span class="line">cd busybox-1.32.1</span><br></pre></td></tr></table></figure>
+
+<h5 id="编译源码-1"><a href="#编译源码-1" class="headerlink" title="编译源码"></a>编译源码</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make install -j 8</span><br></pre></td></tr></table></figure>
+
+<p><code>make menuconfig</code> 对busybox编译参数进行设置，类似于linux kernel设置。由于我们前面编译的linux kernel只有一个内核文件，并且linux 程序执行的所需的依赖库，我们暂时是不打算装的，因此在编译busybox时，我们选择将busybox编译为一个静态二进制文件。</p>
+<p>设置的路径如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings—&gt;</span><br><span class="line">	Build Options—&gt;</span><br><span class="line">  		 Build Busybox as a static binary(no shared libs)</span><br></pre></td></tr></table></figure>
+
+<p><code>make install -j 8</code> 在执行后，会在当前目录生成<code>_install</code> 目录，这个目录里面包含busybox所有工具。我们可以看到，比如<code>bin</code> 目录中的程序，除了busybox外都是链接到busybox的软链。具体的调用都是busybox通过argv[0]来识别到调用名，在busybox内部来调用的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[] )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span> ; i &lt; argc ; i++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"argv[%d] = %s\n"</span>, i, argv[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="制作文件系统"><a href="#制作文件系统" class="headerlink" title="制作文件系统"></a>制作文件系统</h2><h5 id="补全目录"><a href="#补全目录" class="headerlink" title="补全目录"></a>补全目录</h5><p>进入busybox的_install目录，补充完linux缺失的目录和文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir root dev etc bin sbin mnt sys proc lib home tmp var usr</span><br><span class="line">mkdir usr/sbin usr/bin usr/lib usr/modules</span><br><span class="line">mkdir mnt/usb mnt/nfs mnt/etc mnt/etc/init.d</span><br><span class="line">mkdir lib/modules</span><br><span class="line">chmod 1777 tmp</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建设备文件"><a href="#创建设备文件" class="headerlink" title="创建设备文件"></a>创建设备文件</h5><p>进入dev目录执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mknod -m 660 console c 5 1</span><br><span class="line">sudo mknod -m 660 null c 1 3</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置磁盘分区"><a href="#配置磁盘分区" class="headerlink" title="配置磁盘分区"></a>配置磁盘分区</h5><p>进入etc目录，创建并编辑fstab文件，输入以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">proc    /proc   proc    defaults    0   0</span><br><span class="line">none    /tmp    ramfs   defaults    0   0</span><br><span class="line">mdev    /dev    ramfs   defaults    0   0</span><br><span class="line">sysfs   /sys    sysfs   defaults    0   0</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置初始化操作"><a href="#配置初始化操作" class="headerlink" title="配置初始化操作"></a>配置初始化操作</h5><p>在etc下创建init.d目录，并在init.d目录下编辑rcS文件且加上可执行权限，输入以下内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/sh</span></span><br><span class="line">/bin/mount -a</span><br></pre></td></tr></table></figure>
+
+<p>在etc下编辑inittab，输入以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/etc/init.d/rcS</span><br><span class="line">::respawn:-/bin/sh</span><br><span class="line">::restart:/sbin/init</span><br><span class="line">::ctrlaltdel:/bin/umount -a -r</span><br><span class="line">::shutdown:/bin/umount -a -r</span><br><span class="line">::shutdown:/sbin/swapoff –a</span><br></pre></td></tr></table></figure>
+
+<h5 id="打包文件系统"><a href="#打包文件系统" class="headerlink" title="打包文件系统"></a>打包文件系统</h5><p>在_install目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; ./rootfs.img</span><br></pre></td></tr></table></figure>
+
+<p>这个时候会生成<code>rootfs.img</code> 文件</p>
+<h2 id="Qemu-编译及运行"><a href="#Qemu-编译及运行" class="headerlink" title="Qemu 编译及运行"></a>Qemu 编译及运行</h2><p>我自己在ubuntu20.04上通过<code>sudo apt-get install qemu</code> 安装qemu，显示安装成功了，但是却找不到相关文件，因此后面是源码安装的。</p>
+<h5 id="准备源码"><a href="#准备源码" class="headerlink" title="准备源码"></a>准备源码</h5><p>源码地址：<a href="https://www.qemu.org/" target="_blank" rel="noopener">https://www.qemu.org/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xz -d qemu-5.2.0.tar.xz</span><br><span class="line">tar xvf qemu-5.2.0.tar.xz</span><br><span class="line">cd qemu-5.2.0</span><br></pre></td></tr></table></figure>
+
+<h5 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure </span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<p><code>./configure</code> 后面可以指定安装路径，默然qemu会安装到/usr/local/bin中:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure  --prefix=/usr/bin/qemu --localstatedir=/var --sysconfdir=/etc</span><br></pre></td></tr></table></figure>
+
+<h5 id="加载并运行linux"><a href="#加载并运行linux" class="headerlink" title="加载并运行linux"></a>加载并运行linux</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -kernel ./bzImage -initrd  ./rootfs.img -nographic -append "console=ttyS0"</span><br></pre></td></tr></table></figure>
+
+<h2 id="Linux-启动"><a href="#Linux-启动" class="headerlink" title="Linux 启动"></a>Linux 启动</h2><p>TODO : 启动分析</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.sunxiaokong.xyz/2020-01-14/lzx-linuxkernel-qemuinit/" target="_blank" rel="noopener">https://www.sunxiaokong.xyz/2020-01-14/lzx-linuxkernel-qemuinit/</a>  试了博主的方式，会提示<code>physical kaslr disabled</code> 而无法启动内核</p>
+<p><a href="https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e" target="_blank" rel="noopener">https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/busybox/" rel="tag"># busybox</a>
+          
+            <a href="/tags/qemu/" rel="tag"># qemu</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/31/Flutter-基本使用/" rel="next" title="Flutter 基本使用">
+                <i class="fa fa-chevron-left"></i> Flutter 基本使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zauther</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zauther" title="GitHub &rarr; https://github.com/zauther" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/busybox/">busybox</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-内核编译"><span class="nav-number">1.</span> <span class="nav-text">Linux 内核编译</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#准备Linux-kernel-源码"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">准备Linux kernel 源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装依赖"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编译源码"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">编译源码</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#BusyBox编译"><span class="nav-number">2.</span> <span class="nav-text">BusyBox编译</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#准备busybox源码"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">准备busybox源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编译源码-1"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">编译源码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作文件系统"><span class="nav-number">3.</span> <span class="nav-text">制作文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#补全目录"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">补全目录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建设备文件"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">创建设备文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置磁盘分区"><span class="nav-number">3.0.0.3.</span> <span class="nav-text">配置磁盘分区</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置初始化操作"><span class="nav-number">3.0.0.4.</span> <span class="nav-text">配置初始化操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#打包文件系统"><span class="nav-number">3.0.0.5.</span> <span class="nav-text">打包文件系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Qemu-编译及运行"><span class="nav-number">4.</span> <span class="nav-text">Qemu 编译及运行</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#准备源码"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">准备源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编译安装"><span class="nav-number">4.0.0.2.</span> <span class="nav-text">编译安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#加载并运行linux"><span class="nav-number">4.0.0.3.</span> <span class="nav-text">加载并运行linux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-启动"><span class="nav-number">5.</span> <span class="nav-text">Linux 启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="Symbols count total">131k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="Reading time total">1:59</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'WDh3rxTlsW2r9MQLCtoBPsDL-MdYXbMMI',
+    appKey: 'Gijp3f1mwLxWWns2wdXATsEv',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: '' || 'zh-cn'
+  });
+
+  //新增以下代码即可，可以移除.info下所有子节点。
+var infoEle = document.querySelector('#comments .info');
+if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
+  infoEle.childNodes.forEach(function(item) {
+    item.parentNode.removeChild(item);
+  });
+}
+
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+<script>
+  $('.highlight').not('.gist .highlight').each(function(i, e) {
+    var $wrap = $('<div>').addClass('highlight-wrap');
+    $(e).after($wrap);
+    $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function(e) {
+      var code = $(this).parent().find('.code').find('.line').map(function(i, e) {
+        return $(e).text();
+      }).toArray().join('\n');
+      var ta = document.createElement('textarea');
+      var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+      ta.style.top = yPosition + 'px'; // Prevent page scroll
+      ta.style.position = 'absolute';
+      ta.style.opacity = '0';
+      ta.readOnly = true;
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, code.length);
+      ta.readOnly = false;
+      var result = document.execCommand('copy');
+      
+        if (result) $(this).text('Copied');
+        else $(this).text('Copy failed');
+      
+      ta.blur(); // For iOS
+      $(this).blur();
+    })).on('mouseleave', function(e) {
+      var $b = $(this).find('.copy-btn');
+      setTimeout(function() {
+        $b.text('Copy');
+      }, 300);
+    }).append(e);
+  })
+</script>
+
+
+  
+
+  
+
+</body>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+</html>

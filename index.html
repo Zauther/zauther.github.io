@@ -331,7 +331,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/科学上网工具/">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/从qemu启动Linux内核看linux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zauther">
@@ -351,7 +351,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2021/01/17/科学上网工具/" class="post-title-link" itemprop="url">科学上网工具</a>
+                <a href="/2021/01/31/从qemu启动Linux内核看linux/" class="post-title-link" itemprop="url">qemu启动Linux内核</a>
               
             
           </h1>
@@ -376,9 +376,13 @@
                 
               
 
-              <time title="Created: 2021-01-17 13:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T13:27:02+00:00">2021-01-17</time>
+              <time title="Created: 2021-01-31 22:01:12 / Modified: 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T22:01:12+00:00">2021-01-31</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -395,8 +399,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/17/科学上网工具/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/科学上网工具/" itemprop="commentCount"></span>
+                <a href="/2021/01/31/从qemu启动Linux内核看linux/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/从qemu启动Linux内核看linux/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -404,7 +408,7 @@
 
           
           
-            <span id="/2021/01/17/科学上网工具/" class="leancloud_visitors" data-flag-title="科学上网工具">
+            <span id="/2021/01/31/从qemu启动Linux内核看linux/" class="leancloud_visitors" data-flag-title="qemu启动Linux内核">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -429,7 +433,7 @@
                 
                   <span class="post-meta-item-text">word count: </span>
                 
-                <span title="word count">6k</span>
+                <span title="word count">3k</span>
               
 
               
@@ -443,7 +447,7 @@
                 
                   <span class="post-meta-item-text">time &asymp;</span>
                 
-                <span title="time">5 mins.</span>
+                <span title="time">3 mins.</span>
               
             </div>
           
@@ -464,24 +468,267 @@
 
       
         
-          <h3 id="V2Ray（ubutnu：websocket-ssl-cdn）"><a href="#V2Ray（ubutnu：websocket-ssl-cdn）" class="headerlink" title="V2Ray（ubutnu：websocket+ssl+cdn）"></a>V2Ray（ubutnu：websocket+ssl+cdn）</h3><h4 id="0x01-设置时区"><a href="#0x01-设置时区" class="headerlink" title="0x01 设置时区"></a>0x01 设置时区</h4><p>v2ray 对时间要求比较严格，服务器时间与本地时间相差在<code>90s</code>内</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata  # 选择时区</span><br><span class="line">hwclock -w # 将当前时区写入bios</span><br></pre></td></tr></table></figure>
+          
+            <h2 id="Linux-内核编译"><a href="#Linux-内核编译" class="headerlink" title="Linux 内核编译"></a>Linux 内核编译</h2><h5 id="准备Linux-kernel-源码"><a href="#准备Linux-kernel-源码" class="headerlink" title="准备Linux kernel 源码"></a>准备Linux kernel 源码</h5><p>下载地址：</p>
+<p> <a href="https://www.kernel.org/" target="_blank" rel="noopener">https://www.kernel.org/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xz -d linux-5.10.12.tar.xz</span><br><span class="line">tar xvf linux-5.10.12.tar</span><br><span class="line">cd linux-5.10.12</span><br></pre></td></tr></table></figure>
 
-<h4 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -L -s https://install.direct/go.sh)</span><br></pre></td></tr></table></figure>
+<h5 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install libelf-dev</span><br><span class="line">sudo apt-get install libncurses-dev</span><br><span class="line">sudo apt-get install flex</span><br><span class="line">sudo apt-get install bison</span><br><span class="line">sudo apt install kernel-package build-essential libncurses5-dev fakeroot</span><br><span class="line">sudo apt install libssl-dev</span><br></pre></td></tr></table></figure>
 
-<p>此脚本会自动安装以下文件：</p>
-<ul>
-<li><code>/usr/bin/v2ray/v2ray</code>：V2Ray 程序；</li>
-<li><code>/usr/bin/v2ray/v2ctl</code>：V2Ray 工具；</li>
-<li><code>/etc/v2ray/config.json</code>：配置文件；</li>
-<li><code>/usr/bin/v2ray/geoip.dat</code>：IP 数据文件</li>
-<li><code>/usr/bin/v2ray/geosite.dat</code>：域名数据文件</li>
-</ul>
-<p>此脚本会配置自动运行脚本。自动运行脚本会在系统重启之后，自动运行 V2Ray。目前自动运行脚本只支持带有 Systemd 的系统，以及 Debian / Ubuntu 全系列。</p>
+<h5 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make bzImage -j8</span><br></pre></td></tr></table></figure>
+
+<p><code>make menuconfig</code> 配置kernel编译参数，可根据自己的需求进行设置，<code>ramfs</code> 一般是默认开启的，后面通过qemu运行需要使用到这个。</p>
+<p>内存分为不同的类型，这里编译的是<code>x86_64</code> <code>bzImage</code> </p>
+<p>内核的不同类型</p>
+<blockquote>
+<p>bzImage是vmlinuz经过gzip压缩后的文件，适用于大内核</p>
+<p>vmlinux是未压缩的内核</p>
+<p>vmlinuz是vmlinux的压缩文件。</p>
+<p>vmlinux 是ELF文件，即编译出来的最原始的文件。</p>
+<p>vmlinuz应该是由ELF文件vmlinux经过OBJCOPY后，并经过压缩后的文件</p>
+<p>zImage是vmlinuz经过gzip压缩后的文件，适用于小内核</p>
+</blockquote>
+<h2 id="BusyBox编译"><a href="#BusyBox编译" class="headerlink" title="BusyBox编译"></a>BusyBox编译</h2><p>在内核加载时，需要为内核准备文件系统，以及各种基本的工具。而BusyBox整合了很多常用的Linux工具。</p>
+<h5 id="准备busybox源码"><a href="#准备busybox源码" class="headerlink" title="准备busybox源码"></a>准备busybox源码</h5><p>下载地址： <a href="https://busybox.net/" target="_blank" rel="noopener">https://busybox.net/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvjf busybox-1.32.1.tar.bz2</span><br><span class="line">cd busybox-1.32.1</span><br></pre></td></tr></table></figure>
+
+<h5 id="编译源码-1"><a href="#编译源码-1" class="headerlink" title="编译源码"></a>编译源码</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make install -j 8</span><br></pre></td></tr></table></figure>
+
+<p><code>make menuconfig</code> 对busybox编译参数进行设置，类似于linux kernel设置。由于我们前面编译的linux kernel只有一个内核文件，并且linux 程序执行的所需的依赖库，我们暂时是不打算装的，因此在编译busybox时，我们选择将busybox编译为一个静态二进制文件。</p>
+<p>设置的路径如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings—&gt;</span><br><span class="line">	Build Options—&gt;</span><br><span class="line">  		 Build Busybox as a static binary(no shared libs)</span><br></pre></td></tr></table></figure>
+
+<p><code>make install -j 8</code> 在执行后，会在当前目录生成<code>_install</code> 目录，这个目录里面包含busybox所有工具。我们可以看到，比如<code>bin</code> 目录中的程序，除了busybox外都是链接到busybox的软链。具体的调用都是busybox通过argv[0]来识别到调用名，在busybox内部来调用的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[] )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span> ; i &lt; argc ; i++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"argv[%d] = %s\n"</span>, i, argv[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="制作文件系统"><a href="#制作文件系统" class="headerlink" title="制作文件系统"></a>制作文件系统</h2><h5 id="补全目录"><a href="#补全目录" class="headerlink" title="补全目录"></a>补全目录</h5><p>进入busybox的_install目录，补充完linux缺失的目录和文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir root dev etc bin sbin mnt sys proc lib home tmp var usr</span><br><span class="line">mkdir usr/sbin usr/bin usr/lib usr/modules</span><br><span class="line">mkdir mnt/usb mnt/nfs mnt/etc mnt/etc/init.d</span><br><span class="line">mkdir lib/modules</span><br><span class="line">chmod 1777 tmp</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建设备文件"><a href="#创建设备文件" class="headerlink" title="创建设备文件"></a>创建设备文件</h5><p>进入dev目录执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mknod -m 660 console c 5 1</span><br><span class="line">sudo mknod -m 660 null c 1 3</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置磁盘分区"><a href="#配置磁盘分区" class="headerlink" title="配置磁盘分区"></a>配置磁盘分区</h5><p>进入etc目录，创建并编辑fstab文件，输入以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">proc    /proc   proc    defaults    0   0</span><br><span class="line">none    /tmp    ramfs   defaults    0   0</span><br><span class="line">mdev    /dev    ramfs   defaults    0   0</span><br><span class="line">sysfs   /sys    sysfs   defaults    0   0</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置初始化操作"><a href="#配置初始化操作" class="headerlink" title="配置初始化操作"></a>配置初始化操作</h5><p>在etc下创建init.d目录，并在init.d目录下编辑rcS文件且加上可执行权限，输入以下内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/sh</span></span><br><span class="line">/bin/mount -a</span><br></pre></td></tr></table></figure>
+
+<p>在etc下编辑inittab，输入以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/etc/init.d/rcS</span><br><span class="line">::respawn:-/bin/sh</span><br><span class="line">::restart:/sbin/init</span><br><span class="line">::ctrlaltdel:/bin/umount -a -r</span><br><span class="line">::shutdown:/bin/umount -a -r</span><br><span class="line">::shutdown:/sbin/swapoff –a</span><br></pre></td></tr></table></figure>
+
+<h5 id="打包文件系统"><a href="#打包文件系统" class="headerlink" title="打包文件系统"></a>打包文件系统</h5><p>在_install目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; ./rootfs.img</span><br></pre></td></tr></table></figure>
+
+<p>这个时候会生成<code>rootfs.img</code> 文件</p>
+<h2 id="Qemu-编译及运行"><a href="#Qemu-编译及运行" class="headerlink" title="Qemu 编译及运行"></a>Qemu 编译及运行</h2><p>我自己在ubuntu20.04上通过<code>sudo apt-get install qemu</code> 安装qemu，显示安装成功了，但是却找不到相关文件，因此后面是源码安装的。</p>
+<h5 id="准备源码"><a href="#准备源码" class="headerlink" title="准备源码"></a>准备源码</h5><p>源码地址：<a href="https://www.qemu.org/" target="_blank" rel="noopener">https://www.qemu.org/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xz -d qemu-5.2.0.tar.xz</span><br><span class="line">tar xvf qemu-5.2.0.tar.xz</span><br><span class="line">cd qemu-5.2.0</span><br></pre></td></tr></table></figure>
+
+<h5 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure </span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<p><code>./configure</code> 后面可以指定安装路径，默然qemu会安装到/usr/local/bin中:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure  --prefix=/usr/bin/qemu --localstatedir=/var --sysconfdir=/etc</span><br></pre></td></tr></table></figure>
+
+<h5 id="加载并运行linux"><a href="#加载并运行linux" class="headerlink" title="加载并运行linux"></a>加载并运行linux</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -kernel ./bzImage -initrd  ./rootfs.img -nographic -append "console=ttyS0"</span><br></pre></td></tr></table></figure>
+
+<h2 id="Linux-启动"><a href="#Linux-启动" class="headerlink" title="Linux 启动"></a>Linux 启动</h2><p>TODO : 启动分析</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.sunxiaokong.xyz/2020-01-14/lzx-linuxkernel-qemuinit/" target="_blank" rel="noopener">https://www.sunxiaokong.xyz/2020-01-14/lzx-linuxkernel-qemuinit/</a>  试了博主的方式，会提示<code>physical kaslr disabled</code> 而无法启动内核</p>
+<p><a href="https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e" target="_blank" rel="noopener">https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/Flutter-基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2021/01/31/Flutter-基本使用/" class="post-title-link" itemprop="url">Flutter 基本使用</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/31/Flutter-基本使用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/Flutter-基本使用/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/31/Flutter-基本使用/" class="leancloud_visitors" data-flag-title="Flutter 基本使用">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">24k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">22 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="一、-Flutter-混合开发"><a href="#一、-Flutter-混合开发" class="headerlink" title="一、 Flutter 混合开发"></a>一、 Flutter 混合开发</h3><p>Flutter 环境配置</p>
+<h4 id="1-Flutter-整体架构"><a href="#1-Flutter-整体架构" class="headerlink" title="1. Flutter 整体架构"></a>1. Flutter 整体架构</h4><p><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/flutter.svg" alt="flutter"></p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2021/01/17/科学上网工具/#more" rel="contents">
+              <a class="btn" href="/2021/01/31/Flutter-基本使用/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -541,7 +788,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/MAC 下 V8 Android编译指墙/">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/MAC 下 V8 Android编译指墙/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zauther">
@@ -561,7 +808,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2021/01/17/MAC 下 V8 Android编译指墙/" class="post-title-link" itemprop="url">MAC 下 V8 Android编译指墙</a>
+                <a href="/2021/01/31/MAC 下 V8 Android编译指墙/" class="post-title-link" itemprop="url">MAC 下 V8 Android编译指墙</a>
               
             
           </h1>
@@ -586,7 +833,7 @@
                 
               
 
-              <time title="Created: 2021-01-17 13:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T13:27:02+00:00">2021-01-17</time>
+              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
             
 
             
@@ -605,8 +852,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/17/MAC 下 V8 Android编译指墙/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/MAC 下 V8 Android编译指墙/" itemprop="commentCount"></span>
+                <a href="/2021/01/31/MAC 下 V8 Android编译指墙/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/MAC 下 V8 Android编译指墙/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -614,7 +861,7 @@
 
           
           
-            <span id="/2021/01/17/MAC 下 V8 Android编译指墙/" class="leancloud_visitors" data-flag-title="MAC 下 V8 Android编译指墙">
+            <span id="/2021/01/31/MAC 下 V8 Android编译指墙/" class="leancloud_visitors" data-flag-title="MAC 下 V8 Android编译指墙">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -680,34 +927,34 @@
 </ol>
 <h4 id="1-2-编译环境搭建"><a href="#1-2-编译环境搭建" class="headerlink" title="1.2 编译环境搭建"></a>1.2 编译环境搭建</h4><p>V8源码通过depot_tools工具来管理，首先下载这个工具，作者以<code>/Users/*/Documents/test/v8</code> 目录为工作目录。</p>
 <p>由于需要访问国外站，在获取depot_tools前需要做一些不可描述的事情：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> http_proxy=<span class="string">"http://127.0.0.1:8001"</span>; <span class="built_in">export</span> HTTP_PROXY=<span class="string">"http://127.0.0.1:8001"</span>; <span class="built_in">export</span> https_proxy=<span class="string">"http://127.0.0.1:8001"</span>; <span class="built_in">export</span> HTTPS_PROXY=<span class="string">"http://127.0.0.1:8001"</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> export http_proxy="http://127.0.0.1:8001"; export HTTP_PROXY="http://127.0.0.1:8001"; export https_proxy="http://127.0.0.1:8001"; export HTTPS_PROXY="http://127.0.0.1:8001"</span><br></pre></td></tr></table></figure>
 
 <p>开启代理后，将其假如环境变量。</p>
 <p>进入<code>/Users/*/Documents/test/v8</code> 目录下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://chromium.googlesource.com/chromium/tools/depot_tools.git</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git</span><br></pre></td></tr></table></figure>
 
 <p>通过git下载<code>depot_tools</code> 。</p>
 <p>将工具集假如环境变量：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/Users/*/Documents/<span class="built_in">test</span>/v8/depot_tools</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> export PATH=$PATH:/Users/*/Documents/test/v8/depot_tools</span><br></pre></td></tr></table></figure>
 
 <p>fetch V8源码，并同步，fetch命令即depot_tools中的命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> fetch v8</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> gclient sync</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> fetch v8</span><br><span class="line"><span class="meta">$</span> gclient sync</span><br></pre></td></tr></table></figure>
 
 <p>详见:<br><a href="https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up" target="_blank" rel="noopener">https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up</a></p>
 <p>作者使用Mac，Xcode 为10.2.1，Xcode在10以后不支持32位的编译，一次需要同时安装10一下的版本。</p>
 <p>到苹果下载官网 <a href="https://developer.apple.com/download/more/" target="_blank" rel="noopener">https://developer.apple.com/download/more/</a> 找到Xcode 10一下的版本并下载，我采用的是9.4.1。由于Xcode 体积比较大，通过浏览器下载比较慢。直接复制下载地址到下载器无法下载，需要将下载地址的请求头一并复制：打开chrome 开发者工具，点击下载后在Network可看到下载地址，右键下载地址，选择Copy-Copy as cURL，在终端粘贴后假如 <code>-O</code> 即可通过curl下载。</p>
 <p>笔者将Xcode9.4.1 安装到：<code>/Applications/Xcode9.4.1/Xcode.app</code> </p>
 <p>查看xcode的版本：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcode-select -p</span></span><br><span class="line">/Applications/Xcode.app/Contents/Developer</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> xcode-select -p</span><br><span class="line">/Applications/Xcode.app/Contents/Developer</span><br></pre></td></tr></table></figure>
 
 <p>切换xcode的版本：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo xcode-select -s /Applications/Xcode9.4.1/Xcode.app/Contents/Developer</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo xcode-select -s /Applications/Xcode9.4.1/Xcode.app/Contents/Developer</span><br></pre></td></tr></table></figure>
 
 <p>接下来进入编译的坑。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2021/01/17/MAC 下 V8 Android编译指墙/#more" rel="contents">
+              <a class="btn" href="/2021/01/31/MAC 下 V8 Android编译指墙/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -767,7 +1014,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/Flutter-基本使用/">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zauther">
@@ -787,7 +1034,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2021/01/17/Flutter-基本使用/" class="post-title-link" itemprop="url">Flutter 基本使用</a>
+                <a href="/2021/01/31/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
               
             
           </h1>
@@ -812,221 +1059,7 @@
                 
               
 
-              <time title="Created: 2021-01-17 13:27:02" itemprop="dateCreated datePublished" datetime="2021-01-17T13:27:02+00:00">2021-01-17</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2021-01-21 14:36:15" itemprop="dateModified" datetime="2021-01-21T14:36:15+00:00">2021-01-21</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/17/Flutter-基本使用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/Flutter-基本使用/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-            <span id="/2021/01/17/Flutter-基本使用/" class="leancloud_visitors" data-flag-title="Flutter 基本使用">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Views: </span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">word count: </span>
-                
-                <span title="word count">24k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">time &asymp;</span>
-                
-                <span title="time">22 mins.</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="一、-Flutter-混合开发"><a href="#一、-Flutter-混合开发" class="headerlink" title="一、 Flutter 混合开发"></a>一、 Flutter 混合开发</h3><p>Flutter 环境配置</p>
-<h4 id="1-Flutter-整体架构"><a href="#1-Flutter-整体架构" class="headerlink" title="1. Flutter 整体架构"></a>1. Flutter 整体架构</h4><p><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/flutter.svg" alt="flutter"></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2021/01/17/Flutter-基本使用/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zauther">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2021/01/17/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2021-01-17 12:42:26" itemprop="dateCreated datePublished" datetime="2021-01-17T12:42:26+00:00">2021-01-17</time>
+              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
             
 
             
@@ -1045,8 +1078,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/17/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/hello-world/" itemprop="commentCount"></span>
+                <a href="/2021/01/31/hello-world/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/hello-world/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1054,7 +1087,7 @@
 
           
           
-            <span id="/2021/01/17/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+            <span id="/2021/01/31/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -1184,7 +1217,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/17/Android-Native开发/">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/科学上网工具/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zauther">
@@ -1204,7 +1237,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2021/01/17/Android-Native开发/" class="post-title-link" itemprop="url">Android Native开发</a>
+                <a href="/2021/01/31/科学上网工具/" class="post-title-link" itemprop="url">科学上网工具</a>
               
             
           </h1>
@@ -1229,7 +1262,7 @@
                 
               
 
-              <time title="Created: 2021-01-17 12:42:26" itemprop="dateCreated datePublished" datetime="2021-01-17T12:42:26+00:00">2021-01-17</time>
+              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
             
 
             
@@ -1248,8 +1281,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2021/01/17/Android-Native开发/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/Android-Native开发/" itemprop="commentCount"></span>
+                <a href="/2021/01/31/科学上网工具/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/科学上网工具/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1257,7 +1290,217 @@
 
           
           
-            <span id="/2021/01/17/Android-Native开发/" class="leancloud_visitors" data-flag-title="Android Native开发">
+            <span id="/2021/01/31/科学上网工具/" class="leancloud_visitors" data-flag-title="科学上网工具">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">word count: </span>
+                
+                <span title="word count">6k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">time &asymp;</span>
+                
+                <span title="time">5 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="V2Ray（ubutnu：websocket-ssl-cdn）"><a href="#V2Ray（ubutnu：websocket-ssl-cdn）" class="headerlink" title="V2Ray（ubutnu：websocket+ssl+cdn）"></a>V2Ray（ubutnu：websocket+ssl+cdn）</h3><h4 id="0x01-设置时区"><a href="#0x01-设置时区" class="headerlink" title="0x01 设置时区"></a>0x01 设置时区</h4><p>v2ray 对时间要求比较严格，服务器时间与本地时间相差在<code>90s</code>内</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata  # 选择时区</span><br><span class="line">hwclock -w # 将当前时区写入bios</span><br></pre></td></tr></table></figure>
+
+<h4 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -L -s https://install.direct/go.sh)</span><br></pre></td></tr></table></figure>
+
+<p>此脚本会自动安装以下文件：</p>
+<ul>
+<li><code>/usr/bin/v2ray/v2ray</code>：V2Ray 程序；</li>
+<li><code>/usr/bin/v2ray/v2ctl</code>：V2Ray 工具；</li>
+<li><code>/etc/v2ray/config.json</code>：配置文件；</li>
+<li><code>/usr/bin/v2ray/geoip.dat</code>：IP 数据文件</li>
+<li><code>/usr/bin/v2ray/geosite.dat</code>：域名数据文件</li>
+</ul>
+<p>此脚本会配置自动运行脚本。自动运行脚本会在系统重启之后，自动运行 V2Ray。目前自动运行脚本只支持带有 Systemd 的系统，以及 Debian / Ubuntu 全系列。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2021/01/31/科学上网工具/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2021/01/31/Android-Native开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2021/01/31/Android-Native开发/" class="post-title-link" itemprop="url">Android Native开发</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-01-31 14:03:05" itemprop="dateCreated datePublished" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2021/01/31/Android-Native开发/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/31/Android-Native开发/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2021/01/31/Android-Native开发/" class="leancloud_visitors" data-flag-title="Android Native开发">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -1335,7 +1578,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2021/01/17/Android-Native开发/#more" rel="contents">
+              <a class="btn" href="/2021/01/31/Android-Native开发/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1440,7 +1683,7 @@
                 
               
 
-              <time title="Created: 2020-02-06 06:53:12" itemprop="dateCreated datePublished" datetime="2020-02-06T06:53:12+00:00">2020-02-06</time>
+              <time title="Created: 2020-02-06 14:53:12" itemprop="dateCreated datePublished" datetime="2020-02-06T14:53:12+00:00">2020-02-06</time>
             
 
             
@@ -1457,7 +1700,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2021-01-17 13:27:02" itemprop="dateModified" datetime="2021-01-17T13:27:02+00:00">2021-01-17</time>
+                <time title="Modified: 2021-01-31 14:03:05" itemprop="dateModified" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
               
             
           </span>
@@ -1632,7 +1875,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2019/05/31/Java8 Lambda表达式详解/">
+    <link itemprop="mainEntityOfPage" href="https://www.cwiki.cn/2019/06/01/Java8 Lambda表达式详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zauther">
@@ -1652,7 +1895,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/31/Java8 Lambda表达式详解/" class="post-title-link" itemprop="url">Java8 Lambda表达式详解</a>
+                <a href="/2019/06/01/Java8 Lambda表达式详解/" class="post-title-link" itemprop="url">Java8 Lambda表达式详解</a>
               
             
           </h1>
@@ -1677,7 +1920,7 @@
                 
               
 
-              <time title="Created: 2019-05-31 16:00:00" itemprop="dateCreated datePublished" datetime="2019-05-31T16:00:00+00:00">2019-05-31</time>
+              <time title="Created: 2019-06-01 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-01T00:00:00+00:00">2019-06-01</time>
             
 
             
@@ -1694,7 +1937,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2021-01-17 12:42:26" itemprop="dateModified" datetime="2021-01-17T12:42:26+00:00">2021-01-17</time>
+                <time title="Modified: 2021-01-31 14:03:05" itemprop="dateModified" datetime="2021-01-31T14:03:05+00:00">2021-01-31</time>
               
             
           </span>
@@ -1712,8 +1955,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2019/05/31/Java8 Lambda表达式详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/05/31/Java8 Lambda表达式详解/" itemprop="commentCount"></span>
+                <a href="/2019/06/01/Java8 Lambda表达式详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/06/01/Java8 Lambda表达式详解/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1721,7 +1964,7 @@
 
           
           
-            <span id="/2019/05/31/Java8 Lambda表达式详解/" class="leancloud_visitors" data-flag-title="Java8 Lambda表达式详解">
+            <span id="/2019/06/01/Java8 Lambda表达式详解/" class="leancloud_visitors" data-flag-title="Java8 Lambda表达式详解">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -1838,7 +2081,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/31/Java8 Lambda表达式详解/#more" rel="contents">
+              <a class="btn" href="/2019/06/01/Java8 Lambda表达式详解/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1925,7 +2168,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -1962,7 +2205,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -2006,7 +2255,7 @@
     <h3 class="widget-title">标签</h3>
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMake/">CMake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Native/">Native</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/busybox/">busybox</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
@@ -2041,7 +2290,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">128k</span>
+    <span title="Symbols count total">131k</span>
   
 
   
@@ -2050,7 +2299,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">1:57</span>
+    <span title="Reading time total">1:59</span>
   
 </div>
 
