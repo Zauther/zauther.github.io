@@ -27,8 +27,8 @@
 <meta property="og:site_name" content="Zzz个人博客">
 <meta property="og:description" content="从接触Linux开始到现在，使用Linux也接近十年了，期间也尝试过各种Linux发行版。目前主要开发环境使用的时MacOS，使用起来还算是非常顺手。但是在有些时候也不太方便，比如Linux Kernel的编译、有些工具链的使用、一些Linux下工具使用，等还是使用Linux环境比较方便。Linux凭借其开源特点，各种发行版百花齐放，主流服务器大多都是使用Linux系统，比如Debain、Ubun">
 <meta property="og:locale">
-<meta property="article:published_time" content="2022-05-29T14:28:56.000Z">
-<meta property="article:modified_time" content="2022-05-29T15:05:54.881Z">
+<meta property="article:published_time" content="2022-05-29T22:28:56.000Z">
+<meta property="article:modified_time" content="2022-05-29T15:48:52.295Z">
 <meta property="article:author" content="zauther">
 <meta name="twitter:card" content="summary">
 
@@ -221,7 +221,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-05-29 22:28:56 / Modified: 23:05:54" itemprop="dateCreated datePublished" datetime="2022-05-29T22:28:56+08:00">2022-05-29</time>
+              <time title="Created: 2022-05-29 22:28:56 / Modified: 15:48:52" itemprop="dateCreated datePublished" datetime="2022-05-29T22:28:56+00:00">2022-05-29</time>
             </span>
 
           <br>
@@ -269,8 +269,10 @@
 <ul>
 <li>挂载LVM磁盘</li>
 </ul>
+<p>powershell下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET-CimInstance -query &quot;SELECT * from Win32_DiskDrive&quot;</span><br><span class="line">wsl --mount \\.\PHYSICALDRIVE0 --bare</span><br></pre></td></tr></table></figure>
 
+<p>wsl linux环境中</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">lvm 挂载</span></span><br><span class="line">sudo vgscan #扫描得到逻辑分区vgkubuntu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">激活</span></span><br><span class="line">sudo vgchange -a y vgkubuntu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出设备</span></span><br><span class="line">sudo fdisk -l</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载</span></span><br><span class="line">sudo mount /dev/dm-0 /mnt/wsl/ubuntu_host</span><br></pre></td></tr></table></figure>
 
 <p>非LVM直接挂载。</p>
@@ -305,13 +307,6 @@
 
           </div>
           
-    
-  
-  <div class="comments">
-  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
-  </div>
-  
-  
 
 <script>
   window.addEventListener('tabs:register', () => {
