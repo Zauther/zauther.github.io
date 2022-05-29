@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.cwiki.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Flutter UI容器承载Flutter的Android容器Flutter容器包含有FlutterActivity和FlutterFragmentActivity。他们分别实现了Provider, PluginRegistry, ViewFactory，二者的方法主要通过FlutterActivityDelegate 代理出去 FlutterActivityDelegateFlutterActi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Android 初始化流程">
+<meta property="og:url" content="https://blog.cwiki.cn/2022/05/10/Flutter-Android-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Zzz个人博客">
+<meta property="og:description" content="Flutter UI容器承载Flutter的Android容器Flutter容器包含有FlutterActivity和FlutterFragmentActivity。他们分别实现了Provider, PluginRegistry, ViewFactory，二者的方法主要通过FlutterActivityDelegate 代理出去 FlutterActivityDelegateFlutterActi">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-05-10T07:49:18.000Z">
+<meta property="article:modified_time" content="2022-05-11T07:13:26.725Z">
+<meta property="article:author" content="zauther">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.cwiki.cn/2022/05/10/Flutter-Android-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Flutter Android 初始化流程 | Zzz个人博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-97381903-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zzz个人博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2022/05/10/Flutter-Android-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flutter Android 初始化流程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-10 15:49:18" itemprop="dateCreated datePublished" datetime="2022-05-10T15:49:18+08:00">2022-05-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-11 15:13:26" itemprop="dateModified" datetime="2022-05-11T15:13:26+08:00">2022-05-11</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>12 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="Flutter-UI容器"><a href="#Flutter-UI容器" class="headerlink" title="Flutter UI容器"></a>Flutter UI容器</h4><h5 id="承载Flutter的Android容器"><a href="#承载Flutter的Android容器" class="headerlink" title="承载Flutter的Android容器"></a>承载Flutter的Android容器</h5><p>Flutter容器包含有FlutterActivity和FlutterFragmentActivity。他们分别实现了<code>Provider</code>, <code>PluginRegistry</code>, <code>ViewFactory</code>，二者的方法主要通过<code>FlutterActivityDelegate</code> 代理出去</p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="278px" preserveAspectRatio="none" style="width:888px;height:278px;background:#FFFFFF;" version="1.1" viewBox="0 0 888 278" width="888px" zoomAndPan="magnify"><defs/><g><!--MD5=[e72aae6de22b09cdc9529a59d7fca5eb]
+class FlutterActivityDelegate--><g id="elem_FlutterActivityDelegate"><rect codeLine="1" fill="#F1F1F1" height="48" id="FlutterActivityDelegate" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="186" x="252" y="223"/><ellipse cx="267" cy="239" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M269.9688,244.6406 Q269.3906,244.9375 268.75,245.0781 Q268.1094,245.2344 267.4063,245.2344 Q264.9063,245.2344 263.5781,243.5938 Q262.2656,241.9375 262.2656,238.8125 Q262.2656,235.6875 263.5781,234.0313 Q264.9063,232.375 267.4063,232.375 Q268.1094,232.375 268.75,232.5313 Q269.4063,232.6875 269.9688,232.9844 L269.9688,235.7031 Q269.3438,235.125 268.75,234.8594 Q268.1563,234.5781 267.5313,234.5781 Q266.1875,234.5781 265.5,235.6563 Q264.8125,236.7188 264.8125,238.8125 Q264.8125,240.9063 265.5,241.9844 Q266.1875,243.0469 267.5313,243.0469 Q268.1563,243.0469 268.75,242.7813 Q269.3438,242.5 269.9688,241.9219 L269.9688,244.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="154" x="281" y="243.8467">FlutterActivityDelegate</text><line style="stroke:#181818;stroke-width:0.5;" x1="253" x2="437" y1="255" y2="255"/><line style="stroke:#181818;stroke-width:0.5;" x1="253" x2="437" y1="263" y2="263"/></g><!--MD5=[17641098b0a070581bab2e5cbfdafafe]
+class FlutterActivityEvents--><g id="elem_FlutterActivityEvents"><rect fill="#F1F1F1" height="48" id="FlutterActivityEvents" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="170" x="7" y="115"/><ellipse cx="22" cy="131" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M17.9219,126.7656 L17.9219,124.6094 L25.3125,124.6094 L25.3125,126.7656 L22.8438,126.7656 L22.8438,134.8438 L25.3125,134.8438 L25.3125,137 L17.9219,137 L17.9219,134.8438 L20.3906,134.8438 L20.3906,126.7656 L17.9219,126.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="138" x="36" y="135.8467">FlutterActivityEvents</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="176" y1="147" y2="147"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="176" y1="155" y2="155"/></g><!--MD5=[3521822871a02163bc1090dd8c65b7f5]
+class Provider--><g id="elem_Provider"><rect fill="#F1F1F1" height="48" id="Provider" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="88" x="184" y="7"/><ellipse cx="199" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M194.9219,18.7656 L194.9219,16.6094 L202.3125,16.6094 L202.3125,18.7656 L199.8438,18.7656 L199.8438,26.8438 L202.3125,26.8438 L202.3125,29 L194.9219,29 L194.9219,26.8438 L197.3906,26.8438 L197.3906,18.7656 L194.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="56" x="213" y="27.8467">Provider</text><line style="stroke:#181818;stroke-width:0.5;" x1="185" x2="271" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="185" x2="271" y1="47" y2="47"/></g><!--MD5=[0bee35ff36c2bfe1d068cc18effabcca]
+class PluginRegistry--><g id="elem_PluginRegistry"><rect fill="#F1F1F1" height="48" id="PluginRegistry" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="130" x="571" y="7"/><ellipse cx="586" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M581.9219,18.7656 L581.9219,16.6094 L589.3125,16.6094 L589.3125,18.7656 L586.8438,18.7656 L586.8438,26.8438 L589.3125,26.8438 L589.3125,29 L581.9219,29 L581.9219,26.8438 L584.3906,26.8438 L584.3906,18.7656 L581.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="98" x="600" y="27.8467">PluginRegistry</text><line style="stroke:#181818;stroke-width:0.5;" x1="572" x2="700" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="572" x2="700" y1="47" y2="47"/></g><!--MD5=[f0a36ff588851750be7714682b8e0a08]
+class FlutterActivity--><g id="elem_FlutterActivity"><rect codeLine="3" fill="#F1F1F1" height="48" id="FlutterActivity" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="123" x="283.5" y="115"/><ellipse cx="298.5" cy="131" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M301.4688,136.6406 Q300.8906,136.9375 300.25,137.0781 Q299.6094,137.2344 298.9063,137.2344 Q296.4063,137.2344 295.0781,135.5938 Q293.7656,133.9375 293.7656,130.8125 Q293.7656,127.6875 295.0781,126.0313 Q296.4063,124.375 298.9063,124.375 Q299.6094,124.375 300.25,124.5313 Q300.9063,124.6875 301.4688,124.9844 L301.4688,127.7031 Q300.8438,127.125 300.25,126.8594 Q299.6563,126.5781 299.0313,126.5781 Q297.6875,126.5781 297,127.6563 Q296.3125,128.7188 296.3125,130.8125 Q296.3125,132.9063 297,133.9844 Q297.6875,135.0469 299.0313,135.0469 Q299.6563,135.0469 300.25,134.7813 Q300.8438,134.5 301.4688,133.9219 L301.4688,136.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91" x="312.5" y="135.8467">FlutterActivity</text><line style="stroke:#181818;stroke-width:0.5;" x1="284.5" x2="405.5" y1="147" y2="147"/><line style="stroke:#181818;stroke-width:0.5;" x1="284.5" x2="405.5" y1="155" y2="155"/></g><!--MD5=[c881b25adf3665c6568c9693d41a70f3]
+class Activity--><g id="elem_Activity"><rect fill="#F1F1F1" height="48" id="Activity" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="79" x="307.5" y="7"/><ellipse cx="322.5" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M325.4688,28.6406 Q324.8906,28.9375 324.25,29.0781 Q323.6094,29.2344 322.9063,29.2344 Q320.4063,29.2344 319.0781,27.5938 Q317.7656,25.9375 317.7656,22.8125 Q317.7656,19.6875 319.0781,18.0313 Q320.4063,16.375 322.9063,16.375 Q323.6094,16.375 324.25,16.5313 Q324.9063,16.6875 325.4688,16.9844 L325.4688,19.7031 Q324.8438,19.125 324.25,18.8594 Q323.6563,18.5781 323.0313,18.5781 Q321.6875,18.5781 321,19.6563 Q320.3125,20.7188 320.3125,22.8125 Q320.3125,24.9063 321,25.9844 Q321.6875,27.0469 323.0313,27.0469 Q323.6563,27.0469 324.25,26.7813 Q324.8438,26.5 325.4688,25.9219 L325.4688,28.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47" x="336.5" y="27.8467">Activity</text><line style="stroke:#181818;stroke-width:0.5;" x1="308.5" x2="385.5" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="308.5" x2="385.5" y1="47" y2="47"/></g><!--MD5=[6dd3dec888cfc650825cf24d563a6604]
+class ViewFactory--><g id="elem_ViewFactory"><rect fill="#F1F1F1" height="48" id="ViewFactory" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="114" x="422" y="7"/><ellipse cx="437" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M432.9219,18.7656 L432.9219,16.6094 L440.3125,16.6094 L440.3125,18.7656 L437.8438,18.7656 L437.8438,26.8438 L440.3125,26.8438 L440.3125,29 L432.9219,29 L432.9219,26.8438 L435.3906,26.8438 L435.3906,18.7656 L432.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="82" x="451" y="27.8467">ViewFactory</text><line style="stroke:#181818;stroke-width:0.5;" x1="423" x2="535" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="423" x2="535" y1="47" y2="47"/></g><!--MD5=[95ba53836d8309edeaf5cdc27f597766]
+class FlutterFragmentActivity--><g id="elem_FlutterFragmentActivity"><rect codeLine="5" fill="#F1F1F1" height="48" id="FlutterFragmentActivity" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="189" x="441.5" y="115"/><ellipse cx="456.5" cy="131" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M459.4688,136.6406 Q458.8906,136.9375 458.25,137.0781 Q457.6094,137.2344 456.9063,137.2344 Q454.4063,137.2344 453.0781,135.5938 Q451.7656,133.9375 451.7656,130.8125 Q451.7656,127.6875 453.0781,126.0313 Q454.4063,124.375 456.9063,124.375 Q457.6094,124.375 458.25,124.5313 Q458.9063,124.6875 459.4688,124.9844 L459.4688,127.7031 Q458.8438,127.125 458.25,126.8594 Q457.6563,126.5781 457.0313,126.5781 Q455.6875,126.5781 455,127.6563 Q454.3125,128.7188 454.3125,130.8125 Q454.3125,132.9063 455,133.9844 Q455.6875,135.0469 457.0313,135.0469 Q457.6563,135.0469 458.25,134.7813 Q458.8438,134.5 459.4688,133.9219 L459.4688,136.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157" x="470.5" y="135.8467">FlutterFragmentActivity</text><line style="stroke:#181818;stroke-width:0.5;" x1="442.5" x2="629.5" y1="147" y2="147"/><line style="stroke:#181818;stroke-width:0.5;" x1="442.5" x2="629.5" y1="155" y2="155"/></g><!--MD5=[c1be6ddf4ea56b75972dac491aee9766]
+class FragmentActivity--><g id="elem_FragmentActivity"><rect fill="#F1F1F1" height="48" id="FragmentActivity" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="145" x="736.5" y="7"/><ellipse cx="751.5" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M754.4688,28.6406 Q753.8906,28.9375 753.25,29.0781 Q752.6094,29.2344 751.9063,29.2344 Q749.4063,29.2344 748.0781,27.5938 Q746.7656,25.9375 746.7656,22.8125 Q746.7656,19.6875 748.0781,18.0313 Q749.4063,16.375 751.9063,16.375 Q752.6094,16.375 753.25,16.5313 Q753.9063,16.6875 754.4688,16.9844 L754.4688,19.7031 Q753.8438,19.125 753.25,18.8594 Q752.6563,18.5781 752.0313,18.5781 Q750.6875,18.5781 750,19.6563 Q749.3125,20.7188 749.3125,22.8125 Q749.3125,24.9063 750,25.9844 Q750.6875,27.0469 752.0313,27.0469 Q752.6563,27.0469 753.25,26.7813 Q753.8438,26.5 754.4688,25.9219 L754.4688,28.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="113" x="765.5" y="27.8467">FragmentActivity</text><line style="stroke:#181818;stroke-width:0.5;" x1="737.5" x2="880.5" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="737.5" x2="880.5" y1="47" y2="47"/></g><!--MD5=[6d4d55b415ec57c63ba4ca1e9a2d1454]
+reverse link FlutterActivityEvents to FlutterActivityDelegate--><g id="link_FlutterActivityEvents_FlutterActivityDelegate"><path d="M165.6,170.83 C205.25,187.45 253.36,207.6 289.77,222.86 " fill="none" id="FlutterActivityEvents-backto-FlutterActivityDelegate" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="162.64,177.19,146.9,163,168.05,164.27,162.64,177.19" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[d8bdc4c8f5a96ab1d8388734b1795cfd]
+reverse link Provider to FlutterActivityDelegate--><g id="link_Provider_FlutterActivityDelegate"><path d="M235.06,74.94 C240.71,101.56 250.35,135.76 266,163 C279.18,185.94 299.99,207.45 316.94,222.82 " fill="none" id="Provider-backto-FlutterActivityDelegate" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="228.14,76.04,231.28,55.08,241.9,73.42,228.14,76.04" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2a74c99e06d90302b256aa11a4b2bb19]
+reverse link PluginRegistry to FlutterActivityDelegate--><g id="link_PluginRegistry_FlutterActivityDelegate"><path d="M653.61,74.27 C662.18,102.18 667.02,138.06 648,163 C622.44,196.5 517.37,219.79 438.07,233 " fill="none" id="PluginRegistry-backto-FlutterActivityDelegate" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="646.94,76.41,646.82,55.22,660.13,71.71,646.94,76.41" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[5e61f2a041a633b8c2079a852f7c44fe]
+reverse link Activity to FlutterActivity--><g id="link_Activity_FlutterActivity"><path d="M346.19,75.02 C345.93,88.58 345.66,103.04 345.44,114.68 " fill="none" id="Activity-backto-FlutterActivity" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="339.19,74.86,346.57,55,353.19,75.13,339.19,74.86" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[7757f424729984e3242432d4ebefb3a0]
+reverse link Provider to FlutterActivity--><g id="link_Provider_FlutterActivity"><path d="M268.37,68.57 C285.24,83.86 304.35,101.17 319.26,114.68 " fill="none" id="Provider-backto-FlutterActivity" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="263.51,73.62,253.39,55,272.91,63.24,263.51,73.62" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[54c94e77e73502f23afb08d6de1be88a]
+reverse link PluginRegistry to FlutterActivity--><g id="link_PluginRegistry_FlutterActivity"><path d="M553.87,61.92 C507.07,78.96 449.4,99.97 406.52,115.59 " fill="none" id="PluginRegistry-backto-FlutterActivity" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="551.67,55.27,572.86,55,556.46,68.42,551.67,55.27" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[02840d13fe8e09ddd7a33fca926f00af]
+reverse link ViewFactory to FlutterActivity--><g id="link_ViewFactory_FlutterActivity"><path d="M433.95,67.64 C414.34,83.15 391.91,100.89 374.48,114.68 " fill="none" id="ViewFactory-backto-FlutterActivity" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="429.9,61.92,449.92,55,438.58,72.9,429.9,61.92" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[96f9ec98428bc9abb5cd714519aacf0a]
+reverse link FragmentActivity to FlutterFragmentActivity--><g id="link_FragmentActivity_FlutterFragmentActivity"><path d="M731.04,62.27 C687.98,78.99 635.33,99.43 595.59,114.86 " fill="none" id="FragmentActivity-backto-FlutterFragmentActivity" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="728.59,55.71,749.76,55,733.65,68.76,728.59,55.71" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[5454928cf2c2f9c0033a141dc9ff403b]
+reverse link Provider to FlutterFragmentActivity--><g id="link_Provider_FlutterFragmentActivity"><path d="M291.44,55.4 C360.26,79.68 420.65,99.96 465.82,114.94 " fill="none" id="Provider-backto-FlutterFragmentActivity" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="288.82,61.9,272.31,48.62,293.5,48.7,288.82,61.9" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[4e4ed14277b66b157851f2d6c9c8e1e2]
+reverse link PluginRegistry to FlutterFragmentActivity--><g id="link_PluginRegistry_FlutterFragmentActivity"><path d="M600.38,69.75 C586.24,84.74 570.42,101.51 558,114.68 " fill="none" id="PluginRegistry-backto-FlutterFragmentActivity" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="595.49,64.74,614.3,55,605.67,74.35,595.49,64.74" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3c53dad8fd8b1afd02392a60716f39ed]
+reverse link ViewFactory to FlutterFragmentActivity--><g id="link_ViewFactory_FlutterFragmentActivity"><path d="M501.1,73.09 C508.68,87.2 516.9,102.48 523.46,114.68 " fill="none" id="ViewFactory-backto-FlutterFragmentActivity" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="494.68,75.93,491.37,55,507.01,69.3,494.68,75.93" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[bdfed072028aaf26f53ff1a8514797ca]
+link FlutterActivity to FlutterActivityDelegate--><g id="link_FlutterActivity_FlutterActivityDelegate"><path codeLine="7" d="M345,163 C345,179 345,200.45 345,217.53 " fill="none" id="FlutterActivity-to-FlutterActivityDelegate" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="345,222.68,349,213.68,345,217.68,341,213.68,345,222.68" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[ecf2073e99c3d2dba415b1cf3afe2fab]
+link FlutterFragmentActivity to FlutterActivityDelegate--><g id="link_FlutterFragmentActivity_FlutterActivityDelegate"><path codeLine="8" d="M494.56,163 C464.13,179.89 422.78,202.84 391.27,220.32 " fill="none" id="FlutterFragmentActivity-to-FlutterActivityDelegate" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="386.69,222.86,396.5021,222.0104,391.0668,220.4427,392.6345,215.0074,386.69,222.86" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a7506a3f2f147ae3a7b7f9b0b5b8113a]
+@startuml
+class FlutterActivityDelegate implements FlutterActivityEvents, Provider, PluginRegistry
+
+class FlutterActivity extends Activity implements Provider, PluginRegistry, ViewFactory 
+
+class FlutterFragmentActivity extends FragmentActivity implements Provider, PluginRegistry, ViewFactory
+
+FlutterActivity - -> FlutterActivityDelegate
+FlutterFragmentActivity - -> FlutterActivityDelegate
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 13:29:17 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
+
+<span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> <span class="keyword">implements</span> <span class="title class_">Provider</span>, PluginRegistry, ViewFactory&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">FlutterActivityDelegate</span> <span class="variable">delegate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FlutterActivityDelegate</span>(<span class="built_in">this</span>, <span class="built_in">this</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> FlutterActivityEvents eventDelegate;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Provider viewProvider;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PluginRegistry pluginRegistry;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlutterActivity</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.eventDelegate = <span class="built_in">this</span>.delegate;</span><br><span class="line">        <span class="built_in">this</span>.viewProvider = <span class="built_in">this</span>.delegate;</span><br><span class="line">        <span class="built_in">this</span>.pluginRegistry = <span class="built_in">this</span>.delegate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterFragmentActivity</span> <span class="keyword">extends</span> <span class="title class_">FragmentActivity</span> <span class="keyword">implements</span> <span class="title class_">Provider</span>, PluginRegistry, ViewFactory &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">FlutterActivityDelegate</span> <span class="variable">delegate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FlutterActivityDelegate</span>(<span class="built_in">this</span>, <span class="built_in">this</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> FlutterActivityEvents eventDelegate;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Provider viewProvider;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PluginRegistry pluginRegistry;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlutterFragmentActivity</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.eventDelegate = <span class="built_in">this</span>.delegate;</span><br><span class="line">        <span class="built_in">this</span>.viewProvider = <span class="built_in">this</span>.delegate;</span><br><span class="line">        <span class="built_in">this</span>.pluginRegistry = <span class="built_in">this</span>.delegate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>Provider</code> 负责提供FlutterView</p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="85px" preserveAspectRatio="none" style="width:222px;height:85px;background:#FFFFFF;" version="1.1" viewBox="0 0 222 85" width="222px" zoomAndPan="magnify"><defs/><g><!--MD5=[3521822871a02163bc1090dd8c65b7f5]
+class Provider--><g id="elem_Provider"><rect codeLine="1" fill="#F1F1F1" height="64.2969" id="Provider" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="201" x="7" y="7"/><ellipse cx="75.25" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M71.1719,18.7656 L71.1719,16.6094 L78.5625,16.6094 L78.5625,18.7656 L76.0938,18.7656 L76.0938,26.8438 L78.5625,26.8438 L78.5625,29 L71.1719,29 L71.1719,26.8438 L73.6406,26.8438 L73.6406,18.7656 L71.1719,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="56" x="95.75" y="27.8467">Provider</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="207" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="207" y1="47" y2="47"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="189" x="13" y="63.9951">FlutterView getFlutterView()</text></g><!--MD5=[016cced17aa1656ac4b1220b7f63625f]
+@startuml
+interface Provider{
+FlutterView getFlutterView()
+}
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 13:29:17 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
+
+<p><code>PluginRegistry</code>负责插件管理</p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="117px" preserveAspectRatio="none" style="width:368px;height:117px;background:#FFFFFF;" version="1.1" viewBox="0 0 368 117" width="368px" zoomAndPan="magnify"><defs/><g><!--MD5=[0bee35ff36c2bfe1d068cc18effabcca]
+class PluginRegistry--><g id="elem_PluginRegistry"><rect codeLine="1" fill="#F1F1F1" height="96.8906" id="PluginRegistry" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="347" x="7" y="7"/><ellipse cx="127.25" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M123.1719,18.7656 L123.1719,16.6094 L130.5625,16.6094 L130.5625,18.7656 L128.0938,18.7656 L128.0938,26.8438 L130.5625,26.8438 L130.5625,29 L123.1719,29 L123.1719,26.8438 L125.6406,26.8438 L125.6406,18.7656 L123.1719,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="98" x="147.75" y="27.8467">PluginRegistry</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="353" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="353" y1="47" y2="47"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="335" x="13" y="63.9951">PluginRegistry.Registrar registrarFor(String var1);</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="215" x="13" y="80.292">boolean hasPlugin(String var1);</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="301" x="13" y="96.5889">&lt;T&gt; T valuePublishedByPlugin(String var1);</text></g><!--MD5=[0f2025c2beecc190146d3894637fbcd5]
+@startuml
+interface PluginRegistry {
+    PluginRegistry.Registrar registrarFor(String var1);
+    boolean hasPlugin(String var1);
+    <T> T valuePublishedByPlugin(String var1);
+}
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 13:29:17 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
+
+<p><code>ViewFactory</code> 负责管理FlutterView和FlutterNative</p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="117px" preserveAspectRatio="none" style="width:335px;height:117px;background:#FFFFFF;" version="1.1" viewBox="0 0 335 117" width="335px" zoomAndPan="magnify"><defs/><g><!--MD5=[6dd3dec888cfc650825cf24d563a6604]
+class ViewFactory--><g id="elem_ViewFactory"><rect codeLine="1" fill="#F1F1F1" height="96.8906" id="ViewFactory" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="314" x="7" y="7"/><ellipse cx="118.75" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M114.6719,18.7656 L114.6719,16.6094 L122.0625,16.6094 L122.0625,18.7656 L119.5938,18.7656 L119.5938,26.8438 L122.0625,26.8438 L122.0625,29 L114.6719,29 L114.6719,26.8438 L117.1406,26.8438 L117.1406,18.7656 L114.6719,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="82" x="139.25" y="27.8467">ViewFactory</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="320" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="320" y1="47" y2="47"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="302" x="13" y="63.9951">FlutterView createFlutterView(Context var1);</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="299" x="13" y="80.292">FlutterNativeView createFlutterNativeView();</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="232" x="13" y="96.5889">boolean retainFlutterNativeView();</text></g><!--MD5=[a5ccf00d8a809148ec13a598c48706b3]
+@startuml
+interface ViewFactory {
+    FlutterView createFlutterView(Context var1);
+    FlutterNativeView createFlutterNativeView();
+    boolean retainFlutterNativeView();
+}
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 13:29:17 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
+
+<h5 id="Flutter容器代理类-FlutterActivityDelegate"><a href="#Flutter容器代理类-FlutterActivityDelegate" class="headerlink" title="Flutter容器代理类 FlutterActivityDelegate"></a>Flutter容器代理类 FlutterActivityDelegate</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FlutterActivityDelegate</span> <span class="keyword">implements</span> <span class="title class_">FlutterActivityEvents</span>, Provider, PluginRegistry &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="comment">// 设置全屏</span></span><br><span class="line">        <span class="keyword">if</span> (VERSION.SDK_INT &gt;= <span class="number">21</span>) &#123;</span><br><span class="line">            <span class="type">Window</span> <span class="variable">window</span> <span class="operator">=</span> <span class="built_in">this</span>.activity.getWindow();</span><br><span class="line">            window.addFlags(-<span class="number">2147483648</span>);</span><br><span class="line">            window.setStatusBarColor(<span class="number">1073741824</span>);</span><br><span class="line">            window.getDecorView().setSystemUiVisibility(<span class="number">1280</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 获取activity入参</span></span><br><span class="line">        String[] args = getArgsFromIntent(<span class="built_in">this</span>.activity.getIntent());</span><br><span class="line">        <span class="comment">// 确认Flutter Engine初始化完成，详细见后面</span></span><br><span class="line">        FlutterMain.ensureInitializationComplete(<span class="built_in">this</span>.activity.getApplicationContext(), args);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建FlutterView</span></span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 这里实际上调用的是FlutterActivity或FlutterFragmentActivity中的createFlutterView，默认返回null</span></span><br><span class="line">        <span class="built_in">this</span>.flutterView = <span class="built_in">this</span>.viewFactory.createFlutterView(<span class="built_in">this</span>.activity); </span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.flutterView == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="type">FlutterNativeView</span> <span class="variable">nativeView</span> <span class="operator">=</span> <span class="built_in">this</span>.viewFactory.createFlutterNativeView();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 新建FlutterView</span></span><br><span class="line">            <span class="built_in">this</span>.flutterView = <span class="keyword">new</span> <span class="title class_">FlutterView</span>(<span class="built_in">this</span>.activity, (AttributeSet)<span class="literal">null</span>, nativeView);</span><br><span class="line">            <span class="built_in">this</span>.flutterView.setLayoutParams(matchParent);</span><br><span class="line">            <span class="comment">// activity 的ContentView设置为flutterView</span></span><br><span class="line">            <span class="built_in">this</span>.activity.setContentView(<span class="built_in">this</span>.flutterView);</span><br><span class="line">            <span class="comment">// 创建并添加launchView</span></span><br><span class="line">            <span class="built_in">this</span>.launchView = <span class="built_in">this</span>.createLaunchView();</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.launchView != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="built_in">this</span>.addLaunchView();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 运行Flutter appBundle，也就是加载Flutter代码</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.loadIntent(<span class="built_in">this</span>.activity.getIntent())) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">appBundlePath</span> <span class="operator">=</span> FlutterMain.findAppBundlePath();</span><br><span class="line">            <span class="keyword">if</span> (appBundlePath != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="built_in">this</span>.runBundle(appBundlePath);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="FlutterView"><a href="#FlutterView" class="headerlink" title="FlutterView"></a>FlutterView</h5><p>FlutterView 是Flutter在Native上实际的绘制视图。</p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="170px" preserveAspectRatio="none" style="width:493px;height:170px;background:#FFFFFF;" version="1.1" viewBox="0 0 493 170" width="493px" zoomAndPan="magnify"><defs/><g><!--MD5=[9e181a8feef4d879ff68ae341dac7e29]
+class FlutterView--><g id="elem_FlutterView"><rect codeLine="1" fill="#F1F1F1" height="48" id="FlutterView" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="108" x="180" y="115"/><ellipse cx="195" cy="131" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M197.9688,136.6406 Q197.3906,136.9375 196.75,137.0781 Q196.1094,137.2344 195.4063,137.2344 Q192.9063,137.2344 191.5781,135.5938 Q190.2656,133.9375 190.2656,130.8125 Q190.2656,127.6875 191.5781,126.0313 Q192.9063,124.375 195.4063,124.375 Q196.1094,124.375 196.75,124.5313 Q197.4063,124.6875 197.9688,124.9844 L197.9688,127.7031 Q197.3438,127.125 196.75,126.8594 Q196.1563,126.5781 195.5313,126.5781 Q194.1875,126.5781 193.5,127.6563 Q192.8125,128.7188 192.8125,130.8125 Q192.8125,132.9063 193.5,133.9844 Q194.1875,135.0469 195.5313,135.0469 Q196.1563,135.0469 196.75,134.7813 Q197.3438,134.5 197.9688,133.9219 L197.9688,136.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="76" x="209" y="135.8467">FlutterView</text><line style="stroke:#181818;stroke-width:0.5;" x1="181" x2="287" y1="147" y2="147"/><line style="stroke:#181818;stroke-width:0.5;" x1="181" x2="287" y1="155" y2="155"/></g><!--MD5=[b8977a71577b55e49f7305cc373814dc]
+class SurfaceView--><g id="elem_SurfaceView"><rect fill="#F1F1F1" height="48" id="SurfaceView" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="116" x="7" y="7"/><ellipse cx="22" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M24.9688,28.6406 Q24.3906,28.9375 23.75,29.0781 Q23.1094,29.2344 22.4063,29.2344 Q19.9063,29.2344 18.5781,27.5938 Q17.2656,25.9375 17.2656,22.8125 Q17.2656,19.6875 18.5781,18.0313 Q19.9063,16.375 22.4063,16.375 Q23.1094,16.375 23.75,16.5313 Q24.4063,16.6875 24.9688,16.9844 L24.9688,19.7031 Q24.3438,19.125 23.75,18.8594 Q23.1563,18.5781 22.5313,18.5781 Q21.1875,18.5781 20.5,19.6563 Q19.8125,20.7188 19.8125,22.8125 Q19.8125,24.9063 20.5,25.9844 Q21.1875,27.0469 22.5313,27.0469 Q23.1563,27.0469 23.75,26.7813 Q24.3438,26.5 24.9688,25.9219 L24.9688,28.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="36" y="27.8467">SurfaceView</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="122" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="122" y1="47" y2="47"/></g><!--MD5=[3a7197b3f0da127a0a141acdd0964869]
+class BinaryMessenger--><g id="elem_BinaryMessenger"><rect fill="#F1F1F1" height="48" id="BinaryMessenger" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="152" x="158" y="7"/><ellipse cx="173" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M168.9219,18.7656 L168.9219,16.6094 L176.3125,16.6094 L176.3125,18.7656 L173.8438,18.7656 L173.8438,26.8438 L176.3125,26.8438 L176.3125,29 L168.9219,29 L168.9219,26.8438 L171.3906,26.8438 L171.3906,18.7656 L168.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="120" x="187" y="27.8467">BinaryMessenger</text><line style="stroke:#181818;stroke-width:0.5;" x1="159" x2="309" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="159" x2="309" y1="47" y2="47"/></g><!--MD5=[a9ae3d8e8cc3c991390b8b1661d0bc32]
+class TextureRegistry--><g id="elem_TextureRegistry"><rect fill="#F1F1F1" height="48" id="TextureRegistry" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="141" x="345.5" y="7"/><ellipse cx="360.5" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M356.4219,18.7656 L356.4219,16.6094 L363.8125,16.6094 L363.8125,18.7656 L361.3438,18.7656 L361.3438,26.8438 L363.8125,26.8438 L363.8125,29 L356.4219,29 L356.4219,26.8438 L358.8906,26.8438 L358.8906,18.7656 L356.4219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="109" x="374.5" y="27.8467">TextureRegistry</text><line style="stroke:#181818;stroke-width:0.5;" x1="346.5" x2="485.5" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="346.5" x2="485.5" y1="47" y2="47"/></g><!--MD5=[50158a96695c75ded856f65154440c37]
+reverse link SurfaceView to FlutterView--><g id="link_SurfaceView_FlutterView"><path d="M118.91,65.81 C144.42,81.81 174.22,100.51 197.11,114.86 " fill="none" id="SurfaceView-backto-FlutterView" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="114.89,71.56,101.67,55,122.33,59.7,114.89,71.56" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[c73a9ee65b4aa0ee47b390d463b97e16]
+reverse link BinaryMessenger to FlutterView--><g id="link_BinaryMessenger_FlutterView"><path d="M234,75.02 C234,88.58 234,103.04 234,114.68 " fill="none" id="BinaryMessenger-backto-FlutterView" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="227,75,234,55,241,75,227,75" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[858cef43d89f070b3a95c1705d9fa863]
+reverse link TextureRegistry to FlutterView--><g id="link_TextureRegistry_FlutterView"><path d="M359.13,65.12 C331.4,81.27 298.73,100.3 273.73,114.86 " fill="none" id="TextureRegistry-backto-FlutterView" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="355.7,59.02,376.51,55,362.75,71.11,355.7,59.02" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[9d438f640e58a11007dce4603888a18b]
+@startuml
+class FlutterView extends SurfaceView implements BinaryMessenger, TextureRegistry
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 13:29:17 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
+
+<p><code>BinaryMessenger</code> 是Flutter与Native同学的通道，后面会详细讲到<br><code>TextureRegistry</code> 用于管理SurfaceTexture</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterView</span> <span class="keyword">extends</span> <span class="title class_">SurfaceView</span> <span class="keyword">implements</span> <span class="title class_">BinaryMessenger</span>, TextureRegistry &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlutterView</span><span class="params">(Context context, AttributeSet attrs, FlutterNativeView nativeView)</span> &#123;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">        <span class="comment">// 创建FlutterNativeView</span></span><br><span class="line">        <span class="keyword">if</span> (nativeView == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="built_in">this</span>.mNativeView = <span class="keyword">new</span> <span class="title class_">FlutterNativeView</span>(activity.getApplicationContext());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.mNativeView = nativeView;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置dartExecutor</span></span><br><span class="line">        <span class="built_in">this</span>.dartExecutor = <span class="built_in">this</span>.mNativeView.getDartExecutor();</span><br><span class="line">        <span class="comment">// 设置flutterRenderer</span></span><br><span class="line">        <span class="built_in">this</span>.flutterRenderer = <span class="keyword">new</span> <span class="title class_">FlutterRenderer</span>(<span class="built_in">this</span>.mNativeView.getFlutterJNI());</span><br><span class="line">    </span><br><span class="line">        <span class="comment">// 设置渲染和视图大小信息</span></span><br><span class="line">        <span class="built_in">this</span>.mIsSoftwareRenderingEnabled = FlutterJNI.nativeGetIsSoftwareRenderingEnabled();</span><br><span class="line">        <span class="built_in">this</span>.mMetrics = <span class="keyword">new</span> <span class="title class_">FlutterView</span>.ViewportMetrics();</span><br><span class="line">        <span class="built_in">this</span>.mMetrics.devicePixelRatio = context.getResources().getDisplayMetrics().density;</span><br><span class="line">        <span class="built_in">this</span>.setFocusable(<span class="literal">true</span>);</span><br><span class="line">        <span class="built_in">this</span>.setFocusableInTouchMode(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// attachViewAndActivity</span></span><br><span class="line">        <span class="built_in">this</span>.mNativeView.attachViewAndActivity(<span class="built_in">this</span>, activity);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置SurfaceCallback</span></span><br><span class="line">        <span class="built_in">this</span>.mSurfaceCallback = <span class="keyword">new</span> <span class="title class_">Callback</span>() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">surfaceCreated</span><span class="params">(SurfaceHolder holder)</span> &#123;</span><br><span class="line">                FlutterView.<span class="built_in">this</span>.assertAttached();</span><br><span class="line">                FlutterView.<span class="built_in">this</span>.mNativeView.getFlutterJNI().onSurfaceCreated(holder.getSurface());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">surfaceChanged</span><span class="params">(SurfaceHolder holder, <span class="type">int</span> format, <span class="type">int</span> width, <span class="type">int</span> height)</span> &#123;</span><br><span class="line">                FlutterView.<span class="built_in">this</span>.assertAttached();</span><br><span class="line">                FlutterView.<span class="built_in">this</span>.mNativeView.getFlutterJNI().onSurfaceChanged(width, height);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">surfaceDestroyed</span><span class="params">(SurfaceHolder holder)</span> &#123;</span><br><span class="line">                FlutterView.<span class="built_in">this</span>.assertAttached();</span><br><span class="line">                FlutterView.<span class="built_in">this</span>.mNativeView.getFlutterJNI().onSurfaceDestroyed();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="built_in">this</span>.getHolder().addCallback(<span class="built_in">this</span>.mSurfaceCallback);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置内置Channel</span></span><br><span class="line">        <span class="built_in">this</span>.mActivityLifecycleListeners = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">        <span class="built_in">this</span>.mFirstFrameListeners = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">        <span class="built_in">this</span>.navigationChannel = <span class="keyword">new</span> <span class="title class_">NavigationChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line">        <span class="built_in">this</span>.keyEventChannel = <span class="keyword">new</span> <span class="title class_">KeyEventChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line">        <span class="built_in">this</span>.lifecycleChannel = <span class="keyword">new</span> <span class="title class_">LifecycleChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line">        <span class="built_in">this</span>.localizationChannel = <span class="keyword">new</span> <span class="title class_">LocalizationChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line">        <span class="built_in">this</span>.platformChannel = <span class="keyword">new</span> <span class="title class_">PlatformChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line">        <span class="built_in">this</span>.systemChannel = <span class="keyword">new</span> <span class="title class_">SystemChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line">        <span class="built_in">this</span>.settingsChannel = <span class="keyword">new</span> <span class="title class_">SettingsChannel</span>(<span class="built_in">this</span>.dartExecutor);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">PlatformPlugin</span> <span class="variable">platformPlugin</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PlatformPlugin</span>(activity, <span class="built_in">this</span>.platformChannel);</span><br><span class="line">        <span class="built_in">this</span>.addActivityLifecycleListener(<span class="keyword">new</span> <span class="title class_">ActivityLifecycleListener</span>() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPostResume</span><span class="params">()</span> &#123;</span><br><span class="line">                platformPlugin.updateSystemUiOverlays();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="built_in">this</span>.mImm = (InputMethodManager)<span class="built_in">this</span>.getContext().getSystemService(<span class="string">&quot;input_method&quot;</span>);</span><br><span class="line">        <span class="type">PlatformViewsController</span> <span class="variable">platformViewsController</span> <span class="operator">=</span> <span class="built_in">this</span>.mNativeView.getPluginRegistry().getPlatformViewsController();</span><br><span class="line">        <span class="built_in">this</span>.mTextInputPlugin = <span class="keyword">new</span> <span class="title class_">TextInputPlugin</span>(<span class="built_in">this</span>, <span class="built_in">this</span>.dartExecutor, platformViewsController);</span><br><span class="line">        <span class="built_in">this</span>.androidKeyProcessor = <span class="keyword">new</span> <span class="title class_">AndroidKeyProcessor</span>(<span class="built_in">this</span>.keyEventChannel, <span class="built_in">this</span>.mTextInputPlugin);</span><br><span class="line">        <span class="built_in">this</span>.androidTouchProcessor = <span class="keyword">new</span> <span class="title class_">AndroidTouchProcessor</span>(<span class="built_in">this</span>.flutterRenderer);</span><br><span class="line">        <span class="built_in">this</span>.mNativeView.getPluginRegistry().getPlatformViewsController().attachTextInputPlugin(<span class="built_in">this</span>.mTextInputPlugin);</span><br><span class="line">        <span class="built_in">this</span>.sendLocalesToDart(<span class="built_in">this</span>.getResources().getConfiguration());</span><br><span class="line">        <span class="built_in">this</span>.sendUserPlatformSettingsToDart();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>FlutterActivityDelegate</code> 中我们知道，加载dart执行的是<code>FlutterView</code>的<code>runFromBundle</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">runFromBundle</span><span class="params">(FlutterRunArguments args)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.assertAttached();</span><br><span class="line">    <span class="built_in">this</span>.preRun();</span><br><span class="line">    <span class="built_in">this</span>.mNativeView.runFromBundle(args);</span><br><span class="line">    <span class="built_in">this</span>.postRun();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上调用的是<code>mNativeView.runFromBundle(args)</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterNativeView</span> <span class="keyword">implements</span> <span class="title class_">BinaryMessenger</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">runFromBundle</span><span class="params">(FlutterRunArguments args)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (args.entrypoint == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AssertionError</span>(<span class="string">&quot;An entrypoint must be specified&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.assertAttached();</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.applicationIsRunning) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AssertionError</span>(<span class="string">&quot;This Flutter engine instance is already running an application&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">this</span>.mFlutterJNI.runBundleAndSnapshotFromLibrary(args.bundlePath, args.entrypoint, args.libraryPath, <span class="built_in">this</span>.mContext.getResources().getAssets());</span><br><span class="line">                <span class="built_in">this</span>.applicationIsRunning = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，最后调用的是mFlutterJNI。</p>
+<h5 id="FlutterNativeView与FlutterJNI"><a href="#FlutterNativeView与FlutterJNI" class="headerlink" title="FlutterNativeView与FlutterJNI"></a>FlutterNativeView与FlutterJNI</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterNativeView</span> <span class="keyword">implements</span> <span class="title class_">BinaryMessenger</span> &#123;</span><br><span class="line">     <span class="keyword">public</span> <span class="title function_">FlutterNativeView</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="type">boolean</span> isBackgroundView)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.mContext = context;</span><br><span class="line">        <span class="comment">// 创建FlutterPluginRegistry，插件注册器</span></span><br><span class="line">        <span class="built_in">this</span>.mPluginRegistry = <span class="keyword">new</span> <span class="title class_">FlutterPluginRegistry</span>(<span class="built_in">this</span>, context);</span><br><span class="line">        <span class="comment">// 创建FlutterJNI</span></span><br><span class="line">        <span class="built_in">this</span>.mFlutterJNI = <span class="keyword">new</span> <span class="title class_">FlutterJNI</span>();</span><br><span class="line">        <span class="comment">// 将</span></span><br><span class="line">        <span class="built_in">this</span>.mFlutterJNI.setRenderSurface(<span class="keyword">new</span> <span class="title class_">FlutterNativeView</span>.RenderSurfaceImpl());</span><br><span class="line">        <span class="comment">// 创建DartExecutor</span></span><br><span class="line">        <span class="built_in">this</span>.dartExecutor = <span class="keyword">new</span> <span class="title class_">DartExecutor</span>(<span class="built_in">this</span>.mFlutterJNI, context.getAssets());</span><br><span class="line">        <span class="comment">// addEngineLifecycleListener</span></span><br><span class="line">        <span class="built_in">this</span>.mFlutterJNI.addEngineLifecycleListener(<span class="keyword">new</span> <span class="title class_">FlutterNativeView</span>.EngineLifecycleListenerImpl());</span><br><span class="line">        <span class="built_in">this</span>.attach(<span class="built_in">this</span>, isBackgroundView);</span><br><span class="line">        <span class="built_in">this</span>.assertAttached();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 加载Flutter Bundle</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">runFromBundle</span><span class="params">(FlutterRunArguments args)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (args.entrypoint == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AssertionError</span>(<span class="string">&quot;An entrypoint must be specified&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.assertAttached();</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.applicationIsRunning) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AssertionError</span>(<span class="string">&quot;This Flutter engine instance is already running an application&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">this</span>.mFlutterJNI.runBundleAndSnapshotFromLibrary(args.bundlePath, args.entrypoint, args.libraryPath, <span class="built_in">this</span>.mContext.getResources().getAssets());</span><br><span class="line">                <span class="built_in">this</span>.applicationIsRunning = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="283px" preserveAspectRatio="none" style="width:882px;height:283px;background:#FFFFFF;" version="1.1" viewBox="0 0 882 283" width="882px" zoomAndPan="magnify"><defs/><g><ellipse cx="50" cy="41.5" fill="#222222" rx="10" ry="10" style="stroke:none;stroke-width:1.0;"/><rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="104" x="7" y="117"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="84" x="17" y="138.1387">FlutterActivity</text><rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="161" x="139.5" y="117"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="141" x="149.5" y="138.1387">FlutterActivityDelegate</text><g id="elem_GMN120"><path d="M80.5,6 L80.5,76.5313 A0,0 0 0 0 80.5,76.5313 L216,76.5313 L220,116.66 L224,76.5313 L359.5,76.5313 A0,0 0 0 0 359.5,76.5313 L359.5,16 L349.5,6 L80.5,6 A0,0 0 0 0 80.5,6 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M349.5,6 L349.5,16 L359.5,16 L349.5,6 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="195" x="90.5" y="23.0669">FlutterActivity 是主要承载页面，</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="249" x="86.5" y="38.1997">具体的实现由FlutterActivityDelegate代理</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="258" x="86.5" y="53.3325">FlutterActivityDelegate 创建FlutterView，</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127" x="86.5" y="68.4653">并加载Flutter bundle</text></g><rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="89" x="336.5" y="117"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="69" x="346.5" y="138.1387">FlutterView</text><g id="elem_GMN125"><path d="M165.5,191 L165.5,276.6641 A0,0 0 0 0 165.5,276.6641 L510.5,276.6641 A0,0 0 0 0 510.5,276.6641 L510.5,201 L500.5,191 L360.43,191 L373.9,151.18 L352.43,191 L165.5,191 A0,0 0 0 0 165.5,191 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M500.5,191 L500.5,201 L510.5,201 L500.5,191 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="204" x="171.5" y="208.0669">FlutterView 继承于SurfaceView，</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="148" x="171.5" y="223.1997">为实际渲染的native view</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="239" x="171.5" y="238.3325">FlutterView初始化时会设置UI相关的信息</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="324" x="171.5" y="253.4653">以及内置的Channel，FlutterView与FlutterNativeView</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="52" x="171.5" y="268.5981">相互绑定</text></g><rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="128" x="454" y="117"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="108" x="464" y="138.1387">FlutterNativeView</text><g id="elem_GMN130"><path d="M380,14 L380,69.3984 A0,0 0 0 0 380,69.3984 L520.35,69.3984 L519.62,116.74 L528.35,69.3984 L674,69.3984 A0,0 0 0 0 674,69.3984 L674,24 L664,14 L380,14 A0,0 0 0 0 380,14 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M664,14 L664,24 L674,24 L664,14 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="273" x="386" y="31.0669">FlutterNativeView继承于BinaryMessenger，</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="254" x="386" y="46.1997">并持有FlutterJNI，而FlutterJNI是Android与</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="149" x="386" y="61.3325">FlutterEngine交互的桥梁</text></g><rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="76" x="645" y="117"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="56" x="655" y="138.1387">FlutterJNI</text><g id="elem_GMN136"><path d="M530.5,221.5 L530.5,246.6328 A0,0 0 0 0 530.5,246.6328 L835.5,246.6328 A0,0 0 0 0 835.5,246.6328 L835.5,231.5 L825.5,221.5 L687,221.5 L683,151.18 L679,221.5 L530.5,221.5 A0,0 0 0 0 530.5,221.5 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M825.5,221.5 L825.5,231.5 L835.5,231.5 L825.5,221.5 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="284" x="536.5" y="238.5669">大部分是jni的native方法，与Flutter Engine交互</text></g><ellipse cx="866" cy="234" fill="none" rx="10" ry="10" style="stroke:#222222;stroke-width:1.0;"/><ellipse cx="866.5" cy="234.5" fill="#222222" rx="6" ry="6" style="stroke:none;stroke-width:1.0;"/><!--MD5=[7f4335e1b6316eb72c8506d40a34e0c6]
+link start to FlutterActivity--><g id="link_start_FlutterActivity"><path d="M50.9,51.51 C52.28,65.4 54.97,92.45 56.87,111.57 " fill="none" id="start-to-FlutterActivity" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="57.38,116.74,60.4859,107.3937,56.8938,111.7637,52.5238,108.1716,57.38,116.74" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[bdfed072028aaf26f53ff1a8514797ca]
+link FlutterActivity to FlutterActivityDelegate--><g id="link_FlutterActivity_FlutterActivityDelegate"><path d="M111.2,134 C118.8,134 126.39,134 133.99,134 " fill="none" id="FlutterActivity-to-FlutterActivityDelegate" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="139.25,134,130.25,130,134.25,134,130.25,138,139.25,134" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[b4654c53f6a254be0eefc10f6e335199]
+link FlutterActivityDelegate to FlutterView--><g id="link_FlutterActivityDelegate_FlutterView"><path d="M300.5,134 C310.77,134 321.04,134 331.31,134 " fill="none" id="FlutterActivityDelegate-to-FlutterView" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="336.35,134,327.35,130,331.35,134,327.35,138,336.35,134" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3ef452a3bc4f7952a4b243a7afe0b223]
+link FlutterView to FlutterNativeView--><g id="link_FlutterView_FlutterNativeView"><path d="M425.69,145.21 C433.3,146.19 440.92,146.71 448.54,146.75 " fill="none" id="FlutterView-to-FlutterNativeView" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="453.81,146.7,444.776,142.7773,448.8102,146.7429,444.8446,150.777,453.81,146.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[0f6a12f270cfc1587537e14268d245b0]
+link FlutterNativeView to FlutterView--><g id="link_FlutterNativeView_FlutterView"><path d="M453.81,121.3 C446.19,121.12 438.58,121.42 430.96,122.18 " fill="none" id="FlutterNativeView-to-FlutterView" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="425.69,122.79,435.0879,125.7361,430.6573,122.219,434.1744,117.7884,425.69,122.79" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[aea36ecdc750e134d8d4d13f3f0ef1f3]
+link FlutterNativeView to FlutterJNI--><g id="link_FlutterNativeView_FlutterJNI"><path d="M582.13,134 C601.22,134 620.31,134 639.4,134 " fill="none" id="FlutterNativeView-to-FlutterJNI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="644.78,134,635.78,130,639.78,134,635.78,138,644.78,134" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[0610f192158a662c333784acf518a884]
+link FlutterJNI to end--><g id="link_FlutterJNI_end"><path d="M721.21,139.55 C757.25,145.66 810.84,159.62 846,191 C854.26,198.37 859.41,209.89 862.41,219.01 " fill="none" id="FlutterJNI-to-end" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="863.94,224.04,865.1451,214.2651,862.4836,219.2568,857.492,216.5953,863.94,224.04" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[35a1c22b6583565d98070e025d742655]
+@startuml
+(*)  - -> FlutterActivity
+
+"FlutterActivity" -> "FlutterActivityDelegate"
+note top
+ FlutterActivity 是主要承载页面，
+具体的实现由FlutterActivityDelegate代理
+FlutterActivityDelegate 创建FlutterView，
+并加载Flutter bundle
+end note
+
+FlutterActivityDelegate -> FlutterView
+note bottom
+FlutterView 继承于SurfaceView，
+为实际渲染的native view
+FlutterView初始化时会设置UI相关的信息
+以及内置的Channel，FlutterView与FlutterNativeView
+相互绑定
+end note
+
+FlutterView -> FlutterNativeView
+note top
+FlutterNativeView继承于BinaryMessenger，
+并持有FlutterJNI，而FlutterJNI是Android与
+FlutterEngine交互的桥梁
+end note
+FlutterNativeView -> FlutterView
+FlutterNativeView -> FlutterJNI
+note bottom
+大部分是jni的native方法，与Flutter Engine交互
+end note
+
+- ->(*)
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 13:29:17 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
+
+<h4 id="Flutter-Engine"><a href="#Flutter-Engine" class="headerlink" title="Flutter Engine"></a>Flutter Engine</h4><h5 id="Flutter-初始化"><a href="#Flutter-初始化" class="headerlink" title="Flutter 初始化"></a>Flutter 初始化</h5><p>在使用Flutter前需要初始化Flutter</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FlutterMain.startInitialization(applicationContext);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterMain</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">startInitialization</span><span class="params">(<span class="meta">@NonNull</span> Context applicationContext)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isRunningInRobolectricTest) &#123;</span><br><span class="line">            startInitialization(applicationContext, <span class="keyword">new</span> <span class="title class_">FlutterMain</span>.Settings());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">startInitialization</span><span class="params">(<span class="meta">@NonNull</span> Context applicationContext, <span class="meta">@NonNull</span> FlutterMain.Settings settings)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isRunningInRobolectricTest) &#123;</span><br><span class="line">            <span class="comment">// 初始化必须在主线程</span></span><br><span class="line">            <span class="keyword">if</span> (Looper.myLooper() != Looper.getMainLooper()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;startInitialization must be called on the main thread&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sSettings == <span class="literal">null</span>) &#123;</span><br><span class="line">                sSettings = settings;</span><br><span class="line">                <span class="type">long</span> <span class="variable">initStartTimestampMillis</span> <span class="operator">=</span> SystemClock.uptimeMillis();</span><br><span class="line">                <span class="comment">// 初始化配置，主要是读取metadata中自定义的libapp.so、flutter_assets、vm_snapshot_data和isolate_snapshot_data对于的路径</span></span><br><span class="line">                <span class="comment">// 一般可以不是自行设置</span></span><br><span class="line">                initConfig(applicationContext);</span><br><span class="line">                <span class="comment">// 初始化Flutter资源，从flutter_assets读取并加载资源</span></span><br><span class="line">                <span class="comment">// 包含vm_snapshot_data，isolate_snapshot_data、kernel_blob.bin</span></span><br><span class="line">                initResources(applicationContext);</span><br><span class="line">                <span class="comment">// 记载flutter.so</span></span><br><span class="line">                System.loadLibrary(<span class="string">&quot;flutter&quot;</span>);</span><br><span class="line">                <span class="comment">// 初始化Vsync工具</span></span><br><span class="line">                VsyncWaiter.getInstance((WindowManager)applicationContext.getSystemService(<span class="string">&quot;window&quot;</span>)).init();</span><br><span class="line">                <span class="comment">// 记录初始化耗时</span></span><br><span class="line">                <span class="type">long</span> <span class="variable">initTimeMillis</span> <span class="operator">=</span> SystemClock.uptimeMillis() - initStartTimestampMillis;</span><br><span class="line">                FlutterJNI.nativeRecordStartTimestamp(initTimeMillis);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>android assets目录下flutter_assets</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">assets</span><br><span class="line">└── flutter_assets</span><br><span class="line">    ├── AssetManifest.json</span><br><span class="line">    ├── FontManifest.json</span><br><span class="line">    ├── LICENSE</span><br><span class="line">    ├── fonts</span><br><span class="line">    │   └── MaterialIcons-Regular.ttf</span><br><span class="line">    ├── isolate_snapshot_data</span><br><span class="line">    ├── kernel_blob.bin</span><br><span class="line">    ├── packages</span><br><span class="line">    │   └── cupertino_icons</span><br><span class="line">    │       └── assets</span><br><span class="line">    │           └── CupertinoIcons.ttf</span><br><span class="line">    └── vm_snapshot_data</span><br></pre></td></tr></table></figure>
+
+<p>在<code>FlutterActivityDelegate</code>中，<code>onCreate</code>时，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FlutterActivityDelegate</span>&#123;</span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">         FlutterMain.ensureInitializationComplete(<span class="built_in">this</span>.activity.getApplicationContext(), args);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlutterMain</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">ensureInitializationComplete</span><span class="params">(<span class="meta">@NonNull</span> Context applicationContext, <span class="meta">@Nullable</span> String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isRunningInRobolectricTest) &#123;</span><br><span class="line">            <span class="comment">// 确认在主线程，且sSettings不为空，sSettings在startInitialization中设置</span></span><br><span class="line">            <span class="keyword">if</span> (Looper.myLooper() != Looper.getMainLooper()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;ensureInitializationComplete must be called on the main thread&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sSettings == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;ensureInitializationComplete must be called after startInitialization&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!sInitialized) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 等待资源加载完成，在startInitialization中设置</span></span><br><span class="line">                    <span class="keyword">if</span> (sResourceExtractor != <span class="literal">null</span>) &#123;</span><br><span class="line">                        sResourceExtractor.waitForCompletion();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 设置flutter参数</span></span><br><span class="line">                    <span class="comment">// icu-symbol-prefix, icu-native-lib-path,snapshot-asset-path,</span></span><br><span class="line">                    <span class="comment">// vm-snapshot-data,isolate-snapshot-data,cache-dir-path,log-tag</span></span><br><span class="line">                    List&lt;String&gt; shellArgs = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">                    shellArgs.add(<span class="string">&quot;--icu-symbol-prefix=_binary_icudtl_dat&quot;</span>);</span><br><span class="line">                    <span class="type">ApplicationInfo</span> <span class="variable">applicationInfo</span> <span class="operator">=</span> getApplicationInfo(applicationContext);</span><br><span class="line">                    shellArgs.add(<span class="string">&quot;--icu-native-lib-path=&quot;</span> + applicationInfo.nativeLibraryDir + File.separator + <span class="string">&quot;libflutter.so&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span> (args != <span class="literal">null</span>) &#123;</span><br><span class="line">                        Collections.addAll(shellArgs, args);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="type">String</span> <span class="variable">kernelPath</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">                    <span class="type">String</span> <span class="variable">appStoragePath</span> <span class="operator">=</span> PathUtils.getDataDirectory(applicationContext) + File.separator + sFlutterAssetsDir;</span><br><span class="line">                    kernelPath = appStoragePath + File.separator + <span class="string">&quot;kernel_blob.bin&quot;</span>;</span><br><span class="line">                    shellArgs.add(<span class="string">&quot;--snapshot-asset-path=&quot;</span> + appStoragePath);</span><br><span class="line">                    shellArgs.add(<span class="string">&quot;--vm-snapshot-data=&quot;</span> + sVmSnapshotData);</span><br><span class="line">                    shellArgs.add(<span class="string">&quot;--isolate-snapshot-data=&quot;</span> + sIsolateSnapshotData);</span><br><span class="line">                    shellArgs.add(<span class="string">&quot;--cache-dir-path=&quot;</span> + PathUtils.getCacheDirectory(applicationContext));</span><br><span class="line">                    <span class="keyword">if</span> (sSettings.getLogTag() != <span class="literal">null</span>) &#123;</span><br><span class="line">                        shellArgs.add(<span class="string">&quot;--log-tag=&quot;</span> + sSettings.getLogTag());</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    appStoragePath = PathUtils.getFilesDir(applicationContext);</span><br><span class="line">                    <span class="type">String</span> <span class="variable">engineCachesPath</span> <span class="operator">=</span> PathUtils.getCacheDirectory(applicationContext);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// FlutterJNI 初始化Flutter Engine</span></span><br><span class="line">                    FlutterJNI.nativeInit(applicationContext, (String[])shellArgs.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]), kernelPath, appStoragePath, engineCachesPath);</span><br><span class="line">                    sInitialized = <span class="literal">true</span>;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception var7) &#123;</span><br><span class="line">                    Log.e(<span class="string">&quot;FlutterMain&quot;</span>, <span class="string">&quot;Flutter initialization failed.&quot;</span>, var7);</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(var7);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，所有与Flutter Engine相关的操作都是用过FlutterJNI来交互的</p>
+<h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><p>Flutter Engine初始化主要是加载<code>flutter.so</code>，设置<code>flutter_assets</code>，并通过FlutterJNI设置到Flutter Engine中。</p>
+<p>关于FlutterJNI相关的内容，再后面关于Flutter Engine定制中会详细介绍到。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/27/Android%20%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/" rel="prev" title="Android 源码编译">
+      <i class="fa fa-chevron-left"></i> Android 源码编译
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/29/%E4%BD%BF%E7%94%A8wsl%E6%9B%BF%E4%BB%A3ubuntu/" rel="next" title="使用wsl替代ubuntu">
+      使用wsl替代ubuntu <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Flutter-UI%E5%AE%B9%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">Flutter UI容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%BF%E8%BD%BDFlutter%E7%9A%84Android%E5%AE%B9%E5%99%A8"><span class="nav-number">1.1.</span> <span class="nav-text">承载Flutter的Android容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Flutter%E5%AE%B9%E5%99%A8%E4%BB%A3%E7%90%86%E7%B1%BB-FlutterActivityDelegate"><span class="nav-number">1.2.</span> <span class="nav-text">Flutter容器代理类 FlutterActivityDelegate</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FlutterView"><span class="nav-number">1.3.</span> <span class="nav-text">FlutterView</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FlutterNativeView%E4%B8%8EFlutterJNI"><span class="nav-number">1.4.</span> <span class="nav-text">FlutterNativeView与FlutterJNI</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flutter-Engine"><span class="nav-number">2.</span> <span class="nav-text">Flutter Engine</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Flutter-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">Flutter 初始化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zauther</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zauther" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zauther" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+        
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width:100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/" rel="tag">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Chromiun/" rel="tag">Chromiun</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Grub/" rel="tag">Grub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JS/" rel="tag">JS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/" rel="tag">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/U-Boot/" rel="tag">U-Boot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V2ray/" rel="tag">V2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/" rel="tag">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/" rel="tag">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag">引导</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:13</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

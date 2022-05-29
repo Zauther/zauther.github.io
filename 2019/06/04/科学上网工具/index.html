@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.cwiki.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="V2Ray（ubutnu：websocket+ssl+cdn）0x01 设置时区v2ray 对时间要求比较严格，服务器时间与本地时间相差在90s内 12dpkg-reconfigure tzdata  # 选择时区hwclock -w # 将当前时区写入bios  0x02 安装1bash &lt;(curl -L https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;v2fly&#x2F;f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="科学上网工具">
+<meta property="og:url" content="https://blog.cwiki.cn/2019/06/04/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="Zzz个人博客">
+<meta property="og:description" content="V2Ray（ubutnu：websocket+ssl+cdn）0x01 设置时区v2ray 对时间要求比较严格，服务器时间与本地时间相差在90s内 12dpkg-reconfigure tzdata  # 选择时区hwclock -w # 将当前时区写入bios  0x02 安装1bash &lt;(curl -L https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;v2fly&#x2F;f">
+<meta property="og:locale">
+<meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200208210956.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/image-20200208203655760.png">
+<meta property="article:published_time" content="2019-06-04T02:32:00.000Z">
+<meta property="article:modified_time" content="2022-05-09T16:45:55.056Z">
+<meta property="article:author" content="zauther">
+<meta property="article:tag" content="工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200208210956.png">
+
+<link rel="canonical" href="https://blog.cwiki.cn/2019/06/04/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91%E5%B7%A5%E5%85%B7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>科学上网工具 | Zzz个人博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-97381903-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zzz个人博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2019/06/04/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91%E5%B7%A5%E5%85%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          科学上网工具
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-06-04 10:32:00" itemprop="dateCreated datePublished" datetime="2019-06-04T10:32:00+08:00">2019-06-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-10 00:45:55" itemprop="dateModified" datetime="2022-05-10T00:45:55+08:00">2022-05-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="V2Ray（ubutnu：websocket-ssl-cdn）"><a href="#V2Ray（ubutnu：websocket-ssl-cdn）" class="headerlink" title="V2Ray（ubutnu：websocket+ssl+cdn）"></a>V2Ray（ubutnu：websocket+ssl+cdn）</h3><h4 id="0x01-设置时区"><a href="#0x01-设置时区" class="headerlink" title="0x01 设置时区"></a>0x01 设置时区</h4><p>v2ray 对时间要求比较严格，服务器时间与本地时间相差在<code>90s</code>内</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata  # 选择时区</span><br><span class="line">hwclock -w # 将当前时区写入bios</span><br></pre></td></tr></table></figure>
+
+<h4 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
+
+<p>此脚本会自动安装以下文件：</p>
+<ul>
+<li><code>/usr/bin/v2ray/v2ray</code>：V2Ray 程序；</li>
+<li><code>/usr/bin/v2ray/v2ctl</code>：V2Ray 工具；</li>
+<li><code>/etc/v2ray/config.json</code>：配置文件；</li>
+<li><code>/usr/bin/v2ray/geoip.dat</code>：IP 数据文件</li>
+<li><code>/usr/bin/v2ray/geosite.dat</code>：域名数据文件</li>
+</ul>
+<p>此脚本会配置自动运行脚本。自动运行脚本会在系统重启之后，自动运行 V2Ray。目前自动运行脚本只支持带有 Systemd 的系统，以及 Debian &#x2F; Ubuntu 全系列。</p>
+<span id="more"></span>
+
+<p>运行脚本位于系统的以下位置：</p>
+<ul>
+<li><code>/etc/systemd/system/v2ray.service</code>: Systemd</li>
+<li><code>/etc/init.d/v2ray</code>: SysV</li>
+</ul>
+<p>脚本运行完成后，你需要：</p>
+<ol>
+<li>编辑 &#x2F;etc&#x2F;v2ray&#x2F;config.json 文件来配置你需要的代理方式；</li>
+<li>运行 service v2ray start 来启动 V2Ray 进程；</li>
+<li>之后可以使用 service v2ray start|stop|status|reload|restart|force-reload 控制 V2Ray 的运行。</li>
+</ol>
+<p>问题：</p>
+<ol>
+<li><p><code>main: failed to load config:  &gt; v2ray.com/core/main/confloader/external: config file not readable &gt; open : no such file or directory</code><br>此问题是<code>/etc/v2ray/config.json</code>  配置文件缺失，将<code>/usr/bin/v2ray/config.json</code>中的文件拷贝至<code>/etc/v2ray/</code>。</p>
+<p>而事实上仅仅拷贝只是默认配置，需要根据自己的服务来配置。</p>
+</li>
+</ol>
+<h4 id="0x03-配置-WebSocket-TLS-Web"><a href="#0x03-配置-WebSocket-TLS-Web" class="headerlink" title="0x03 配置(WebSocket+TLS+Web)"></a>0x03 配置(WebSocket+TLS+Web)</h4><h5 id="服务器-V2Ray-配置-x2F-etc-x2F-v2ray-x2F-config-json"><a href="#服务器-V2Ray-配置-x2F-etc-x2F-v2ray-x2F-config-json" class="headerlink" title="服务器 V2Ray 配置(&#x2F;etc&#x2F;v2ray&#x2F;config.json)"></a>服务器 V2Ray 配置(&#x2F;etc&#x2F;v2ray&#x2F;config.json)</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;inbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">10000</span><span class="punctuation">,</span>  <span class="comment">// 服务器监听端口</span></span><br><span class="line">      <span class="attr">&quot;listen&quot;</span><span class="punctuation">:</span><span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span><span class="comment">//只监听 127.0.0.1，避免除本机外的机器探测到开放了 10000 端口</span></span><br><span class="line">      <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;clients&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;UUID&quot;</span><span class="punctuation">,</span> <span class="comment">// https://www.uuidgenerator.net/ 可在这个网站上随机生成</span></span><br><span class="line">            <span class="attr">&quot;alterId&quot;</span><span class="punctuation">:</span> <span class="number">64</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;streamSettings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;network&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ws&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;wsSettings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/path&quot;</span>  <span class="comment">// 客户端连接时的地址</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;outbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;freedom&quot;</span><span class="punctuation">,</span>  <span class="comment">//允许所有协议</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h5><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span>  <span class="number">443</span> ssl;</span><br><span class="line">  <span class="attribute">ssl</span> <span class="literal">on</span>;</span><br><span class="line">  <span class="attribute">ssl_certificate</span>       /etc/v2ray/v2ray.crt;</span><br><span class="line">  <span class="attribute">ssl_certificate_key</span>   /etc/v2ray/v2ray.key;</span><br><span class="line">  <span class="attribute">ssl_protocols</span>         TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">  <span class="attribute">ssl_ciphers</span>           HIGH:!aNULL:!MD5;</span><br><span class="line">  <span class="attribute">server_name</span>           mydomain.me;  <span class="comment"># 你的域名</span></span><br><span class="line">  <span class="section">location</span> /path &#123;  <span class="comment"># 与 V2Ray 配置中的 path 保持一致</span></span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:10000; <span class="comment">#假设WebSocket监听在环回地址的10000端口上</span></span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Show realip in v2ray access.log</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;dns&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;servers&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;localhost&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;inbounds&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;listen&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span> <span class="punctuation">:</span> <span class="number">1081</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;protocol&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;socks&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;tag&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;socksinbound&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;auth&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;noauth&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;udp&quot;</span> <span class="punctuation">:</span> <span class="keyword">false</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ip&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;listen&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span> <span class="punctuation">:</span> <span class="number">8001</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;protocol&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;http&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;tag&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;httpinbound&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;timeout&quot;</span> <span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;outbounds&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;sendThrough&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;0.0.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;mux&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;enabled&quot;</span> <span class="punctuation">:</span> <span class="keyword">false</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;concurrency&quot;</span> <span class="punctuation">:</span> <span class="number">8</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;protocol&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;vnext&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;address&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;mydomain.me&quot;</span><span class="punctuation">,</span>  <span class="comment">//mydomain.me，你的域名</span></span><br><span class="line">            <span class="attr">&quot;users&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">              <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;id&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;UUID&quot;</span><span class="punctuation">,</span>  <span class="comment">//你的uuid</span></span><br><span class="line">                <span class="attr">&quot;alterId&quot;</span> <span class="punctuation">:</span> <span class="number">64</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;security&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;level&quot;</span> <span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">              <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span> <span class="punctuation">:</span> <span class="number">443</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;tag&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;Server Name&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;streamSettings&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;network&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;ws&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;wsSettings&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;path&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;\/path&quot;</span>  <span class="comment">// 对于服务器/path</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;security&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;tls&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;routing&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;all_to_main&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;domainStrategy&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;AsIs&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;rules&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;field&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;outboundTag&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;Server Jupyter&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;port&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;0-65535&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;log&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;error&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;\/var\/folders\/q5\/0000gn\/T\/cenmrev.v2rayx.log\/error.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;loglevel&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;error&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;access&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;\/var\/folders\/q5\/0000gn\/T\/cenmrev.v2rayx.log\/access.log&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>(<a target="_blank" rel="noopener" href="https://github.com/Cenmrev/V2RayX">V2RayX 客户端下载</a>)</p>
+<p><strong>以上可实现websoket + ssl 实现代理</strong></p>
+<h4 id="0x04-与网站流量混淆配置（WebSocket-TLS-Web）"><a href="#0x04-与网站流量混淆配置（WebSocket-TLS-Web）" class="headerlink" title="0x04 与网站流量混淆配置（WebSocket+TLS+Web）"></a>0x04 与网站流量混淆配置（WebSocket+TLS+Web）</h4><p>将代理流量与网站流量进行混淆，防干扰能力更好。</p>
+<h5 id="将链接混入网站中"><a href="#将链接混入网站中" class="headerlink" title="将链接混入网站中"></a>将链接混入网站中</h5><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">server_name</span>           mydomain.me;  <span class="comment"># 你的域名</span></span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span>;</span><br><span class="line">    <span class="attribute">ssl</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_certificate</span>             /etc/v2ray/v2ray.crt;  <span class="comment"># ssl证书配置</span></span><br><span class="line">    <span class="attribute">ssl_certificate_key</span>   /etc/v2ray/v2ray.key;  <span class="comment"># ssl证书配置</span></span><br><span class="line">    <span class="attribute">ssl_protocols</span>         TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span>           HIGH:!aNULL:!MD5;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attribute">rewrite</span> <span class="string">&#x27;/site/path&#x27;</span>  /path <span class="literal">last</span>;  <span class="comment"># /site/path 网站中的某个地址  /path v2ray地址</span></span><br><span class="line">    <span class="section">location</span> / &#123;  <span class="comment"># 网站配置</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8888/; <span class="comment"># 网站的端口地址        </span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">if</span> ( <span class="variable">$uri</span> = <span class="string">&#x27;/site/path&#x27;</span> ) &#123;   <span class="comment"># /site/path 网站中的某个地址</span></span><br><span class="line">            <span class="attribute">rewrite</span> <span class="variable">$uri</span> /path <span class="literal">break</span>; <span class="comment"># /path v2ray地址</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="section">location</span> /path &#123; <span class="comment"># 与 V2Ray 配置中的 path 保持一致</span></span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:10000;<span class="comment">#假设WebSocket监听在环回地址的10000端口上</span></span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Show realip in v2ray access.log</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">   <span class="comment">#     proxy_set_header Host $host;</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 其中主要步骤是:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">rewrite</span> <span class="string">&#x27;/site/path&#x27;</span>  /path <span class="literal">last</span>;  <span class="comment"># /site/path 网站中的某个地址  /path v2ray地址</span></span><br></pre></td></tr></table></figure>
+
+<p>制造一个与网站相似的链接，重写到真实地址上。</p>
+<p>v2ry的服务器配置不变，客户端配置只需要将<code>/path</code>改为<code>/site/path</code> ,即你的混淆的网站地址。这时，你的代理请求会”变为网站中的一个websocket”。</p>
+<h4 id="0x05-与网站流量混淆配置（WebSocket-TLS-Web-CDN）"><a href="#0x05-与网站流量混淆配置（WebSocket-TLS-Web-CDN）" class="headerlink" title="0x05 与网站流量混淆配置（WebSocket+TLS+Web+CDN）"></a>0x05 与网站流量混淆配置（WebSocket+TLS+Web+CDN）</h4><p><strong>核心：通过cloudflare来分发websocket流量，从而隐藏自己真实IP</strong></p>
+<ol>
+<li><p>在 (<a target="_blank" rel="noopener" href="https://cloudflare.com/">cloudflare.com</a>) 注册，并添加自己的网址</p>
+</li>
+<li><p>在DNS记录中添加A记录，指向服务器<br><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/20200208210956.png"></p>
+</li>
+<li><p>在Network中打开，websockets代理</p>
+<p><img src="https://raw.githubusercontent.com/zauther/figurebed/blog/images/image-20200208203655760.png"></p>
+</li>
+</ol>
+<h4 id="Done"><a href="#Done" class="headerlink" title="Done."></a>Done.</h4><iframe src="https://qiyukf.com/sdk/res/delegate.html?1559402955156" style="border: 0px; margin: 0px; padding: 0px; cursor: default !important; height: 0px; width: 0px;"></iframe>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag"># 工具</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/01/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/07/01/Java8%20Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/" rel="next" title="Java8 Lambda表达式详解">
+      Java8 Lambda表达式详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#V2Ray%EF%BC%88ubutnu%EF%BC%9Awebsocket-ssl-cdn%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">V2Ray（ubutnu：websocket+ssl+cdn）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E8%AE%BE%E7%BD%AE%E6%97%B6%E5%8C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">0x01 设置时区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.</span> <span class="nav-text">0x02 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x03-%E9%85%8D%E7%BD%AE-WebSocket-TLS-Web"><span class="nav-number">1.3.</span> <span class="nav-text">0x03 配置(WebSocket+TLS+Web)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8-V2Ray-%E9%85%8D%E7%BD%AE-x2F-etc-x2F-v2ray-x2F-config-json"><span class="nav-number">1.3.1.</span> <span class="nav-text">服务器 V2Ray 配置(&#x2F;etc&#x2F;v2ray&#x2F;config.json)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Nginx-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">Nginx 配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.3.</span> <span class="nav-text">客户端配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x04-%E4%B8%8E%E7%BD%91%E7%AB%99%E6%B5%81%E9%87%8F%E6%B7%B7%E6%B7%86%E9%85%8D%E7%BD%AE%EF%BC%88WebSocket-TLS-Web%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">0x04 与网站流量混淆配置（WebSocket+TLS+Web）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%86%E9%93%BE%E6%8E%A5%E6%B7%B7%E5%85%A5%E7%BD%91%E7%AB%99%E4%B8%AD"><span class="nav-number">1.4.1.</span> <span class="nav-text">将链接混入网站中</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x05-%E4%B8%8E%E7%BD%91%E7%AB%99%E6%B5%81%E9%87%8F%E6%B7%B7%E6%B7%86%E9%85%8D%E7%BD%AE%EF%BC%88WebSocket-TLS-Web-CDN%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">0x05 与网站流量混淆配置（WebSocket+TLS+Web+CDN）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Done"><span class="nav-number">1.6.</span> <span class="nav-text">Done.</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zauther</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zauther" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zauther" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+        
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width:100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/" rel="tag">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Chromiun/" rel="tag">Chromiun</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Grub/" rel="tag">Grub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JS/" rel="tag">JS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/" rel="tag">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/U-Boot/" rel="tag">U-Boot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V2ray/" rel="tag">V2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/" rel="tag">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/" rel="tag">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag">引导</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:13</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.cwiki.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. 创建虚拟磁盘1dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;15g.img bs&#x3D;1M count&#x3D;15360 # 15GB  2. 挂载img12sudo losetup -l # 查看当前loop设备sudo losetup &#x2F;dev&#x2F;loop0 15g.img # 挂在到空闲的loop0上  3. img分区通过fdisk对img分区执行： 1sudo fdisk &#x2F;dev&#x2F;loop0  进入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux虚拟镜像创建分区和Grub2安装">
+<meta property="og:url" content="https://blog.cwiki.cn/2021/03/27/Linux%E8%99%9A%E6%8B%9F%E9%95%9C%E5%83%8F%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA%E5%92%8CGrub2%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="Zzz个人博客">
+<meta property="og:description" content="1. 创建虚拟磁盘1dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;15g.img bs&#x3D;1M count&#x3D;15360 # 15GB  2. 挂载img12sudo losetup -l # 查看当前loop设备sudo losetup &#x2F;dev&#x2F;loop0 15g.img # 挂在到空闲的loop0上  3. img分区通过fdisk对img分区执行： 1sudo fdisk &#x2F;dev&#x2F;loop0  进入">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-03-27T14:51:00.000Z">
+<meta property="article:modified_time" content="2022-05-09T16:33:07.549Z">
+<meta property="article:author" content="zauther">
+<meta property="article:tag" content="Grub">
+<meta property="article:tag" content="引导">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.cwiki.cn/2021/03/27/Linux%E8%99%9A%E6%8B%9F%E9%95%9C%E5%83%8F%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA%E5%92%8CGrub2%E5%AE%89%E8%A3%85/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Linux虚拟镜像创建分区和Grub2安装 | Zzz个人博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-97381903-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zzz个人博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/03/27/Linux%E8%99%9A%E6%8B%9F%E9%95%9C%E5%83%8F%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA%E5%92%8CGrub2%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux虚拟镜像创建分区和Grub2安装
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-27 22:51:00" itemprop="dateCreated datePublished" datetime="2021-03-27T22:51:00+08:00">2021-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-10 00:33:07" itemprop="dateModified" datetime="2022-05-10T00:33:07+08:00">2022-05-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>7.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>7 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-创建虚拟磁盘"><a href="#1-创建虚拟磁盘" class="headerlink" title="1. 创建虚拟磁盘"></a>1. 创建虚拟磁盘</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=15g.img bs=1M count=15360 # 15GB</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-挂载img"><a href="#2-挂载img" class="headerlink" title="2. 挂载img"></a>2. 挂载img</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo losetup -l # 查看当前loop设备</span><br><span class="line">sudo losetup /dev/loop0 15g.img # 挂在到空闲的loop0上</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-img分区"><a href="#3-img分区" class="headerlink" title="3. img分区"></a>3. img分区</h3><p>通过fdisk对img分区<br>执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo fdisk /dev/loop0</span><br></pre></td></tr></table></figure>
+
+<p>进入提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">欢迎使用 fdisk (util-linux 2.34)。</span><br><span class="line">更改将停留在内存中，直到您决定将更改写入磁盘。</span><br><span class="line">使用写入命令前请三思。</span><br><span class="line"></span><br><span class="line">设备不包含可识别的分区表。</span><br><span class="line">创建了一个磁盘标识符为 0x7accf69c 的新 DOS 磁盘标签。</span><br><span class="line"></span><br><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
+
+<p>输入m，查看帮助</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： m</span><br><span class="line"></span><br><span class="line">帮助：</span><br><span class="line"></span><br><span class="line">  DOS (MBR)</span><br><span class="line">   a   开关 可启动 标志</span><br><span class="line">   b   编辑嵌套的 BSD 磁盘标签</span><br><span class="line">   c   开关 dos 兼容性标志</span><br><span class="line"></span><br><span class="line">  常规</span><br><span class="line">   d   删除分区</span><br><span class="line">   F   列出未分区的空闲区</span><br><span class="line">   l   列出已知分区类型</span><br><span class="line">   n   添加新分区</span><br><span class="line">   p   打印分区表</span><br><span class="line">   t   更改分区类型</span><br><span class="line">   v   检查分区表</span><br><span class="line">   i   打印某个分区的相关信息</span><br><span class="line"></span><br><span class="line">  杂项</span><br><span class="line">   m   打印此菜单</span><br><span class="line">   u   更改 显示/记录 单位</span><br><span class="line">   x   更多功能(仅限专业人员)</span><br><span class="line"></span><br><span class="line">  脚本</span><br><span class="line">   I   从 sfdisk 脚本文件加载磁盘布局</span><br><span class="line">   O   将磁盘布局转储为 sfdisk 脚本文件</span><br><span class="line"></span><br><span class="line">  保存并退出</span><br><span class="line">   w   将分区表写入磁盘并退出</span><br><span class="line">   q   退出而不保存更改</span><br><span class="line"></span><br><span class="line">  新建空磁盘标签</span><br><span class="line">   g   新建一份 GPT 分区表</span><br><span class="line">   G   新建一份空 GPT (IRIX) 分区表</span><br><span class="line">   o   新建一份的空 DOS 分区表</span><br><span class="line">   s   新建一份空 Sun 分区表</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
+
+<p>我们主要用到的有：</p>
+<ul>
+<li>n   添加新分区</li>
+<li>t   更改分区类型</li>
+<li>a   开关 可启动 标志</li>
+<li>w   将分区表写入磁盘并退出</li>
+<li>q   退出而不保存更改</li>
+</ul>
+<p>下面首先来分区，这里主要分为3个区，boot，rootfs和swap分区</p>
+<ol>
+<li>boot分区分200M，</li>
+<li>swap分1G</li>
+<li>其余分到rootfs</li>
+</ol>
+<h4 id="3-1-Boot分区"><a href="#3-1-Boot分区" class="headerlink" title="3.1 Boot分区"></a>3.1 Boot分区</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： n</span><br><span class="line">分区类型</span><br><span class="line">   p   主分区 (0个主分区，0个扩展分区，4空闲)</span><br><span class="line">   e   扩展分区 (逻辑分区容器)</span><br><span class="line">选择 (默认 p)： p</span><br><span class="line">分区号 (1-4, 默认  1): </span><br><span class="line">第一个扇区 (2048-31457279, 默认 2048): </span><br><span class="line">Last sector, +/-sectors or +/-size&#123;K,M,G,T,P&#125; (2048-31457279, 默认 31457279): +200M</span><br><span class="line"></span><br><span class="line">创建了一个新分区 1，类型为“Linux”，大小为 200 MiB。</span><br></pre></td></tr></table></figure>
+
+<p>一张硬盘上，主分区最多只能有4个，加入4个主分区未将磁盘使用完，剩下的空间是无法在分配的，也就是无法使用。如果一张硬盘上想有个多分区，做多3个主分区，至少一个扩展分区，剩下的为逻辑分区。在有逻辑分区的情况下，必须有一个以上的扩展分区。逻辑分区没有数量限制。<br>一张硬盘上，分区表一般位于硬盘某柱面的0磁头1扇区。而第1个分区表（也即主分区表）总是位于（0柱面，0磁头，1扇区），剩余的分区表位置可以由主分区表依次推导出来。硬盘第一个扇区（512字节）坏死了，那么这个硬盘就没法用了。</p>
+<p><code>t</code> 可修改分区类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： t</span><br><span class="line">已选择分区 1</span><br><span class="line">Hex 代码(输入 L 列出所有代码)： L</span><br><span class="line"></span><br><span class="line"> 0  空              24  NEC DOS         81  Minix / 旧 Linu bf  Solaris        </span><br><span class="line"> 1  FAT12           27  隐藏的 NTFS Win 82  Linux swap / So c1  DRDOS/sec (FAT-</span><br><span class="line"> 2  XENIX root      39  Plan 9          83  Linux           c4  DRDOS/sec (FAT-</span><br><span class="line"> 3  XENIX usr       3c  PartitionMagic  84  OS/2 隐藏 或 In c6  DRDOS/sec (FAT-</span><br><span class="line"> 4  FAT16 &lt;32M      40  Venix 80286     85  Linux 扩展      c7  Syrinx         </span><br><span class="line"> 5  扩展            41  PPC PReP Boot   86  NTFS 卷集       da  非文件系统数据 </span><br><span class="line"> 6  FAT16           42  SFS             87  NTFS 卷集       db  CP/M / CTOS / .</span><br><span class="line"> 7  HPFS/NTFS/exFAT 4d  QNX4.x          88  Linux 纯文本    de  Dell 工具      </span><br><span class="line"> 8  AIX             4e  QNX4.x 第2部分  8e  Linux LVM       df  BootIt         </span><br><span class="line"> 9  AIX 可启动      4f  QNX4.x 第3部分  93  Amoeba          e1  DOS 访问       </span><br><span class="line"> a  OS/2 启动管理器 50  OnTrack DM      94  Amoeba BBT      e3  DOS R/O        </span><br><span class="line"> b  W95 FAT32       51  OnTrack DM6 Aux 9f  BSD/OS          e4  SpeedStor      </span><br><span class="line"> c  W95 FAT32 (LBA) 52  CP/M            a0  IBM Thinkpad 休 ea  Rufus 对齐     </span><br><span class="line"> e  W95 FAT16 (LBA) 53  OnTrack DM6 Aux a5  FreeBSD         eb  BeOS fs        </span><br><span class="line"> f  W95 扩展 (LBA)  54  OnTrackDM6      a6  OpenBSD         ee  GPT            </span><br><span class="line">10  OPUS            55  EZ-Drive        a7  NeXTSTEP        ef  EFI (FAT-12/16/</span><br><span class="line">11  隐藏的 FAT12    56  Golden Bow      a8  Darwin UFS      f0  Linux/PA-RISC  </span><br><span class="line">12  Compaq 诊断     5c  Priam Edisk     a9  NetBSD          f1  SpeedStor      </span><br><span class="line">14  隐藏的 FAT16 &lt;3 61  SpeedStor       ab  Darwin 启动     f4  SpeedStor      </span><br><span class="line">16  隐藏的 FAT16    63  GNU HURD 或 Sys af  HFS / HFS+      f2  DOS 次要       </span><br><span class="line">17  隐藏的 HPFS/NTF 64  Novell Netware  b7  BSDI fs         fb  VMware VMFS    </span><br><span class="line">18  AST 智能睡眠    65  Novell Netware  b8  BSDI swap       fc  VMware VMKCORE </span><br><span class="line">1b  隐藏的 W95 FAT3 70  DiskSecure 多启 bb  Boot Wizard 隐  fd  Linux raid 自动</span><br><span class="line">1c  隐藏的 W95 FAT3 75  PC/IX           bc  Acronis FAT32 L fe  LANstep        </span><br><span class="line">1e  隐藏的 W95 FAT1 80  旧 Minix        be  Solaris 启动    ff  BBT            </span><br><span class="line">Hex 代码(输入 L 列出所有代码)： 83</span><br><span class="line">已将分区“Linux”的类型更改为“Linux”。</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-rootfs分区"><a href="#3-2-rootfs分区" class="headerlink" title="3.2 rootfs分区"></a>3.2 rootfs分区</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： n</span><br><span class="line">分区类型</span><br><span class="line">   p   主分区 (1个主分区，0个扩展分区，3空闲)</span><br><span class="line">   e   扩展分区 (逻辑分区容器)</span><br><span class="line">选择 (默认 p)： p</span><br><span class="line">分区号 (2-4, 默认  2): </span><br><span class="line">第一个扇区 (411648-31457279, 默认 411648): </span><br><span class="line">Last sector, +/-sectors or +/-size&#123;K,M,G,T,P&#125; (411648-31457279, 默认 31457279): +14136M</span><br><span class="line"></span><br><span class="line">创建了一个新分区 2，类型为“Linux”，大小为 13.8 GiB。</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-swap分区"><a href="#3-3-swap分区" class="headerlink" title="3.3 swap分区"></a>3.3 swap分区</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： n</span><br><span class="line">分区类型</span><br><span class="line">   p   主分区 (2个主分区，0个扩展分区，2空闲)</span><br><span class="line">   e   扩展分区 (逻辑分区容器)</span><br><span class="line">选择 (默认 p)： p</span><br><span class="line">分区号 (3,4, 默认  3): </span><br><span class="line">第一个扇区 (29362176-31457279, 默认 29362176): </span><br><span class="line">Last sector, +/-sectors or +/-size&#123;K,M,G,T,P&#125; (29362176-31457279, 默认 31457279): </span><br><span class="line"></span><br><span class="line">创建了一个新分区 3，类型为“Linux”，大小为 1023 MiB。</span><br><span class="line"></span><br><span class="line">命令(输入 m 获取帮助)： t</span><br><span class="line">分区号 (1-3, 默认  3): 3</span><br><span class="line">Hex 代码(输入 L 列出所有代码)： 82</span><br><span class="line"></span><br><span class="line">已将分区“Linux”的类型更改为“Linux swap / Solaris”。</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-设置Boot分区可以引导标记"><a href="#3-4-设置Boot分区可以引导标记" class="headerlink" title="3.4 设置Boot分区可以引导标记"></a>3.4 设置Boot分区可以引导标记</h4><p>磁盘开头的446字节内容特指为“主引导记录”（MBR），其后是4个16字节的“磁盘分区表”（DPT），以及2字节的结束标志（55AA）。446 + 4*16 + 2 &#x3D; 512字节。<br>可引导标记就是此分区的第一个扇区最后2个字节为55AA。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： a</span><br><span class="line">分区号 (1-3, 默认  3): 1</span><br><span class="line"></span><br><span class="line">分区 1 的 可启动 标志已启用。</span><br></pre></td></tr></table></figure>
+
+<p> <code>a</code> 设置可引导标记，选择分区1。 </p>
+<h4 id="3-5-保存分区记录"><a href="#3-5-保存分区记录" class="headerlink" title="3.5 保存分区记录"></a>3.5 保存分区记录</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)： w</span><br><span class="line">分区表已调整。</span><br><span class="line">将调用 ioctl() 来重新读分区表。</span><br><span class="line">重新读取分区表失败。: 无效的参数</span><br><span class="line"></span><br><span class="line">内核仍在使用旧分区表。新分区表将在下次重启或运行 partprobe(8) 或 kpartx(8) 后生效。</span><br></pre></td></tr></table></figure>
+
+<p>操作完后一定记得输入 <code>w</code> 保存。 <code>重新读取分区表失败</code> 可以忽略，此时已经成功了。</p>
+<h4 id="3-6-卸载设备"><a href="#3-6-卸载设备" class="headerlink" title="3.6 卸载设备"></a>3.6 卸载设备</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo losetup -d /dev/loop0 # 卸载loop设备</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-7-查看img分区情况"><a href="#3-7-查看img分区情况" class="headerlink" title="3.7 查看img分区情况"></a>3.7 查看img分区情况</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l 15g.img     </span><br><span class="line"></span><br><span class="line">Disk 15g.img：15 GiB，16106127360 字节，31457280 个扇区</span><br><span class="line">单元：扇区 / 1 * 512 = 512 字节</span><br><span class="line">扇区大小(逻辑/物理)：512 字节 / 512 字节</span><br><span class="line">I/O 大小(最小/最佳)：512 字节 / 512 字节</span><br><span class="line">磁盘标签类型：dos</span><br><span class="line">磁盘标识符：0xc71ed2c6</span><br><span class="line"></span><br><span class="line">设备        启动     起点     末尾     扇区  大小 Id 类型</span><br><span class="line">15g.img1    *        2048   411647   409600  200M 83 Linux</span><br><span class="line">15g.img2           411648 29362175 28950528 13.8G 83 Linux</span><br><span class="line">15g.img3         29362176 31457279  2095104 1023M 82 Linux swap / Solaris</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-losetup挂载分区"><a href="#4-losetup挂载分区" class="headerlink" title="4. losetup挂载分区"></a>4. losetup挂载分区</h3><h4 id="4-1-将分区挂在到loop设备"><a href="#4-1-将分区挂在到loop设备" class="headerlink" title="4.1 将分区挂在到loop设备"></a>4.1 将分区挂在到loop设备</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-o （起始扇区 * 扇区大小）--sizelimit （扇区数量 * 扇区大小） 字节</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">2048 x 512 = 1048576       409600 x 512 = 209715200</span>        </span><br><span class="line">sudo losetup -f -o 1048576 --sizelimit 209715200 15g.img</span><br><span class="line">sudo losetup -f -o 210763776 --sizelimit 14822670336 15g.img</span><br><span class="line">sudo losetup -f -o 15033434112 --sizelimit 1072693248 15g.img</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>15g.img</code> 中包含3个分区，如果使用 <code>losetup</code> 挂载，需要计算每个分区的其实位置和大小。<br>起始位置和偏移通过 3.7中的信息可以查看到。<br><code>-o</code> 起点<em>512<br><code>--sizelimit</code> 扇区</em>512</p>
+<h4 id="4-2-查看挂载情况"><a href="#4-2-查看挂载情况" class="headerlink" title="4.2 查看挂载情况"></a>4.2 查看挂载情况</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo losetup -l</span><br><span class="line"></span><br><span class="line">NAME         SIZELIMIT      OFFSET AUTOCLEAR RO BACK-FILE                            DIO LOG-SEC</span><br><span class="line">/dev/loop1 14822670336   210763776         0  0 /home/zauther/zos/product/zos15g.img   0     512</span><br><span class="line">/dev/loop2  1072693248 15033434112         0  0 /home/zauther/zos/product/zos15g.img   0     512</span><br><span class="line">/dev/loop0   209715200     1048576         0  0 /home/zauther/zos/product/zos15g.img   0     512</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;dev&#x2F;loop0  对应boot分区<br>&#x2F;dev&#x2F;loop1  对应rootfs分区<br>&#x2F;dev&#x2F;loop2  对应swap分区</p>
+<h4 id="4-3-格式化分区"><a href="#4-3-格式化分区" class="headerlink" title="4.3 格式化分区"></a>4.3 格式化分区</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfs.ext4 /dev/loop0</span><br><span class="line">sudo mkfs.ext4 /dev/loop1</span><br><span class="line">sudo mkswap /dev/loop2</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-4-挂载到mnt"><a href="#4-4-挂载到mnt" class="headerlink" title="4.4 挂载到mnt"></a>4.4 挂载到mnt</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/boot</span><br><span class="line">sudo mkdir /mnt/rootfs </span><br><span class="line">sudo mount /dev/loop0 /mnt/boot</span><br><span class="line">sudo mount /dev/loop1 /mnt/rootfs</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-5-查看挂载情况"><a href="#4-5-查看挂载情况" class="headerlink" title="4.5 查看挂载情况"></a>4.5 查看挂载情况</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br><span class="line"></span><br><span class="line">文件系统        容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/loop0      178M  216K  164M    1% /mnt/boot</span><br><span class="line">/dev/loop1       14G   41M   13G    1% /mnt/rootfs</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-kpartx-挂载分区"><a href="#5-kpartx-挂载分区" class="headerlink" title="5 kpartx 挂载分区"></a>5 kpartx 挂载分区</h3><p>通过<code>losetup</code>挂载需要手动计算位置，如果虚假镜像中包含分区表，可以通过<code>kpartx</code>一次性挂载</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kpartx -av 15g.img </span><br><span class="line"></span><br><span class="line">add map loop0p1 (253:2): 0 409600 linear 7:2 2048</span><br><span class="line">add map loop0p2 (253:3): 0 28950528 linear 7:2 411648</span><br><span class="line">add map loop0p3 (253:4): 0 2095104 linear 7:2 29362176</span><br></pre></td></tr></table></figure>
+
+<p><code>-a</code> 添加镜像<br><code>-v</code> verbos信息打印<br><code>kpartx</code>会将 <code>15g.img</code> 挂载到 <code>/dev/loop0</code> 然后映射到 <code>/dev/mapper</code> 中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls /dev/mapper/       </span><br><span class="line"></span><br><span class="line">control  loop0p1  loop0p2  loop0p3</span><br></pre></td></tr></table></figure>
+
+<p>可参考4.4 中，将<code>loop0p1  loop0p2  loop0p3</code>分别挂载到<code>/mnt</code>中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount  /dev/mapper/loop0p1 /mnt/boot</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-安装Grub2到设备"><a href="#6-安装Grub2到设备" class="headerlink" title="6 安装Grub2到设备"></a>6 安装Grub2到设备</h3><h4 id="6-1-安装grub"><a href="#6-1-安装grub" class="headerlink" title="6.1 安装grub"></a>6.1 安装grub</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install grub2</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-2-安装Grub2到设备"><a href="#6-2-安装Grub2到设备" class="headerlink" title="6.2 安装Grub2到设备"></a>6.2 安装Grub2到设备</h4><p>强制安装到 <code>/dev/mapper/loop0p1</code> 即boot分区：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub-install --boot-directory=/mnt/boot --force --allow-floppy /dev/mapper/loop0p1</span><br></pre></td></tr></table></figure>
+
+<p><code>--boot-directory</code> boot分区中的目录位置，需要在boot分区中新建以下文件夹：<br>在执行完 <code>sudo mount  /dev/mapper/loop0p1 /mnt/boot</code> 后：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /mnt/boot</span><br><span class="line">sudo mkdir -p mnt/boot</span><br><span class="line">cd mnt/boot</span><br><span class="line">sudo mkdir grub</span><br></pre></td></tr></table></figure>
+
+<p>此时路径为 <code>/mnt/boot/mnt/boot</code> 。<br>当然也可以再前面直接挂载 <code>sudo mount  /dev/mapper/loop0p1 /mnt</code></p>
+<h4 id="6-3-测试"><a href="#6-3-测试" class="headerlink" title="6.3 测试"></a>6.3 测试</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -nographic -drive format=raw,file=15g.img</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-通过Docker安装Grub2"><a href="#7-通过Docker安装Grub2" class="headerlink" title="7 通过Docker安装Grub2"></a>7 通过Docker安装Grub2</h3><h4 id="7-1-安装docker"><a href="#7-1-安装docker" class="headerlink" title="7.1 安装docker"></a>7.1 安装docker</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common</span><br><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line">sudo add-apt-repository \                                                                      </span><br><span class="line">   &quot;deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \</span><br><span class="line"><span class="meta prompt_">   $</span><span class="language-bash">(lsb_release -cs) \</span></span><br><span class="line"><span class="language-bash">   stable<span class="string">&quot;</span></span></span><br><span class="line">sudo apt-get update                                                                            </span><br><span class="line">sudo apt-get install docker-ce</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-2-添加dockerhub加速镜像"><a href="#7-2-添加dockerhub加速镜像" class="headerlink" title="7.2 添加dockerhub加速镜像"></a>7.2 添加dockerhub加速镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/docker/daemon.json</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p><code>/etc/docker/daemon.json</code> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [</span><br><span class="line">    &quot;https://hub-mirror.c.163.com&quot;,</span><br><span class="line">    &quot;https://mirror.baidubce.com&quot;,</span><br><span class="line">    &quot;https://registry.docker-cn.com&quot;,</span><br><span class="line">    &quot;https://reg-mirror.qiniu.com&quot;,</span><br><span class="line">    &quot;https://dockerhub.azk8s.cn&quot;,</span><br><span class="line">    &quot;https://docker.mirrors.ustc.edu.cn&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-3-拉取Ubuntu镜像并执行"><a href="#7-3-拉取Ubuntu镜像并执行" class="headerlink" title="7.3 拉取Ubuntu镜像并执行"></a>7.3 拉取Ubuntu镜像并执行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo docker pull ubuntu</span><br><span class="line">sudo docker run --rm -it -v ~/testgrub:/root/testgrub ubuntu</span><br></pre></td></tr></table></figure>
+
+<p><code>--rm</code> 运行完退出容器后，自动销毁并删除镜像<br><code>-it</code> 以bash交互的形式运行容器<br><code>-v ~/testgrub:/root/testgrub </code> 本地卷:容器内卷 映射<br>在容器内按第6节中的操作，会发现loop设备无法使用。</p>
+<h4 id="7-4-添加设备映射"><a href="#7-4-添加设备映射" class="headerlink" title="7.4 添加设备映射"></a>7.4 添加设备映射</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/docker/daemon.json</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>添加设备映射并重启docker<br><code>/etc/docker/daemon.json</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [</span><br><span class="line">    &quot;https://hub-mirror.c.163.com&quot;,</span><br><span class="line">    &quot;https://mirror.baidubce.com&quot;,</span><br><span class="line">    &quot;https://registry.docker-cn.com&quot;,</span><br><span class="line">    &quot;https://reg-mirror.qiniu.com&quot;,</span><br><span class="line">    &quot;https://dockerhub.azk8s.cn&quot;,</span><br><span class="line">    &quot;https://docker.mirrors.ustc.edu.cn&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;storage-driver&quot;: &quot;devicemapper&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-卸载设备"><a href="#8-卸载设备" class="headerlink" title="8 卸载设备"></a>8 卸载设备</h3><p>在安装完grub2后，卸载设备</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo umount /mnt/boot/ </span><br><span class="line"></span><br><span class="line">sudo losetup -d /dev/loop0 # loop加载时</span><br><span class="line">sudo kpartx -dv 15g.img  # kpartx加载时 </span><br></pre></td></tr></table></figure>
+
+<p>kpartx:<br><code>-d</code> 卸载镜像，会同时卸载<code>/dev/mapper/loop0p*</code> 和<code>/dev/loop0</code></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Grub/" rel="tag"># Grub</a>
+              <a href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag"># 引导</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/26/%E6%A0%91%E8%8E%93%E6%B4%BE%E4%BD%BF%E7%94%A8V2ray/" rel="prev" title="树莓派使用V2ray">
+      <i class="fa fa-chevron-left"></i> 树莓派使用V2ray
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/29/U-Boot%20%E5%AE%89%E8%A3%85%E5%88%B0%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="next" title="U-Boot 安装到树莓派">
+      U-Boot 安装到树莓派 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%A3%81%E7%9B%98"><span class="nav-number">1.</span> <span class="nav-text">1. 创建虚拟磁盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8C%82%E8%BD%BDimg"><span class="nav-number">2.</span> <span class="nav-text">2. 挂载img</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-img%E5%88%86%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">3. img分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-Boot%E5%88%86%E5%8C%BA"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Boot分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-rootfs%E5%88%86%E5%8C%BA"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 rootfs分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-swap%E5%88%86%E5%8C%BA"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 swap分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-%E8%AE%BE%E7%BD%AEBoot%E5%88%86%E5%8C%BA%E5%8F%AF%E4%BB%A5%E5%BC%95%E5%AF%BC%E6%A0%87%E8%AE%B0"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 设置Boot分区可以引导标记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-%E4%BF%9D%E5%AD%98%E5%88%86%E5%8C%BA%E8%AE%B0%E5%BD%95"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 保存分区记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-%E5%8D%B8%E8%BD%BD%E8%AE%BE%E5%A4%87"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 卸载设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-%E6%9F%A5%E7%9C%8Bimg%E5%88%86%E5%8C%BA%E6%83%85%E5%86%B5"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 查看img分区情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-losetup%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA"><span class="nav-number">4.</span> <span class="nav-text">4. losetup挂载分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E5%B0%86%E5%88%86%E5%8C%BA%E6%8C%82%E5%9C%A8%E5%88%B0loop%E8%AE%BE%E5%A4%87"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 将分区挂在到loop设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E6%9F%A5%E7%9C%8B%E6%8C%82%E8%BD%BD%E6%83%85%E5%86%B5"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 查看挂载情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%88%86%E5%8C%BA"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 格式化分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-%E6%8C%82%E8%BD%BD%E5%88%B0mnt"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 挂载到mnt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-%E6%9F%A5%E7%9C%8B%E6%8C%82%E8%BD%BD%E6%83%85%E5%86%B5"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 查看挂载情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-kpartx-%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA"><span class="nav-number">5.</span> <span class="nav-text">5 kpartx 挂载分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%89%E8%A3%85Grub2%E5%88%B0%E8%AE%BE%E5%A4%87"><span class="nav-number">6.</span> <span class="nav-text">6 安装Grub2到设备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-%E5%AE%89%E8%A3%85grub"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 安装grub</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-%E5%AE%89%E8%A3%85Grub2%E5%88%B0%E8%AE%BE%E5%A4%87"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 安装Grub2到设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-%E6%B5%8B%E8%AF%95"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85Grub2"><span class="nav-number">7.</span> <span class="nav-text">7 通过Docker安装Grub2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-%E5%AE%89%E8%A3%85docker"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 安装docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-%E6%B7%BB%E5%8A%A0dockerhub%E5%8A%A0%E9%80%9F%E9%95%9C%E5%83%8F"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 添加dockerhub加速镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-%E6%8B%89%E5%8F%96Ubuntu%E9%95%9C%E5%83%8F%E5%B9%B6%E6%89%A7%E8%A1%8C"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 拉取Ubuntu镜像并执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-%E6%B7%BB%E5%8A%A0%E8%AE%BE%E5%A4%87%E6%98%A0%E5%B0%84"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 添加设备映射</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%8D%B8%E8%BD%BD%E8%AE%BE%E5%A4%87"><span class="nav-number">8.</span> <span class="nav-text">8 卸载设备</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zauther</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zauther" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zauther" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+        
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width:100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/" rel="tag">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Chromiun/" rel="tag">Chromiun</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Grub/" rel="tag">Grub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JS/" rel="tag">JS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/" rel="tag">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/U-Boot/" rel="tag">U-Boot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V2ray/" rel="tag">V2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/" rel="tag">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/" rel="tag">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag">引导</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:13</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

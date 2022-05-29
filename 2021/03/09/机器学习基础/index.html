@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.cwiki.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="主要任务 分类（classification）：将实例数据划分到合适的类别中。 应用实例：判断网站是否被黑客入侵（二分类 ），手写数字的自动识别（多分类）   回归（regression）：主要用于预测数值型数据。 应用实例：股票价格波动的预测，房屋价格的预测等。    监督学习（supervised learning）必须确定目标变量的值，以便机器学习算法可以发现特征和目标变量之间的关系。在监督">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习基础">
+<meta property="og:url" content="https://blog.cwiki.cn/2021/03/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Zzz个人博客">
+<meta property="og:description" content="主要任务 分类（classification）：将实例数据划分到合适的类别中。 应用实例：判断网站是否被黑客入侵（二分类 ），手写数字的自动识别（多分类）   回归（regression）：主要用于预测数值型数据。 应用实例：股票价格波动的预测，房屋价格的预测等。    监督学习（supervised learning）必须确定目标变量的值，以便机器学习算法可以发现特征和目标变量之间的关系。在监督">
+<meta property="og:locale">
+<meta property="og:image" content="https://camo.githubusercontent.com/d8590769184ddfedf61412b48b779edcba563d4d/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f2545362539432542412545352539392541382545352541442541362545342542392541302545352539462542412545372541312538302545382541452541442545372542422538332545382542462538372545372541382538422e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1134&status=done&style=none&width=1134">
+<meta property="og:image" content="https://camo.githubusercontent.com/5e3d929718cc18352130414fc6c89ef281f89d31/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f6d6c5f616c676f726974686d2e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1130&status=done&style=none&width=1130">
+<meta property="og:image" content="https://camo.githubusercontent.com/3d53b6befc5c3d0b6df6a890d1bc698de5205315/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f2545362539432542412545352539392541382545352541442541362545342542392541302545352539462542412545372541312538302d2545392538302538392545362538422541392545372541452539372545362542332539352e6a7067#align=left&display=inline&height=662&margin=%5Bobject%20Object%5D&originHeight=662&originWidth=1238&status=done&style=none&width=1238">
+<meta property="og:image" content="https://raw.githubusercontent.com/Zauther/figurebed/blog/imgs/activation_function.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/Zauther/figurebed/blog/imgs/sigmoid.svg">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070574-9232b0e5-c18b-48c8-b18c-b2d9b44d0865.svg#align=left&display=inline&height=51&margin=%5Bobject%20Object%5D&originHeight=51&originWidth=478&size=0&status=done&style=none&width=478">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070582-be05cbae-f668-46fe-acee-fa862ee1184a.svg#align=left&display=inline&height=69&margin=%5Bobject%20Object%5D&originHeight=69&originWidth=337&size=0&status=done&style=none&width=337">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070575-609126fe-8170-4da6-823a-e0bf1d473c1c.svg#align=left&display=inline&height=25&margin=%5Bobject%20Object%5D&originHeight=25&originWidth=212&size=0&status=done&style=none&width=212">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070587-7e1d9949-1ee2-4c7f-ac10-125c561ca2a8.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=208&size=0&status=done&style=none&width=208">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070615-c09c6263-6790-4d44-8472-d7a7cbc0e83e.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=212&size=0&status=done&style=none&width=212">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070591-621633f8-781a-4c2e-8830-e80854df13e8.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=219&size=0&status=done&style=none&width=219">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070595-969cd82f-775e-4997-91de-dbe05c785759.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=214&size=0&status=done&style=none&width=214">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/__latex/f899941d2acb44b4ffa1cc1dfdd903b8.svg#card=math&code=f%28x%29%3D%5Cbegin%7Bcases%7D%0Ax%2C%5Cquad%20if%20%5Cquad%20x%20%3C%200%20%5C%5C%5C%5C%0A%5Calpha%28e%5Ex-1%29%2C%5Cquad%20otherwise%0A%5Cend%7Bcases%7D&height=61&width=241">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/__latex/aa44f735dfcacbb5534b9070249b0192.svg#card=math&code=f%28x%29%27%3D%5Cbegin%7Bcases%7D%0A1%2C%5Cquad%20if%20%5Cquad%20x%20%3C%200%20%5C%5C%5C%5C%0Af%28x%29%20%2B%20%5Calpha%20%2C%5Cquad%20otherwise%0A%5Cend%7Bcases%7D&height=61&width=240">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070597-cfb40bdd-fc19-4ef5-8f50-b42cbec0bd33.svg#align=left&display=inline&height=57&margin=%5Bobject%20Object%5D&originHeight=57&originWidth=133&size=0&status=done&style=none&width=133">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/gif/286414/1615626070588-ad4a7f87-c8d1-4d45-b38e-fc5d9e649eba.gif#align=left&display=inline&height=480&margin=%5Bobject%20Object%5D&originHeight=480&originWidth=620&size=0&status=done&style=none&width=620">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/gif/286414/1615626070576-53f54d5c-3464-4e71-bcc6-070ba700e787.gif#align=left&display=inline&height=557&margin=%5Bobject%20Object%5D&originHeight=557&originWidth=720&size=0&status=done&style=none&width=720">
+<meta property="article:published_time" content="2021-03-09T11:51:00.000Z">
+<meta property="article:modified_time" content="2022-05-09T16:33:07.550Z">
+<meta property="article:author" content="zauther">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/d8590769184ddfedf61412b48b779edcba563d4d/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f2545362539432542412545352539392541382545352541442541362545342542392541302545352539462542412545372541312538302545382541452541442545372542422538332545382542462538372545372541382538422e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1134&status=done&style=none&width=1134">
+
+<link rel="canonical" href="https://blog.cwiki.cn/2021/03/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>机器学习基础 | Zzz个人博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-97381903-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zzz个人博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/03/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-09 19:51:00" itemprop="dateCreated datePublished" datetime="2021-03-09T19:51:00+08:00">2021-03-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-10 00:33:07" itemprop="dateModified" datetime="2022-05-10T00:33:07+08:00">2022-05-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="主要任务"><a href="#主要任务" class="headerlink" title="主要任务"></a>主要任务</h2><ul>
+<li>分类（classification）：将实例数据划分到合适的类别中。<ul>
+<li>应用实例：判断网站是否被黑客入侵（二分类 ），手写数字的自动识别（多分类）</li>
+</ul>
+</li>
+<li>回归（regression）：主要用于预测数值型数据。<ul>
+<li>应用实例：股票价格波动的预测，房屋价格的预测等。</li>
+</ul>
+</li>
+</ul>
+<h2 id="监督学习（supervised-learning）"><a href="#监督学习（supervised-learning）" class="headerlink" title="监督学习（supervised learning）"></a>监督学习（supervised learning）</h2><p>必须确定目标变量的值，以便机器学习算法可以发现特征和目标变量之间的关系。在监督学习中，给定一组数据，我们知道正确的输出结果应该是什么样子，并且知道在输入和输出之间有着一个特定的关系。 (包括：分类和回归)</p>
+<h2 id="非监督学习（unsupervised-learing）"><a href="#非监督学习（unsupervised-learing）" class="headerlink" title="非监督学习（unsupervised learing）"></a>非监督学习（unsupervised learing）</h2><p>在机器学习，无监督学习的问题是，在未加标签的数据中，试图找到隐藏的结构。因为提供给学习者的实例是未标记的，因此没有错误或报酬信号来评估潜在的解决方案。</p>
+<h2 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h2><p>这个算法可以训练程序做出某一决定。程序在某一情况下尝试所有的可能行动，记录不同行动的结果并试着找出最好的一次尝试来做决定。 属于这一类算法的有马尔可夫决策过程。</p>
+<h4 id="机器学习过程"><a href="#机器学习过程" class="headerlink" title="机器学习过程"></a>机器学习过程</h4><p><img src="https://camo.githubusercontent.com/d8590769184ddfedf61412b48b779edcba563d4d/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f2545362539432542412545352539392541382545352541442541362545342542392541302545352539462542412545372541312538302545382541452541442545372542422538332545382542462538372545372541382538422e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1134&status=done&style=none&width=1134"></p>
+<h4 id="算法汇总"><a href="#算法汇总" class="headerlink" title="算法汇总"></a>算法汇总</h4><p><img src="https://camo.githubusercontent.com/5e3d929718cc18352130414fc6c89ef281f89d31/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f6d6c5f616c676f726974686d2e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1130&status=done&style=none&width=1130"></p>
+<h2 id="机器学习-使用"><a href="#机器学习-使用" class="headerlink" title="机器学习 使用"></a>机器学习 使用</h2><h4 id="选择算法需要考虑的两个问题"><a href="#选择算法需要考虑的两个问题" class="headerlink" title="选择算法需要考虑的两个问题"></a>选择算法需要考虑的两个问题</h4><ol>
+<li>算法场景<ul>
+<li>预测明天是否下雨，因为可以用历史的天气情况做预测，所以选择监督学习算法</li>
+<li>给一群陌生的人进行分组，但是我们并没有这些人的类别信息，所以选择无监督学习算法、通过他们身高、体重等特征进行处理。</li>
+</ul>
+</li>
+<li>需要收集或分析的数据是什么</li>
+</ol>
+<h4 id="选择算法图"><a href="#选择算法图" class="headerlink" title="选择算法图"></a>选择算法图</h4><p><img src="https://camo.githubusercontent.com/3d53b6befc5c3d0b6df6a890d1bc698de5205315/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f2545362539432542412545352539392541382545352541442541362545342542392541302545352539462542412545372541312538302d2545392538302538392545362538422541392545372541452539372545362542332539352e6a7067#align=left&display=inline&height=662&margin=%5Bobject%20Object%5D&originHeight=662&originWidth=1238&status=done&style=none&width=1238"></p>
+<h4 id="机器学习-开发流程"><a href="#机器学习-开发流程" class="headerlink" title="机器学习 开发流程"></a>机器学习 开发流程</h4><ol>
+<li>收集数据: 收集样本数据</li>
+<li>准备数据: 注意数据的格式</li>
+<li>分析数据: 为了确保数据集中没有垃圾数据；<ul>
+<li>如果是算法可以处理的数据格式或可信任的数据源，则可以跳过该步骤；</li>
+<li>另外该步骤需要人工干预，会降低自动化系统的价值。</li>
+</ul>
+</li>
+<li>训练算法: [机器学习算法核心]如果使用无监督学习算法，由于不存在目标变量值，则可以跳过该步骤</li>
+<li>测试算法: [机器学习算法核心]评估算法效果</li>
+<li>使用算法: 将机器学习算法转为应用程序</li>
+</ol>
+<h1 id="深度学习中激活函数的优缺点"><a href="#深度学习中激活函数的优缺点" class="headerlink" title="深度学习中激活函数的优缺点"></a>深度学习中激活函数的优缺点</h1><p><strong>为什么要使用非线性激活函数？</strong></p>
+<p>答：如果不使用激活函数，这种情况下每一层输出都是上一层输入的线性函数。无论神经网络有多少层，输出都是输入的线性函数，这样就和只有一个隐藏层的效果是一样的。这种情况相当于多层感知机(MLP)。</p>
+<h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><p><img src="https://raw.githubusercontent.com/Zauther/figurebed/blog/imgs/activation_function.webp"></p>
+<h2 id="1-Sigmoid函数"><a href="#1-Sigmoid函数" class="headerlink" title="1. Sigmoid函数"></a>1. Sigmoid函数</h2><p><strong>sigmoid函数</strong></p>
+<p><img src="https://raw.githubusercontent.com/Zauther/figurebed/blog/imgs/sigmoid.svg"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x =  np.arange(-<span class="number">10</span>,<span class="number">10</span>,<span class="number">0.01</span>)</span><br><span class="line">y=<span class="number">1</span>/(<span class="number">1</span>+np.exp(-x))</span><br><span class="line"></span><br><span class="line"><span class="comment">#sigmoid函数图像</span></span><br><span class="line">plt.plot(x,y,label=<span class="string">&#x27;sigmoid函数图像&#x27;</span>)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span>,linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>sigmoid的导数</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070574-9232b0e5-c18b-48c8-b18c-b2d9b44d0865.svg#align=left&display=inline&height=51&margin=%5Bobject%20Object%5D&originHeight=51&originWidth=478&size=0&status=done&style=none&width=478"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sigmoid导数图像</span></span><br><span class="line">dev_y = y*(<span class="number">1</span>-y)</span><br><span class="line">plt.plot(x,dev_y,label=<span class="string">&#x27;sigmoid导数图像&#x27;</span>)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span>,linewidth=<span class="string">&#x27;0.2&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ol>
+<li>便于求导的平滑函数；</li>
+<li>能压缩数据，保证数据幅度不会有问题；</li>
+<li>适合用于前向传播。</li>
+</ol>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>容易出现梯度消失（gradient vanishing）的现象：当激活函数接近饱和区时，变化太缓慢，导数接近0，根据后向传递的数学依据是微积分求导的链式法则，当前导数需要之前各层导数的乘积，几个比较小的数相乘，导数结果很接近0，从而无法完成深层网络的训练。</li>
+<li>Sigmoid的输出不是0均值（zero-centered）的：这会导致后层的神经元的输入是非0均值的信号，这会对梯度产生影响。以 f&#x3D;sigmoid(wx+b)为例， 假设输入均为正数（或负数），那么对w的导数总是正数（或负数），这样在反向传播过程中要么都往正方向更新，要么都往负方向更新，导致有一种捆绑效果，使得收敛缓慢。</li>
+<li>幂运算相对耗时</li>
+</ol>
+<h2 id="2-tanh函数"><a href="#2-tanh函数" class="headerlink" title="2. tanh函数"></a>2. tanh函数</h2><p><strong>tanh函数</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070582-be05cbae-f668-46fe-acee-fa862ee1184a.svg#align=left&display=inline&height=69&margin=%5Bobject%20Object%5D&originHeight=69&originWidth=337&size=0&status=done&style=none&width=337"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x =  np.arange(-<span class="number">10</span>,<span class="number">10</span>,<span class="number">0.01</span>)</span><br><span class="line">y=(np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#tanh函数图像</span></span><br><span class="line">plt.plot(x,y)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span> , linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="tanh导数"><a href="#tanh导数" class="headerlink" title="tanh导数"></a><strong>tanh导数</strong></h1><p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070575-609126fe-8170-4da6-823a-e0bf1d473c1c.svg#align=left&display=inline&height=25&margin=%5Bobject%20Object%5D&originHeight=25&originWidth=212&size=0&status=done&style=none&width=212"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#tanh导数图像</span></span><br><span class="line">dev_y=<span class="number">1</span>-np.square(y)</span><br><span class="line">plt.plot(x,dev_y)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span> , linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>tanh函数将输入值压缩到 -1~1 的范围，因此它是0均值的，解决了Sigmoid函数的非zero-centered问题，但是它也存在梯度消失和幂运算的问题。</p>
+<p>其实 tanh(x)&#x3D;2sigmoid(2x)-1</p>
+<h2 id="3-ReLU-Rectified-Linear-Unit-修正的线性单元"><a href="#3-ReLU-Rectified-Linear-Unit-修正的线性单元" class="headerlink" title="3. ReLU(Rectified Linear Unit 修正的线性单元)"></a>3. ReLU(Rectified Linear Unit 修正的线性单元)</h2><p><strong>ReLU</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070587-7e1d9949-1ee2-4c7f-ac10-125c561ca2a8.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=208&size=0&status=done&style=none&width=208"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x =  np.arange(-<span class="number">10</span>,<span class="number">10</span>,<span class="number">0.01</span>)</span><br><span class="line">y=<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x:x <span class="keyword">if</span> x&gt;<span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span>,x))</span><br><span class="line"></span><br><span class="line"><span class="comment">#ReLU函数图像</span></span><br><span class="line">plt.plot(x,y)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span> , linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>ReLU函数导数</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070615-c09c6263-6790-4d44-8472-d7a7cbc0e83e.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=212&size=0&status=done&style=none&width=212"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ReLU函数导数图像</span></span><br><span class="line">dev_y =<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: <span class="number">1</span> <span class="keyword">if</span> x&gt;<span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span>,x))</span><br><span class="line">plt.plot(x,dev_y)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span> , linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ol>
+<li>SGD算法的收敛速度比 sigmoid 和 tanh 快；（梯度不会饱和，解决了梯度消失问题）</li>
+<li>计算复杂度低，不需要进行指数运算；</li>
+<li>适合用于后向传播。</li>
+</ol>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>ReLU的输出不是zero-centered；</li>
+<li>Dead ReLU Problem（神经元坏死现象）：某些神经元可能永远不会被激活，导致相应参数永远不会被更新（在负数部分，梯度为0）。产生这种现象的两个原因：参数初始化问题；learning rate太高导致在训练过程中参数更新太大。 解决方法：采用Xavier初始化方法，以及避免将learning rate设置太大或使用adagrad等自动调节learning rate的算法。</li>
+<li>ReLU不会对数据做幅度压缩，所以数据的幅度会随着模型层数的增加不断扩张。</li>
+</ol>
+<h2 id="4-Leakly-ReLU函数"><a href="#4-Leakly-ReLU函数" class="headerlink" title="4. Leakly ReLU函数"></a>4. Leakly ReLU函数</h2><p><strong>Leakly ReLU函数</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070591-621633f8-781a-4c2e-8830-e80854df13e8.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=219&size=0&status=done&style=none&width=219"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">x =  np.arange(-<span class="number">10</span>,<span class="number">10</span>,<span class="number">0.01</span>)</span><br><span class="line">lambda1=<span class="number">0.1</span>   <span class="comment">#指定lambda为0.1</span></span><br><span class="line">y=<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x:x <span class="keyword">if</span> x&gt;<span class="number">0</span> <span class="keyword">else</span> lambda1*x,x))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#leaky ReLU函数图像</span></span><br><span class="line">plt.plot(x,y)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span> , linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Leaky ReLU函数导数</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070595-969cd82f-775e-4997-91de-dbe05c785759.svg#align=left&display=inline&height=49&margin=%5Bobject%20Object%5D&originHeight=49&originWidth=214&size=0&status=done&style=none&width=214"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#leaky ReLU函数导数图像</span></span><br><span class="line">dev_y = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: <span class="number">1</span> <span class="keyword">if</span> x&gt;<span class="number">0</span> <span class="keyword">else</span> lambda1,x))</span><br><span class="line">plt.plot(x,dev_y)</span><br><span class="line">plt.grid(color=<span class="string">&#x27;b&#x27;</span> , linewidth=<span class="string">&#x27;0.1&#x27;</span> ,linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>用来解决ReLU带来的神经元坏死的问题，可以将0.01设置成一个变量a，其中a由后向传播学出来。_但是其表现并不一定比ReLU好_。</p>
+<h2 id="5-ELU函数（指数线性函数）"><a href="#5-ELU函数（指数线性函数）" class="headerlink" title="5. ELU函数（指数线性函数）"></a>5. ELU函数（指数线性函数）</h2><p><strong>ELU函数（指数线性函数）</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/__latex/f899941d2acb44b4ffa1cc1dfdd903b8.svg#card=math&code=f%28x%29%3D%5Cbegin%7Bcases%7D%0Ax%2C%5Cquad%20if%20%5Cquad%20x%20%3C%200%20%5C%5C%5C%5C%0A%5Calpha%28e%5Ex-1%29%2C%5Cquad%20otherwise%0A%5Cend%7Bcases%7D&height=61&width=241"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x =  np.arange(-10,10,0.01)</span><br><span class="line">y=list(map(lambda x:x if x&gt;0 else (np.exp(x)-1),x))</span><br><span class="line"></span><br><span class="line"># ELU函数（指数线性函数）图像</span><br><span class="line">plt.plot(x,y)</span><br><span class="line">plt.grid(color=&#x27;b&#x27;,linewidth=&#x27;0.1&#x27; ,linestyle=&#x27;--&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>ELU函数（指数线性函数）导数</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/__latex/aa44f735dfcacbb5534b9070249b0192.svg#card=math&code=f%28x%29%27%3D%5Cbegin%7Bcases%7D%0A1%2C%5Cquad%20if%20%5Cquad%20x%20%3C%200%20%5C%5C%5C%5C%0Af%28x%29%20%2B%20%5Calpha%20%2C%5Cquad%20otherwise%0A%5Cend%7Bcases%7D&height=61&width=240"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># dev_y = list(map(lambda x: 1 if x&gt;0 else lambda1,x))</span><br><span class="line"></span><br><span class="line"># ELU函数（指数线性函数）图像</span><br><span class="line"># plt.plot(x,dev_y)</span><br><span class="line"># plt.grid(color=&#x27;b&#x27;,linewidth=&#x27;0.1&#x27; ,linestyle=&#x27;--&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>ELU有ReLU的所有优点，并且不会有 Dead ReLU问题，输出的均值接近0（zero-centered）。但是计算量大，其表现并不一定比ReLU好。。</p>
+<h2 id="6-softmax"><a href="#6-softmax" class="headerlink" title="6. softmax"></a>6. softmax</h2><p><strong>softmax</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/svg/286414/1615626070597-cfb40bdd-fc19-4ef5-8f50-b42cbec0bd33.svg#align=left&display=inline&height=57&margin=%5Bobject%20Object%5D&originHeight=57&originWidth=133&size=0&status=done&style=none&width=133"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line"></span><br><span class="line">z = np.arange(-10, 10, 0.05)</span><br><span class="line">exp_z = [math.exp(z) for z in z]</span><br><span class="line">sum_exp_z = sum(exp_z)</span><br><span class="line">softmax_z = [round(i / sum_exp_z, 6) for i in exp_z]</span><br><span class="line">plt.plot(z, softmax_z)</span><br><span class="line">plt.grid(color=&#x27;b&#x27;,linewidth=&#x27;0.1&#x27; ,linestyle=&#x27;--&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>多分类任务，当类别数k＝2时，Softmax回归退化为Logistic回归。</p>
+<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32626442">https://zhuanlan.zhihu.com/p/32626442</a></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/gif/286414/1615626070588-ad4a7f87-c8d1-4d45-b38e-fc5d9e649eba.gif#align=left&display=inline&height=480&margin=%5Bobject%20Object%5D&originHeight=480&originWidth=620&size=0&status=done&style=none&width=620"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/gif/286414/1615626070576-53f54d5c-3464-4e71-bcc6-070ba700e787.gif#align=left&display=inline&height=557&margin=%5Bobject%20Object%5D&originHeight=557&originWidth=720&size=0&status=done&style=none&width=720"></p>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60302475">https://zhuanlan.zhihu.com/p/60302475</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/08/JupyterLab%20NoteBook%20%E5%AE%89%E8%A3%85/" rel="prev" title="JupyterLab NoteBook 安装">
+      <i class="fa fa-chevron-left"></i> JupyterLab NoteBook 安装
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/09/MAC%20%E4%B8%8B%20V8%20Android%E7%BC%96%E8%AF%91%E6%8C%87%E5%A2%99/" rel="next" title="MAC 下 V8 Android编译指墙">
+      MAC 下 V8 Android编译指墙 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">主要任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%EF%BC%88supervised-learning%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">监督学习（supervised learning）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%EF%BC%88unsupervised-learing%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">非监督学习（unsupervised learing）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.</span> <span class="nav-text">强化学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B"><span class="nav-number">4.0.1.</span> <span class="nav-text">机器学习过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%B1%87%E6%80%BB"><span class="nav-number">4.0.2.</span> <span class="nav-text">算法汇总</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">机器学习 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95%E9%9C%80%E8%A6%81%E8%80%83%E8%99%91%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="nav-number">5.0.1.</span> <span class="nav-text">选择算法需要考虑的两个问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95%E5%9B%BE"><span class="nav-number">5.0.2.</span> <span class="nav-text">选择算法图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="nav-number">5.0.3.</span> <span class="nav-text">机器学习 开发流程</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number"></span> <span class="nav-text">深度学习中激活函数的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">激活函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Sigmoid%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">1. Sigmoid函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-tanh%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">2. tanh函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tanh%E5%AF%BC%E6%95%B0"><span class="nav-number"></span> <span class="nav-text">tanh导数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ReLU-Rectified-Linear-Unit-%E4%BF%AE%E6%AD%A3%E7%9A%84%E7%BA%BF%E6%80%A7%E5%8D%95%E5%85%83"><span class="nav-number">1.</span> <span class="nav-text">3. ReLU(Rectified Linear Unit 修正的线性单元)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Leakly-ReLU%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">4. Leakly ReLU函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-ELU%E5%87%BD%E6%95%B0%EF%BC%88%E6%8C%87%E6%95%B0%E7%BA%BF%E6%80%A7%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">5. ELU函数（指数线性函数）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-softmax"><span class="nav-number">4.</span> <span class="nav-text">6. softmax</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number"></span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number"></span> <span class="nav-text">损失函数</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zauther</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zauther" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zauther" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+        
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width:100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/" rel="tag">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Chromiun/" rel="tag">Chromiun</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Grub/" rel="tag">Grub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JS/" rel="tag">JS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/" rel="tag">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/U-Boot/" rel="tag">U-Boot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V2ray/" rel="tag">V2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/" rel="tag">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/" rel="tag">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag">引导</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:13</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

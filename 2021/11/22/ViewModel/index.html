@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.cwiki.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ViewModelViewModelProviders123class TestViewModel extends ViewModelTestViewModel test &#x3D; ViewModelProviders.of(this).get(TestViewModel.class);  在ViewModelProviders中会创建ViewModelProvider，通过ViewModelProvi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ViewModel">
+<meta property="og:url" content="https://blog.cwiki.cn/2021/11/22/ViewModel/index.html">
+<meta property="og:site_name" content="Zzz个人博客">
+<meta property="og:description" content="ViewModelViewModelProviders123class TestViewModel extends ViewModelTestViewModel test &#x3D; ViewModelProviders.of(this).get(TestViewModel.class);  在ViewModelProviders中会创建ViewModelProvider，通过ViewModelProvi">
+<meta property="og:locale">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/__puml/2413f5e31d82f1bf26ea75e1c7804dc6.svg#lake_card_v2=eyJ0eXBlIjoicHVtbCIsImNvZGUiOiJAc3RhcnR1bWxcbmludGVyZmFjZSBWaWV3TW9kZWxTdG9yZU93bmVyIHtcblx0Vmlld01vZGVsU3RvcmUgZ2V0Vmlld01vZGVsU3RvcmUoKTtcbn1cblxuY2xhc3MgRnJhZ21lbnRBY3Rpdml0eSBleHRlbmRzIFN1cHBvcnRBY3Rpdml0eSBpbXBsZW1lbnRzIFZpZXdNb2RlbFN0b3JlT3duZXJcblxuY2xhc3MgU3VwcG9ydEFjdGl2aXR5IGV4dGVuZHMgQWN0aXZpdHkgaW1wbGVtZW50cyBMaWZlY3ljbGVPd25lcntcblx0TGlmZWN5Y2xlUmVnaXN0cnkgbUxpZmVjeWNsZVJlZ2lzdHJ5O1xufVxuXG5TdXBwb3J0QWN0aXZpdHkgby0tICBMaWZlY3ljbGVSZWdpc3RyeVxuXG5AZW5kdW1sIiwidXJsIjoiaHR0cHM6Ly9jZG4ubmxhcmsuY29tL3l1cXVlL19fcHVtbC8yNDEzZjVlMzFkODJmMWJmMjZlYTc1ZTFjNzgwNGRjNi5zdmciLCJpZCI6ImF3aTFYIiwibWFyZ2luIjp7InRvcCI6dHJ1ZSwiYm90dG9tIjp0cnVlfSwiY2FyZCI6ImRpYWdyYW0ifQ==">
+<meta property="article:published_time" content="2021-11-21T16:30:00.000Z">
+<meta property="article:modified_time" content="2022-05-29T14:23:29.539Z">
+<meta property="article:author" content="zauther">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/__puml/2413f5e31d82f1bf26ea75e1c7804dc6.svg#lake_card_v2=eyJ0eXBlIjoicHVtbCIsImNvZGUiOiJAc3RhcnR1bWxcbmludGVyZmFjZSBWaWV3TW9kZWxTdG9yZU93bmVyIHtcblx0Vmlld01vZGVsU3RvcmUgZ2V0Vmlld01vZGVsU3RvcmUoKTtcbn1cblxuY2xhc3MgRnJhZ21lbnRBY3Rpdml0eSBleHRlbmRzIFN1cHBvcnRBY3Rpdml0eSBpbXBsZW1lbnRzIFZpZXdNb2RlbFN0b3JlT3duZXJcblxuY2xhc3MgU3VwcG9ydEFjdGl2aXR5IGV4dGVuZHMgQWN0aXZpdHkgaW1wbGVtZW50cyBMaWZlY3ljbGVPd25lcntcblx0TGlmZWN5Y2xlUmVnaXN0cnkgbUxpZmVjeWNsZVJlZ2lzdHJ5O1xufVxuXG5TdXBwb3J0QWN0aXZpdHkgby0tICBMaWZlY3ljbGVSZWdpc3RyeVxuXG5AZW5kdW1sIiwidXJsIjoiaHR0cHM6Ly9jZG4ubmxhcmsuY29tL3l1cXVlL19fcHVtbC8yNDEzZjVlMzFkODJmMWJmMjZlYTc1ZTFjNzgwNGRjNi5zdmciLCJpZCI6ImF3aTFYIiwibWFyZ2luIjp7InRvcCI6dHJ1ZSwiYm90dG9tIjp0cnVlfSwiY2FyZCI6ImRpYWdyYW0ifQ==">
+
+<link rel="canonical" href="https://blog.cwiki.cn/2021/11/22/ViewModel/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>ViewModel | Zzz个人博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-97381903-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zzz个人博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/11/22/ViewModel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ViewModel
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-22 00:30:00" itemprop="dateCreated datePublished" datetime="2021-11-22T00:30:00+08:00">2021-11-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-29 22:23:29" itemprop="dateModified" datetime="2022-05-29T22:23:29+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>13 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="ViewModel"><a href="#ViewModel" class="headerlink" title="ViewModel"></a>ViewModel</h3><h4 id="ViewModelProviders"><a href="#ViewModelProviders" class="headerlink" title="ViewModelProviders"></a>ViewModelProviders</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TestViewModel</span> <span class="keyword">extends</span> <span class="title class_">ViewModel</span></span><br><span class="line"></span><br><span class="line"><span class="type">TestViewModel</span> <span class="variable">test</span> <span class="operator">=</span> ViewModelProviders.of(<span class="built_in">this</span>).get(TestViewModel.class);</span><br></pre></td></tr></table></figure>
+
+<p>在ViewModelProviders中会创建ViewModelProvider，通过ViewModelProvider来管理ViewModel。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NonNull</span></span><br><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ViewModelProvider <span class="title function_">of</span><span class="params">(<span class="meta">@NonNull</span> FragmentActivity activity, <span class="meta">@Nullable</span> Factory factory)</span> &#123;</span><br><span class="line">    <span class="type">Application</span> <span class="variable">application</span> <span class="operator">=</span> checkApplication(activity);</span><br><span class="line">    <span class="keyword">if</span> (factory == <span class="literal">null</span>) &#123;</span><br><span class="line">        factory = AndroidViewModelFactory.getInstance(application);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ViewModelProvider</span>(ViewModelStores.of(activity), (Factory)factory);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>ViewModelProvider中的核心要素只有ViewModelProvider.Factory和ViewModelStore。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ViewModelProvider</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ViewModelProvider.Factory mFactory;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ViewModelStore mViewModelStore;</span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    <span class="meta">@MainThread</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T <span class="keyword">extends</span> <span class="title class_">ViewModel</span>&gt; T <span class="title function_">get</span><span class="params">(<span class="meta">@NonNull</span> String key, <span class="meta">@NonNull</span> Class&lt;T&gt; modelClass)</span> &#123;</span><br><span class="line">        <span class="type">ViewModel</span> <span class="variable">viewModel</span> <span class="operator">=</span> <span class="built_in">this</span>.mViewModelStore.get(key);</span><br><span class="line">        <span class="keyword">if</span> (modelClass.isInstance(viewModel)) &#123;</span><br><span class="line">            <span class="keyword">return</span> viewModel;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (viewModel != <span class="literal">null</span>) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            viewModel = <span class="built_in">this</span>.mFactory.create(modelClass);</span><br><span class="line">            <span class="built_in">this</span>.mViewModelStore.put(key, viewModel);</span><br><span class="line">            <span class="keyword">return</span> viewModel;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在ViewModelProvider.get时，先从mViewModelStore中取，取不到就通过mFactory创建。下面分别是2个<br>Factory中的创建方式，当有包含Application构造函数时，注入mApplication，不包含则直接无参数构造。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">NewInstanceFactory</span> <span class="keyword">implements</span> <span class="title class_">ViewModelProvider</span>.Factory&#123;</span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T <span class="keyword">extends</span> <span class="title class_">ViewModel</span>&gt; T <span class="title function_">create</span><span class="params">(<span class="meta">@NonNull</span> Class&lt;T&gt; modelClass)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> (ViewModel)modelClass.newInstance();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException var3) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Cannot create an instance of &quot;</span> + modelClass, var3);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException var4) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Cannot create an instance of &quot;</span> + modelClass, var4);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">AndroidViewModelFactory</span> <span class="keyword">extends</span> <span class="title class_">ViewModelProvider</span>.NewInstanceFactory &#123;</span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T <span class="keyword">extends</span> <span class="title class_">ViewModel</span>&gt; T <span class="title function_">create</span><span class="params">(<span class="meta">@NonNull</span> Class&lt;T&gt; modelClass)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (AndroidViewModel.class.isAssignableFrom(modelClass)) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> (ViewModel)modelClass.getConstructor(Application.class).newInstance(<span class="built_in">this</span>.mApplication);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (NoSuchMethodException var3) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Cannot create an instance of &quot;</span> + modelClass, var3);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IllegalAccessException var4) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Cannot create an instance of &quot;</span> + modelClass, var4);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InstantiationException var5) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Cannot create an instance of &quot;</span> + modelClass, var5);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InvocationTargetException var6) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Cannot create an instance of &quot;</span> + modelClass, var6);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">super</span>.create(modelClass);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过下图可看到ViewModelStore可来源于FragmentActivity，非FragmentActivity可以通过<code>ViewModelStores._of_(activity)</code> 中的<code>HolderFragment</code> 来注入，原理同后文的<code>ReportFragment</code>。<br><img src="https://cdn.nlark.com/yuque/__puml/2413f5e31d82f1bf26ea75e1c7804dc6.svg#lake_card_v2=eyJ0eXBlIjoicHVtbCIsImNvZGUiOiJAc3RhcnR1bWxcbmludGVyZmFjZSBWaWV3TW9kZWxTdG9yZU93bmVyIHtcblx0Vmlld01vZGVsU3RvcmUgZ2V0Vmlld01vZGVsU3RvcmUoKTtcbn1cblxuY2xhc3MgRnJhZ21lbnRBY3Rpdml0eSBleHRlbmRzIFN1cHBvcnRBY3Rpdml0eSBpbXBsZW1lbnRzIFZpZXdNb2RlbFN0b3JlT3duZXJcblxuY2xhc3MgU3VwcG9ydEFjdGl2aXR5IGV4dGVuZHMgQWN0aXZpdHkgaW1wbGVtZW50cyBMaWZlY3ljbGVPd25lcntcblx0TGlmZWN5Y2xlUmVnaXN0cnkgbUxpZmVjeWNsZVJlZ2lzdHJ5O1xufVxuXG5TdXBwb3J0QWN0aXZpdHkgby0tICBMaWZlY3ljbGVSZWdpc3RyeVxuXG5AZW5kdW1sIiwidXJsIjoiaHR0cHM6Ly9jZG4ubmxhcmsuY29tL3l1cXVlL19fcHVtbC8yNDEzZjVlMzFkODJmMWJmMjZlYTc1ZTFjNzgwNGRjNi5zdmciLCJpZCI6ImF3aTFYIiwibWFyZ2luIjp7InRvcCI6dHJ1ZSwiYm90dG9tIjp0cnVlfSwiY2FyZCI6ImRpYWdyYW0ifQ==">#### LiveData.postValue<br>可在子线程中触发，最终使用的是setValue，如果发送数据过快，存在数据丢失可能，每次从mPendingData中取最新数据。<br>在post时将数据复制到mPendingData，送入主循环队列，后面发送数据时，从mPendingData缓存中取数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">postValue</span><span class="params">(T value)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> postTask;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="built_in">this</span>.mDataLock) &#123;</span><br><span class="line">        postTask = <span class="built_in">this</span>.mPendingData == NOT_SET;</span><br><span class="line">        <span class="built_in">this</span>.mPendingData = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (postTask) &#123;</span><br><span class="line">        ArchTaskExecutor.getInstance().postToMainThread(<span class="built_in">this</span>.mPostValueRunnable);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.mPostValueRunnable = <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        Object newValue;</span><br><span class="line">        <span class="keyword">synchronized</span>(LiveData.<span class="built_in">this</span>.mDataLock) &#123;</span><br><span class="line">            newValue = LiveData.<span class="built_in">this</span>.mPendingData;</span><br><span class="line">            LiveData.<span class="built_in">this</span>.mPendingData = LiveData.NOT_SET;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LiveData.<span class="built_in">this</span>.setValue(newValue);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="LiveData-setValue"><a href="#LiveData-setValue" class="headerlink" title="LiveData.setValue"></a>LiveData.setValue</h4><p>在主线程中执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">setValue</span><span class="params">(T value)</span> &#123;</span><br><span class="line">    assertMainThread(<span class="string">&quot;setValue&quot;</span>);</span><br><span class="line">    ++<span class="built_in">this</span>.mVersion;</span><br><span class="line">    <span class="built_in">this</span>.mData = value;</span><br><span class="line">    <span class="built_in">this</span>.dispatchingValue((LiveData.ObserverWrapper)<span class="literal">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dispatchingValue</span><span class="params">(<span class="meta">@Nullable</span> LiveData&lt;T&gt;.ObserverWrapper initiator)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.mDispatchingValue) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mDispatchInvalidated = <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.mDispatchingValue = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.mDispatchInvalidated = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span> (initiator != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="built_in">this</span>.considerNotify(initiator);</span><br><span class="line">                initiator = <span class="literal">null</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">IteratorWithAdditions</span> <span class="variable">iterator</span> <span class="operator">=</span> <span class="built_in">this</span>.mObservers.iteratorWithAdditions();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">while</span>(iterator.hasNext()) &#123;</span><br><span class="line">                    <span class="built_in">this</span>.considerNotify((LiveData.ObserverWrapper)((Entry)iterator.next()).getValue());</span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">this</span>.mDispatchInvalidated) &#123;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">while</span>(<span class="built_in">this</span>.mDispatchInvalidated);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.mDispatchingValue = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">considerNotify</span><span class="params">(LiveData&lt;T&gt;.ObserverWrapper observer)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (observer.mActive) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!observer.shouldBeActive()) &#123;</span><br><span class="line">            observer.activeStateChanged(<span class="literal">false</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (observer.mLastVersion &lt; <span class="built_in">this</span>.mVersion) &#123;</span><br><span class="line">            observer.mLastVersion = <span class="built_in">this</span>.mVersion;</span><br><span class="line">            observer.mObserver.onChanged(<span class="built_in">this</span>.mData);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>setValue主要分3步：</p>
+<ul>
+<li>++this.mVersion;</li>
+<li>取出mObservers分发值</li>
+<li>根据当前条件分发值</li>
+</ul>
+<p>分发值的条件：</p>
+<ul>
+<li>observer处于Active</li>
+<li>observer.mLastVersion &lt; this.mVersion</li>
+<li>至少处于started之后的生命周期状态，observer.shouldBeActive()，也就是started和resumed状态下。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">shouldBeActive</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.mOwner.getLifecycle().getCurrentState().isAtLeast(State.STARTED);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">enum</span> <span class="title class_">State</span> &#123;</span><br><span class="line">    DESTROYED,</span><br><span class="line">    INITIALIZED,</span><br><span class="line">    CREATED,</span><br><span class="line">    STARTED,</span><br><span class="line">    RESUMED;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">State</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAtLeast</span><span class="params">(<span class="meta">@NonNull</span> Lifecycle.State state)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.compareTo(state) &gt;= <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="LiveData-observe和observeForever"><a href="#LiveData-observe和observeForever" class="headerlink" title="LiveData.observe和observeForever"></a>LiveData.observe和observeForever</h4><p>二者都是将observer包装后放入mObservers中。不同的是observe使用的是LifecycleBoundObserver，当生命周期状态为DESTROYED时，将自己从mObservers移除；observeForever使用的是AlwaysActiveObserver，并将激活状态一直设置为true。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">observe</span><span class="params">(<span class="meta">@NonNull</span> LifecycleOwner owner, <span class="meta">@NonNull</span> Observer&lt;T&gt; observer)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (owner.getLifecycle().getCurrentState() != State.DESTROYED) &#123;</span><br><span class="line">        LiveData&lt;T&gt;.<span class="type">LifecycleBoundObserver</span> <span class="variable">wrapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LiveData</span>.LifecycleBoundObserver(owner, observer);</span><br><span class="line">        LiveData&lt;T&gt;.<span class="type">ObserverWrapper</span> <span class="variable">existing</span> <span class="operator">=</span> (LiveData.ObserverWrapper)<span class="built_in">this</span>.mObservers.putIfAbsent(observer, wrapper);</span><br><span class="line">        <span class="keyword">if</span> (existing != <span class="literal">null</span> &amp;&amp; !existing.isAttachedTo(owner)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Cannot add the same observer with different lifecycles&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (existing == <span class="literal">null</span>) &#123;</span><br><span class="line">            owner.getLifecycle().addObserver(wrapper);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">observeForever</span><span class="params">(<span class="meta">@NonNull</span> Observer&lt;T&gt; observer)</span> &#123;</span><br><span class="line">    LiveData&lt;T&gt;.<span class="type">AlwaysActiveObserver</span> <span class="variable">wrapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LiveData</span>.AlwaysActiveObserver(observer);</span><br><span class="line">    LiveData&lt;T&gt;.<span class="type">ObserverWrapper</span> <span class="variable">existing</span> <span class="operator">=</span> (LiveData.ObserverWrapper)<span class="built_in">this</span>.mObservers.putIfAbsent(observer, wrapper);</span><br><span class="line">    <span class="keyword">if</span> (existing != <span class="literal">null</span> &amp;&amp; existing <span class="keyword">instanceof</span> LiveData.LifecycleBoundObserver) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Cannot add the same observer with different lifecycles&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (existing == <span class="literal">null</span>) &#123;</span><br><span class="line">        wrapper.activeStateChanged(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Lifecycle"><a href="#Lifecycle" class="headerlink" title="Lifecycle"></a>Lifecycle</h3><p>在SupportActivity中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SupportActivity</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">LifecycleRegistry</span> <span class="variable">mLifecycleRegistry</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LifecycleRegistry</span>(<span class="built_in">this</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(<span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        ReportFragment.injectIfNeededIn(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Lifecycle <span class="title function_">getLifecycle</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.mLifecycleRegistry;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReportFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">injectIfNeededIn</span><span class="params">(Activity activity)</span> &#123;</span><br><span class="line">        <span class="type">FragmentManager</span> <span class="variable">manager</span> <span class="operator">=</span> activity.getFragmentManager();</span><br><span class="line">        <span class="keyword">if</span> (manager.findFragmentByTag(<span class="string">&quot;android.arch.lifecycle.LifecycleDispatcher.report_fragment_tag&quot;</span>) == <span class="literal">null</span>) &#123;</span><br><span class="line">            manager.beginTransaction().add(<span class="keyword">new</span> <span class="title class_">ReportFragment</span>(), <span class="string">&quot;android.arch.lifecycle.LifecycleDispatcher.report_fragment_tag&quot;</span>).commit();</span><br><span class="line">            manager.executePendingTransactions();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SupportActivity onCreate时注入ReportFragment，用来监听生命周期。<br>在ReportFragment中，通过添加Fragment到Activity中来实现对Activity生命周期的捕捉（类似的有权限申请）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReportFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onActivityCreated</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onActivityCreated(savedInstanceState);</span><br><span class="line">        <span class="built_in">this</span>.dispatchCreate(<span class="built_in">this</span>.mProcessListener);</span><br><span class="line">        <span class="built_in">this</span>.dispatch(Event.ON_CREATE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onStart();</span><br><span class="line">        <span class="built_in">this</span>.dispatchStart(<span class="built_in">this</span>.mProcessListener);</span><br><span class="line">        <span class="built_in">this</span>.dispatch(Event.ON_START);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onResume();</span><br><span class="line">        <span class="built_in">this</span>.dispatchResume(<span class="built_in">this</span>.mProcessListener);</span><br><span class="line">        <span class="built_in">this</span>.dispatch(Event.ON_RESUME);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onPause();</span><br><span class="line">        <span class="built_in">this</span>.dispatch(Event.ON_PAUSE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStop</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onStop();</span><br><span class="line">        <span class="built_in">this</span>.dispatch(Event.ON_STOP);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onDestroy();</span><br><span class="line">        <span class="built_in">this</span>.dispatch(Event.ON_DESTROY);</span><br><span class="line">        <span class="built_in">this</span>.mProcessListener = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dispatch</span><span class="params">(Event event)</span> &#123;</span><br><span class="line">        <span class="type">Activity</span> <span class="variable">activity</span> <span class="operator">=</span> <span class="built_in">this</span>.getActivity();</span><br><span class="line">        <span class="keyword">if</span> (activity <span class="keyword">instanceof</span> LifecycleRegistryOwner) &#123;</span><br><span class="line">            ((LifecycleRegistryOwner)activity).getLifecycle().handleLifecycleEvent(event);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (activity <span class="keyword">instanceof</span> LifecycleOwner) &#123;</span><br><span class="line">                <span class="type">Lifecycle</span> <span class="variable">lifecycle</span> <span class="operator">=</span> ((LifecycleOwner)activity).getLifecycle();</span><br><span class="line">                <span class="keyword">if</span> (lifecycle <span class="keyword">instanceof</span> LifecycleRegistry) &#123;</span><br><span class="line">                    ((LifecycleRegistry)lifecycle).handleLifecycleEvent(event);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终生命周期的处理实现在LifecycleRegistryOwner中，也就是 SupportActivity中的mLifecycleRegistry。<br>​</p>
+<p>在LifecycleRegistryOwner中，当前后状态相同是，不会触发状态变更。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LifecycleRegistry</span> <span class="keyword">extends</span> <span class="title class_">Lifecycle</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleLifecycleEvent</span><span class="params">(<span class="meta">@NonNull</span> Event event)</span> &#123;</span><br><span class="line">        <span class="type">State</span> <span class="variable">next</span> <span class="operator">=</span> getStateAfter(event);</span><br><span class="line">        <span class="built_in">this</span>.moveToState(next);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">moveToState</span><span class="params">(State next)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.mState != next) &#123;</span><br><span class="line">            <span class="built_in">this</span>.mState = next;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="built_in">this</span>.mHandlingEvent &amp;&amp; <span class="built_in">this</span>.mAddingObserverCounter == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="built_in">this</span>.mHandlingEvent = <span class="literal">true</span>;</span><br><span class="line">                <span class="built_in">this</span>.sync();</span><br><span class="line">                <span class="built_in">this</span>.mHandlingEvent = <span class="literal">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">this</span>.mNewEventOccurred = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sync</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">LifecycleOwner</span> <span class="variable">lifecycleOwner</span> <span class="operator">=</span> (LifecycleOwner)<span class="built_in">this</span>.mLifecycleOwner.get();</span><br><span class="line">        <span class="keyword">if</span> (lifecycleOwner == <span class="literal">null</span>) &#123;</span><br><span class="line">            Log.w(<span class="string">&quot;LifecycleRegistry&quot;</span>, <span class="string">&quot;LifecycleOwner is garbage collected, you shouldn&#x27;t try dispatch new events from it.&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">while</span>(!<span class="built_in">this</span>.isSynced()) &#123;</span><br><span class="line">                <span class="built_in">this</span>.mNewEventOccurred = <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">this</span>.mState.compareTo(((LifecycleRegistry.ObserverWithState)<span class="built_in">this</span>.mObserverMap.eldest().getValue()).mState) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="built_in">this</span>.backwardPass(lifecycleOwner);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Entry&lt;LifecycleObserver, LifecycleRegistry.ObserverWithState&gt; newest = <span class="built_in">this</span>.mObserverMap.newest();</span><br><span class="line">                <span class="keyword">if</span> (!<span class="built_in">this</span>.mNewEventOccurred &amp;&amp; newest != <span class="literal">null</span> &amp;&amp; <span class="built_in">this</span>.mState.compareTo(((LifecycleRegistry.ObserverWithState)newest.getValue()).mState) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="built_in">this</span>.forwardPass(lifecycleOwner);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">this</span>.mNewEventOccurred = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ProcessLifecycleOwnerInitializer"><a href="#ProcessLifecycleOwnerInitializer" class="headerlink" title="ProcessLifecycleOwnerInitializer"></a>ProcessLifecycleOwnerInitializer</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProcessLifecycleOwnerInitializer</span> <span class="keyword">extends</span> <span class="title class_">ContentProvider</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ProcessLifecycleOwnerInitializer</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        LifecycleDispatcher.init(<span class="built_in">this</span>.getContext());</span><br><span class="line">        ProcessLifecycleOwner.init(<span class="built_in">this</span>.getContext());</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="LifecycleDispatcher"><a href="#LifecycleDispatcher" class="headerlink" title="LifecycleDispatcher"></a>LifecycleDispatcher</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LifecycleDispatcher</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!sInitialized.getAndSet(<span class="literal">true</span>)) &#123;</span><br><span class="line">            ((Application)context.getApplicationContext()).registerActivityLifecycleCallbacks(<span class="keyword">new</span> <span class="title class_">LifecycleDispatcher</span>.DispatcherActivityCallback());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">DispatcherActivityCallback</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onActivityCreated</span><span class="params">(Activity activity, Bundle savedInstanceState)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (activity <span class="keyword">instanceof</span> FragmentActivity) &#123;</span><br><span class="line">                ((FragmentActivity)activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(<span class="built_in">this</span>.mFragmentCallback, <span class="literal">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ReportFragment.injectIfNeededIn(activity);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过对application生命周期注册，在onActivityCreated时注入ReportFragment。<br>如果是FragmentActivity，还会registerFragmentLifecycleCallbacks。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">FragmentCallback</span> <span class="keyword">extends</span> <span class="title class_">FragmentLifecycleCallbacks</span> &#123;</span><br><span class="line">    FragmentCallback() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFragmentCreated</span><span class="params">(FragmentManager fm, Fragment f, Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        LifecycleDispatcher.dispatchIfLifecycleOwner(f, Event.ON_CREATE);</span><br><span class="line">        <span class="keyword">if</span> (f <span class="keyword">instanceof</span> LifecycleRegistryOwner) &#123;</span><br><span class="line">            <span class="keyword">if</span> (f.getChildFragmentManager().findFragmentByTag(<span class="string">&quot;android.arch.lifecycle.LifecycleDispatcher.report_fragment_tag&quot;</span>) == <span class="literal">null</span>) &#123;</span><br><span class="line">                f.getChildFragmentManager().beginTransaction().add(<span class="keyword">new</span> <span class="title class_">LifecycleDispatcher</span>.DestructionReportFragment(), <span class="string">&quot;android.arch.lifecycle.LifecycleDispatcher.report_fragment_tag&quot;</span>).commit();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFragmentStarted</span><span class="params">(FragmentManager fm, Fragment f)</span> &#123;</span><br><span class="line">        LifecycleDispatcher.dispatchIfLifecycleOwner(f, Event.ON_START);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFragmentResumed</span><span class="params">(FragmentManager fm, Fragment f)</span> &#123;</span><br><span class="line">        LifecycleDispatcher.dispatchIfLifecycleOwner(f, Event.ON_RESUME);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要是将onFragmentCreated、onFragmentStarted、onFragmentResumed分别分发为ON_CREATE、ON_START、ON_RESUME。<br>​</p>
+<h4 id="ProcessLifecycleOwner"><a href="#ProcessLifecycleOwner" class="headerlink" title="ProcessLifecycleOwner"></a>ProcessLifecycleOwner</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProcessLifecycleOwner</span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        sInstance.attach(context);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.mHandler = <span class="keyword">new</span> <span class="title class_">Handler</span>();</span><br><span class="line">        <span class="built_in">this</span>.mRegistry.handleLifecycleEvent(Event.ON_CREATE);</span><br><span class="line">        <span class="type">Application</span> <span class="variable">app</span> <span class="operator">=</span> (Application)context.getApplicationContext();</span><br><span class="line">        app.registerActivityLifecycleCallbacks(<span class="keyword">new</span> <span class="title class_">EmptyActivityLifecycleCallbacks</span>() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onActivityCreated</span><span class="params">(Activity activity, Bundle savedInstanceState)</span> &#123;</span><br><span class="line">                ReportFragment.get(activity).setProcessListener(ProcessLifecycleOwner.<span class="built_in">this</span>.mInitializationListener);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onActivityPaused</span><span class="params">(Activity activity)</span> &#123;</span><br><span class="line">                ProcessLifecycleOwner.<span class="built_in">this</span>.activityPaused();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onActivityStopped</span><span class="params">(Activity activity)</span> &#123;</span><br><span class="line">                ProcessLifecycleOwner.<span class="built_in">this</span>.activityStopped();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要用处是将ProcessListener（ActivityInitializationListener）注入到对应activity的ReportFragment中。而ActivityInitializationListener中主要包含常用的3个生命周期状态。当ReportFragment中处理什么周期时，会回调这3个方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">ActivityInitializationListener</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><h4 id="ViewModel-1"><a href="#ViewModel-1" class="headerlink" title="ViewModel"></a>ViewModel</h4><ul>
+<li>ViewModel使用反射的形式创建，获取时先从ViewModelStores缓存中获取，没找到则通过Factory创建</li>
+<li>非FragmentActivity类或没实现ViewModelStoreOwner，可通过HolderFragment注入ViewModelStores</li>
+<li>LiveData中postValue可在子线程使用，最终会在主线程调用setValue来分发数据</li>
+<li>LiveData中postValue时，执行setValue时，每次取mPendingData，因此如果postValue过快，会导致前面的数据会被后面的覆盖。</li>
+<li>分发数据时的条件有三个<ul>
+<li>observer处于Active</li>
+<li>observer.mLastVersion &lt; livedata的mVersion</li>
+<li>当前生命周期处于started或resumed下</li>
+</ul>
+</li>
+<li>注册的observer可与生命后期绑定，也可以是全局的，与生命周期绑定的observer会在destory后反注册</li>
+</ul>
+<h4 id="Lifecycle-1"><a href="#Lifecycle-1" class="headerlink" title="Lifecycle"></a>Lifecycle</h4><ul>
+<li>SupportActivity及其子类的生命周期是通过ReportFragment管理的，在onCreated是注入ReportFragment</li>
+<li>非SupportActivity及其子类的，可以通过全局监听各个Activity的生命周期在onCreated是注入ReportFragment</li>
+<li>非SupportActivity及其子类的生命周期管理是通过ProcessLifecycleOwner，ProcessLifecycleOwner在Activity onCreated时设置ReportFragment中监听来感知生命周期变化。可通过静态方法获取ProcessLifecycleOwner对象的LifecycleOwner实现对非SupportActivity及其子类的的感知。</li>
+<li>Lifecycle的状态分为DESTROYED、INITIALIZED、CREATED、STARTED、RESUMED 5种，在ViewModel中可以设置数据的是STARTED、RESUMED</li>
+</ul>
+<h4 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h4><ul>
+<li>通过注入Fragment来感知Activity的生命周期和一些Fragment以Activity绑定的一些方法，应用案例入ReportFragment、HolderFragment，另外权限管理和Activiyt跳转的返回值也可以通过这种方式</li>
+<li>通过ContentProvider来初始化SDK，ContentProvider会在Application的attachContext之后，onCreate之前执行onCreate方法，在AndroidManifest.xml注册后，会自动初始化ContentProvider。但是如果需要对启动进行管理，或者sdk依赖于其他的sdk，则不适合通过ContentProvider来初始化SDK。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/22/Gradle%20%E7%94%A8%E6%B3%95/" rel="prev" title="Gradle 用法">
+      <i class="fa fa-chevron-left"></i> Gradle 用法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/27/Android%20%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/" rel="next" title="Android 源码编译">
+      Android 源码编译 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ViewModel"><span class="nav-number">1.</span> <span class="nav-text">ViewModel</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ViewModelProviders"><span class="nav-number">1.1.</span> <span class="nav-text">ViewModelProviders</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LiveData-setValue"><span class="nav-number">1.2.</span> <span class="nav-text">LiveData.setValue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LiveData-observe%E5%92%8CobserveForever"><span class="nav-number">1.3.</span> <span class="nav-text">LiveData.observe和observeForever</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lifecycle"><span class="nav-number">2.</span> <span class="nav-text">Lifecycle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ProcessLifecycleOwnerInitializer"><span class="nav-number">3.</span> <span class="nav-text">ProcessLifecycleOwnerInitializer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LifecycleDispatcher"><span class="nav-number">3.1.</span> <span class="nav-text">LifecycleDispatcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ProcessLifecycleOwner"><span class="nav-number">3.2.</span> <span class="nav-text">ProcessLifecycleOwner</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ViewModel-1"><span class="nav-number">4.1.</span> <span class="nav-text">ViewModel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lifecycle-1"><span class="nav-number">4.2.</span> <span class="nav-text">Lifecycle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E5%B7%A7"><span class="nav-number">4.3.</span> <span class="nav-text">技巧</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zauther</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zauther" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zauther" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+        
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width:100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/" rel="tag">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Chromiun/" rel="tag">Chromiun</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Grub/" rel="tag">Grub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JS/" rel="tag">JS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/" rel="tag">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/U-Boot/" rel="tag">U-Boot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V2ray/" rel="tag">V2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/" rel="tag">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/" rel="tag">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag">引导</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:13</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

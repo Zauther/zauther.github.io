@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.cwiki.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="主要包含： 123settings.gradlebuild.gradleapp&#x2F;build.gradle  以及gradle wrapper下的gradle jar包和配置文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradle 用法">
+<meta property="og:url" content="https://blog.cwiki.cn/2021/11/22/Gradle%20%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="Zzz个人博客">
+<meta property="og:description" content="主要包含： 123settings.gradlebuild.gradleapp&#x2F;build.gradle  以及gradle wrapper下的gradle jar包和配置文件">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-11-21T16:29:00.000Z">
+<meta property="article:modified_time" content="2022-05-29T14:23:29.539Z">
+<meta property="article:author" content="zauther">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Gradle">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.cwiki.cn/2021/11/22/Gradle%20%E7%94%A8%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Gradle 用法 | Zzz个人博客</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97381903-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-97381903-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zzz个人博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/11/22/Gradle%20%E7%94%A8%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Gradle 用法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-22 00:29:00" itemprop="dateCreated datePublished" datetime="2021-11-22T00:29:00+08:00">2021-11-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-29 22:23:29" itemprop="dateModified" datetime="2022-05-29T22:23:29+08:00">2022-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>9.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>主要包含：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">settings.gradle</span><br><span class="line">build.gradle</span><br><span class="line">app/build.gradle</span><br></pre></td></tr></table></figure>
+
+<p>以及gradle wrapper下的gradle jar包和配置文件</p>
+<span id="more"></span>
+
+<h4 id="Gradle-文件执行顺序"><a href="#Gradle-文件执行顺序" class="headerlink" title="Gradle 文件执行顺序"></a>Gradle 文件执行顺序</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//settings.gradle</span></span><br><span class="line">println(<span class="string">&quot;setting 开始配置&quot;</span>)</span><br><span class="line">include <span class="string">&#x27;:app&#x27;</span></span><br><span class="line">rootProject.name=<span class="string">&#x27;Hello&#x27;</span></span><br><span class="line">println(<span class="string">&quot;setting 配置完成&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//project build.gradle</span></span><br><span class="line">println(<span class="string">&quot;根build.gradle 开始配置&quot;</span>)</span><br><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">println(<span class="string">&quot;根build.gradle 配置完成&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//app build.gradle</span></span><br><span class="line">println(<span class="string">&quot;app build.gradle 开始配置&quot;</span>)</span><br><span class="line"></span><br><span class="line">project.afterEvaluate &#123;</span><br><span class="line">    println <span class="string">&quot;所有模块都已配置完成&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">&#125;</span><br><span class="line">println(<span class="string">&quot;app build.gradle 配置完成&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>三个文件中：<br>settings.gradle 先执行<br>build.gradle 第二执行<br>app&#x2F;build.gradle 第三执行，如果注册了 project.afterEvaluate ，则后执行<br>在不同文件中注册project.afterEvaluate，对于不同的project</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br></pre></td></tr></table></figure>
+
+<p>在settings.gradle中添加</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">gradle.addBuildListener(<span class="keyword">new</span> BuildListener() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> beforeSettings(Settings settings) &#123;</span><br><span class="line">        <span class="variable language_">super</span>.beforeSettings(settings)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> settingsEvaluated(Settings settings) &#123;</span><br><span class="line">        println(<span class="string">&quot;settingsEvaluated------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> projectsLoaded(Gradle gradle) &#123;</span><br><span class="line">        println(<span class="string">&quot;projectsLoaded------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> projectsEvaluated(Gradle gradle) &#123;</span><br><span class="line">        println(<span class="string">&quot;projectsEvaluated------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> buildFinished(BuildResult result) &#123;</span><br><span class="line">        println(<span class="string">&quot;buildFinished------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line">settingsEvaluated------------</span><br><span class="line">projectsLoaded------------</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br><span class="line">projectsEvaluated------------</span><br><span class="line">buildFinished------------</span><br></pre></td></tr></table></figure>
+
+<p>如果是在build.gradle中添加则输出</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br><span class="line">projectsEvaluated------------</span><br><span class="line">buildFinished------------</span><br></pre></td></tr></table></figure>
+
+<p>可以看到settingsEvaluated、projectsLoaded相关的没有打印，因为这个时候settingsEvaluated和projectsLoaded已经执行过了。<br>​</p>
+<h4 id="Gradle-Task"><a href="#Gradle-Task" class="headerlink" title="Gradle Task"></a>Gradle Task</h4><p>在build.gradle文件中：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task hello() &#123;</span><br><span class="line">    println <span class="string">&quot;hello world&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//将给定的闭包 添加到此task操作链表的开头</span></span><br><span class="line">    doFirst &#123;</span><br><span class="line">        println <span class="string">&quot;hello task doFirst&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">&quot;hello task doLast&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>settings.gradle是项目配置文件，无法添加task。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">hello world</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; <span class="attr">Task :</span>hello</span><br><span class="line">hello task doFirst</span><br><span class="line">hello task doLast</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，会先执行配置，然后才会执行task。<br>其中ext是内置变量</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ext.a=<span class="string">&quot;1222&quot;</span></span><br><span class="line"></span><br><span class="line">task hello() &#123;</span><br><span class="line">    println <span class="string">&quot;hello world&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//将给定的闭包 添加到此task操作链表的开头</span></span><br><span class="line">    doFirst &#123;</span><br><span class="line">        println <span class="string">&quot;hello task doFirst:$a&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">&quot;hello task doLast&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="attr">Task :</span>hello</span><br><span class="line">hello task <span class="attr">doFirst:</span><span class="number">1222</span></span><br><span class="line">hello task doLast</span><br></pre></td></tr></table></figure>
+
+<h4 id="Build监听"><a href="#Build监听" class="headerlink" title="Build监听"></a>Build监听</h4><p>在settings.gradle中配置</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">gradle.addBuildListener(<span class="keyword">new</span> BuildListener() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> beforeSettings(Settings settings) &#123;</span><br><span class="line">        <span class="variable language_">super</span>.beforeSettings(settings)</span><br><span class="line">        println(<span class="string">&quot;beforeSettings------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> settingsEvaluated(Settings settings) &#123;</span><br><span class="line">        println(<span class="string">&quot;settingsEvaluated------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> projectsLoaded(Gradle gradle) &#123;</span><br><span class="line">        println(<span class="string">&quot;projectsLoaded------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> projectsEvaluated(Gradle gradle) &#123;</span><br><span class="line">        println(<span class="string">&quot;projectsEvaluated------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> buildFinished(BuildResult result) &#123;</span><br><span class="line">        println(<span class="string">&quot;buildFinished------------&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line">settingsEvaluated------------</span><br><span class="line">projectsLoaded------------</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">hello world</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br><span class="line">projectsEvaluated------------</span><br><span class="line">buildFinished------------</span><br></pre></td></tr></table></figure>
+
+<p>当执行assemble时</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line">settingsEvaluated------------</span><br><span class="line">projectsLoaded------------</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">hello world</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br><span class="line">projectsEvaluated------------</span><br><span class="line"></span><br><span class="line">&gt; <span class="attr">Task :</span><span class="attr">app:</span>preBuild UP-TO-DATE</span><br><span class="line">&gt; <span class="attr">Task :</span><span class="attr">app:</span>preDebugBuild UP-TO-DATE</span><br><span class="line">...</span><br><span class="line">buildFinished------------</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，先执行Evaluated settings，然后是Loaded projects，每个项目的配置设置完后，projectsEvaluated。之后执行各种Task。执行完最后完成buildFinished。<br>​</p>
+<h4 id="Task执行监听"><a href="#Task执行监听" class="headerlink" title="Task执行监听"></a>Task执行监听</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">gradle.addListener(<span class="keyword">new</span> TaskExecutionListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> beforeExecute(Task task) &#123;</span><br><span class="line">        println <span class="string">&quot;打印beforeExecute $&#123;task&#125; ==&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> afterExecute(Task task, TaskState taskState) &#123;</span><br><span class="line">        println <span class="string">&quot;打印afterExecute $&#123;task.getPath()&#125; ---  $&#123;taskState&#125; ==&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">hello world</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; <span class="attr">Task :</span><span class="attr">app:</span>preBuild UP-TO-DATE</span><br><span class="line">打印beforeExecute task <span class="string">&#x27;:app:preBuild&#x27;</span> ==</span><br><span class="line">打印<span class="attr">afterExecute :</span><span class="attr">app:</span>preBuild ---  org.gradle.api.internal.tasks.TaskStateInternal@<span class="number">6</span>bbf2d19 ==</span><br><span class="line"></span><br><span class="line">&gt; <span class="attr">Task :</span><span class="attr">app:</span>preDebugBuild UP-TO-DATE</span><br><span class="line">打印beforeExecute task <span class="string">&#x27;:app:preDebugBuild&#x27;</span> ==</span><br><span class="line">打印<span class="attr">afterExecute :</span><span class="attr">app:</span>preDebugBuild ---  org.gradle.api.internal.tasks.TaskStateInternal@<span class="number">62</span>fecb05 ==</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>会在task执行前后打印日志<br>​</p>
+<h4 id="Gradle-插件"><a href="#Gradle-插件" class="headerlink" title="Gradle 插件"></a>Gradle 插件</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">println(<span class="string">&quot;before apply plugin&quot;</span>)</span><br><span class="line">apply <span class="attr">plugin:</span> MyPlugin</span><br><span class="line">println(<span class="string">&quot;after apply plugin&quot;</span>)</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyPlugin</span> <span class="keyword">implements</span> <span class="title class_">Plugin</span>&lt;Project&gt;&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> apply(Project project) &#123;</span><br><span class="line">        println <span class="string">&quot;apply MyPlugin: $&#123;project.name&#125;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">setting 开始配置</span><br><span class="line">setting 配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span></span><br><span class="line">根build.gradle 开始配置</span><br><span class="line">根build.gradle 配置完成</span><br><span class="line">hello world</span><br><span class="line">build.gradle 所有模块都已配置完成</span><br><span class="line"></span><br><span class="line">&gt; Configure <span class="attr">project :</span>app</span><br><span class="line">app build.gradle 开始配置</span><br><span class="line">app build.gradle 配置完成</span><br><span class="line">before apply plugin</span><br><span class="line">apply <span class="attr">MyPlugin:</span> app</span><br><span class="line">after apply plugin</span><br><span class="line">app build.gradle 所有模块都已配置完成</span><br></pre></td></tr></table></figure>
+
+<p>可以看到插件走的是配置。在配置时，会执行插件的apply。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">println(<span class="string">&quot;before apply plugin&quot;</span>)</span><br><span class="line">apply <span class="attr">plugin:</span> MyPlugin</span><br><span class="line">println(<span class="string">&quot;after apply plugin&quot;</span>)</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyPlugin</span> <span class="keyword">implements</span> <span class="title class_">Plugin</span>&lt;Project&gt;&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> apply(Project project) &#123;</span><br><span class="line">        println <span class="string">&quot;apply MyPlugin: $&#123;project.name&#125;&quot;</span></span><br><span class="line">        project.extensions.add(<span class="string">&quot;testKey&quot;</span>,<span class="string">&quot;helloWork&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">println(<span class="string">&quot;$testKey&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>apply plugin: MyPlugin</code> 后，将<code>testKey</code> 设置到<code>project.extensions</code> 中，后面直接使用。<br>​</p>
+<h4 id="Gradle-Project"><a href="#Gradle-Project" class="headerlink" title="Gradle Project"></a>Gradle Project</h4><p>gradle project常用属性：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">project.afterEvaluate&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">project.plugins.hasPlugin(<span class="string">&quot;com.android.library&quot;</span>)</span><br><span class="line"></span><br><span class="line">project.configurations</span><br><span class="line"></span><br><span class="line">project.gradle.addListener()</span><br></pre></td></tr></table></figure>
+
+<p>通过project中的字段来设置一些东西。<br>​</p>
+<h4 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">project.gradle.addListener(<span class="keyword">new</span> DependencyResolutionListener()&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> beforeResolve(ResolvableDependencies resolvableDependencies) &#123;</span><br><span class="line">        <span class="comment">// 此处可以改变或替换依赖</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> afterResolve(ResolvableDependencies resolvableDependencies) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Gradle-插件添加任务"><a href="#Gradle-插件添加任务" class="headerlink" title="Gradle 插件添加任务"></a>Gradle 插件添加任务</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyTaskPlugin</span> <span class="keyword">implements</span> <span class="title class_">Plugin</span>&lt;Project&gt;&#123;</span><br><span class="line">     <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> apply(Project project) &#123;</span><br><span class="line">        project.task(...)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyProjectTask</span> <span class="keyword">extends</span> <span class="title class_">DefaultTask</span>&#123;</span><br><span class="line">    <span class="meta">@Input</span></span><br><span class="line">    String xxx</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Input</span></span><br><span class="line">    String yyy</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TaskAction</span></span><br><span class="line">    <span class="type">void</span> doPackage() &#123;</span><br><span class="line">        <span class="comment">// 执行任务</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="打印task耗时Demo"><a href="#打印task耗时Demo" class="headerlink" title="打印task耗时Demo"></a>打印task耗时Demo</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> MyPlugin</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyPlugin</span> <span class="keyword">implements</span> <span class="title class_">Plugin</span>&lt;Project&gt;&#123;</span><br><span class="line">    <span class="keyword">private</span> Project mProject;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> apply(Project project) &#123;</span><br><span class="line">        mProject = project;</span><br><span class="line">        <span class="comment">//注册监听，以统计任务的耗时</span></span><br><span class="line">        project.gradle.addListener(<span class="keyword">new</span> BuildTimeListener())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BuildTimeListener</span> <span class="keyword">implements</span> <span class="title class_">TaskExecutionListener</span>, BuildListener &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//用来记录 task 的执行时长信息</span></span><br><span class="line">    Map&lt;String, TaskTimeInfo&gt; taskTimeMap = <span class="keyword">new</span> HashMap&lt;&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> buildStarted(Gradle gradle) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> settingsEvaluated(Settings settings) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> projectsLoaded(Gradle gradle) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> projectsEvaluated(Gradle gradle) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> buildFinished(BuildResult buildResult) &#123;</span><br><span class="line">        println <span class="string">&quot;-----------------GouAPM----------------------&quot;</span></span><br><span class="line">        println <span class="string">&quot;---------------------------------------&quot;</span></span><br><span class="line">        println <span class="string">&quot;build finished, now println all task execution time:&quot;</span></span><br><span class="line">        taskTimeMap.each&#123; k, v -&gt; println <span class="string">&quot;$&#123;k&#125;:[$&#123;v.total&#125;ms]&quot;</span> &#125;</span><br><span class="line">        println <span class="string">&quot;---------------------------------------&quot;</span></span><br><span class="line">        println <span class="string">&quot;---------------------------------------&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> beforeExecute(Task task) &#123;</span><br><span class="line">        <span class="comment">//task开始执行之前搜集task的信息</span></span><br><span class="line">        TaskTimeInfo timeInfo = <span class="keyword">new</span> TaskTimeInfo()</span><br><span class="line">        timeInfo.start = System.currentTimeMillis()</span><br><span class="line">        timeInfo.path = task.getPath()</span><br><span class="line">        taskTimeMap.put(task.getPath(), timeInfo)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="type">void</span> afterExecute(Task task, TaskState taskState) &#123;</span><br><span class="line">        <span class="comment">//task执行完之后，记录结束时的时间</span></span><br><span class="line">        TaskTimeInfo timeInfo = taskTimeMap.get(task.getPath())</span><br><span class="line">        timeInfo.end = System.currentTimeMillis()</span><br><span class="line">        <span class="comment">//计算该 task 的执行时长</span></span><br><span class="line">        timeInfo.total = timeInfo.end - timeInfo.start</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">TaskTimeInfo</span> &#123;</span><br><span class="line">        <span class="comment">//task执行总时长</span></span><br><span class="line">        <span class="type">long</span> total</span><br><span class="line">        String path</span><br><span class="line">        <span class="type">long</span> start</span><br><span class="line">        <span class="type">long</span> end</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/22/C++%20Hook/" rel="prev" title="C++ Hook">
+      <i class="fa fa-chevron-left"></i> C++ Hook
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/22/ViewModel/" rel="next" title="ViewModel">
+      ViewModel <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+  <script src="https://utteranc.es/client.js" repo="Zauther/zauther.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async></script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle-%E6%96%87%E4%BB%B6%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">Gradle 文件执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle-Task"><span class="nav-number">2.</span> <span class="nav-text">Gradle Task</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Build%E7%9B%91%E5%90%AC"><span class="nav-number">3.</span> <span class="nav-text">Build监听</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Task%E6%89%A7%E8%A1%8C%E7%9B%91%E5%90%AC"><span class="nav-number">4.</span> <span class="nav-text">Task执行监听</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle-%E6%8F%92%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">Gradle 插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle-Project"><span class="nav-number">6.</span> <span class="nav-text">Gradle Project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle-%E4%BE%9D%E8%B5%96"><span class="nav-number">7.</span> <span class="nav-text">Gradle 依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle-%E6%8F%92%E4%BB%B6%E6%B7%BB%E5%8A%A0%E4%BB%BB%E5%8A%A1"><span class="nav-number">8.</span> <span class="nav-text">Gradle 插件添加任务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%93%E5%8D%B0task%E8%80%97%E6%97%B6Demo"><span class="nav-number">9.</span> <span class="nav-text">打印task耗时Demo</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zauther</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zauther" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zauther" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+        
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width:100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/" rel="tag">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Chromiun/" rel="tag">Chromiun</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/" rel="tag">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Grub/" rel="tag">Grub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JS/" rel="tag">JS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReactNative/" rel="tag">ReactNative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/U-Boot/" rel="tag">U-Boot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V2ray/" rel="tag">V2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V8/" rel="tag">V8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qemu/" rel="tag">qemu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%95%E5%AF%BC/" rel="tag">引导</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zauther</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:13</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1870807591456075",
+    enable_page_level_ads: true
+});
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>
