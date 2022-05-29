@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.cwiki.cn/2021/04/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E6%9E%84%E5%BB%BA%E6%A0%91%E8%8E%93%E6%B4%BE64%E4%BD%8D%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    
+    <lastmod>2022-05-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.cwiki.cn/2022/05/29/%E4%BD%BF%E7%94%A8wsl%E6%9B%BF%E4%BB%A3ubuntu/</loc>
     
     <lastmod>2022-05-29</lastmod>
@@ -147,15 +156,6 @@
   
   <url>
     <loc>https://blog.cwiki.cn/2021/03/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/</loc>
-    
-    <lastmod>2022-05-09</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.cwiki.cn/2021/04/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E6%9E%84%E5%BB%BA%E6%A0%91%E8%8E%93%E6%B4%BE64%E4%BD%8D%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
     
     <lastmod>2022-05-09</lastmod>
     
