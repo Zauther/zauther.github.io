@@ -2,15 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.cwiki.cn/2021/11/22/C++%20Hook/</loc>
-    
-    <lastmod>2022-06-07</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.cwiki.cn/2021/03/08/JupyterLab%20NoteBook%20%E5%AE%89%E8%A3%85/</loc>
     
     <lastmod>2022-06-07</lastmod>
@@ -93,6 +84,24 @@
   
   <url>
     <loc>https://blog.cwiki.cn/2020/08/10/%E4%BD%BF%E7%94%A8NDK%E5%92%8CCMake%E8%BF%9B%E8%A1%8C%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%BA%93/</loc>
+    
+    <lastmod>2022-06-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.cwiki.cn/readme.html</loc>
+    
+    <lastmod>2022-06-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.cwiki.cn/2021/11/22/C++%20Hook/</loc>
     
     <lastmod>2022-06-07</lastmod>
     
