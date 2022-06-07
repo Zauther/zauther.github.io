@@ -1,15 +1,14 @@
-#### GitPage
+GitPage
 
-[https://blog.cwiki.cn](https://blog.cwiki.cn)
+https://blog.cwiki.cn
 
 - 基于gitpage的博客
 - 使用hexo搭建，主题使用next
 - 通过git action自动发布
-- 评论使用git issue支持，hexo 插件为`hexo-next-utteranc`
+- 评论使用git issue支持，hexo 插件为 hexo-next-utteranc
 
 hexo 插件列表
 
-```json
 {
   "dependencies": {
     "hexo": "^6.0.0",
@@ -31,4 +30,3 @@ hexo 插件列表
     "hexo-theme-landscape": "^0.0.3"
   }
 }
-```
