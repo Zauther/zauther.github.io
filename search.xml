@@ -46,8 +46,8 @@
   </entry>
   <entry>
     <title>C++ Hook</title>
-    <url>/2021/11/21/C++%20Hook/</url>
-    <content><![CDATA[<h2 id="C-Hook"><a href="#C-Hook" class="headerlink" title="C++ Hook"></a>C++ Hook</h2><h3 id="LD-PRELOAD"><a href="#LD-PRELOAD" class="headerlink" title="LD_PRELOAD"></a>LD_PRELOAD</h3><p>通过<code>LD_PRELOAD</code> </p>
+    <url>/2021/11/22/C++%20Hook/</url>
+    <content><![CDATA[<h2 id="C-Hook"><a href="#C-Hook" class="headerlink" title="C++ Hook"></a>C++ Hook</h2><h3 id="LD-PRELOAD-预加载hook-so"><a href="#LD-PRELOAD-预加载hook-so" class="headerlink" title="LD_PRELOAD 预加载hook so"></a>LD_PRELOAD 预加载hook so</h3><p>通过<code>LD_PRELOAD</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>( <span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">&quot;password&quot;</span>) )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Incorrect password\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Correct password\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -o main main.c</span><br></pre></td></tr></table></figure>
@@ -60,7 +60,7 @@
 
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">LD_PRELOAD=./libmyhook.so ./main password </span><br></pre></td></tr></table></figure>
 
-<h4 id="LD-PRELOAD-1"><a href="#LD-PRELOAD-1" class="headerlink" title="LD_PRELOAD"></a>LD_PRELOAD</h4><p>LD_PRELOAD，是个环境变量，用于动态库的加载，动态库加载的优先级最高，一般情况下，其加载顺序为LD_PRELOAD &gt; LD_LIBRARY_PATH &gt; &#x2F;etc&#x2F;ld.so.cache &gt; &#x2F;lib&gt;&#x2F;usr&#x2F;lib。程序中我们经常要调用一些外部库的函数，以rand为例，如果我们有个自定义的rand函数，把它编译成动态库后，通过LD_PRELOAD加载，当程序中调用rand函数时，调用的其实是我们自定义的函数。</p>
+<h4 id="LD-PRELOAD"><a href="#LD-PRELOAD" class="headerlink" title="LD_PRELOAD"></a>LD_PRELOAD</h4><p>LD_PRELOAD，是个环境变量，用于动态库的加载，动态库加载的优先级最高，一般情况下，其加载顺序为LD_PRELOAD &gt; LD_LIBRARY_PATH &gt; &#x2F;etc&#x2F;ld.so.cache &gt; &#x2F;lib&gt;&#x2F;usr&#x2F;lib。程序中我们经常要调用一些外部库的函数，以rand为例，如果我们有个自定义的rand函数，把它编译成动态库后，通过LD_PRELOAD加载，当程序中调用rand函数时，调用的其实是我们自定义的函数。</p>
 <h4 id="dlsym参数"><a href="#dlsym参数" class="headerlink" title="dlsym参数"></a>dlsym参数</h4><p>RTLD_DEFAULT是在当前库中查找函数，而RTLD_NEXT则是在当前库之后查找第一次出现的函数。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">define _GNU_SOURCE</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include &lt;string.h&gt;</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include &lt;dlfcn.h&gt;</span></span><br><span class="line"></span><br><span class="line">typedef int(*Fun)(const char*, const char*);</span><br><span class="line"></span><br><span class="line">int strcmp(const char* s1, const char* s2)</span><br><span class="line">&#123;</span><br><span class="line">  static Fun org_strcmp = NULL;</span><br><span class="line"></span><br><span class="line">      org_strcmp = (Fun)dlsym(RTLD_NEXT, &quot;strcmp&quot;);</span><br><span class="line">    //做我们想做的</span><br><span class="line">  printf(&quot;Hacked by way of ld_preload\n\n\n&quot;);</span><br><span class="line">    //完成真实地功能</span><br><span class="line">  return org_strcmp(s1, s2);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -68,8 +68,22 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">define _GNU_SOURCE</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="dlopen参数"><a href="#dlopen参数" class="headerlink" title="dlopen参数"></a>dlopen参数</h4><p>RTLD_LAZY:在dlopen返回前，对于动态库中存在的未定义的变量(如外部变量extern，也可以是函数)不执行解析，就是不解析这个变量的地址。<br>RTLD_NOW：与上面不同，他需要在dlopen返回前，解析出每个未定义变量的地址，如果解析不出来，在dlopen会返回NULL，错误为：   : undefined symbol: xxxx…….<br>RTLD_GLOBAL:它的含义是使得库中的解析的定义变量在随后的其它的链接库中变得可以使用。</p>
-<h3 id="Android-Hook"><a href="#Android-Hook" class="headerlink" title="Android Hook"></a>Android Hook</h3><p><code>ZygotePreload</code> 在app创建前预加载一些库（java 或native），比如使用 <code>LD_PRELOAD</code> </p>
+<h3 id="Android-Hook"><a href="#Android-Hook" class="headerlink" title="Android Hook"></a>Android Hook</h3><p><code>ZygotePreload</code> 在app创建前预加载一些库（java 或native），比如使用 <code>LD_PRELOAD</code></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">android:zygotePreloadName=<span class="string">&quot;io.github.zauther.demo.ZygotePreload&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Keep</span></span><br><span class="line"><span class="meta">@RequiresApi(api = Build.VERSION_CODES.Q)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ZygotePreload</span> <span class="keyword">implements</span> <span class="title class_">android</span>.app.ZygotePreload&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doPreload</span><span class="params">(<span class="meta">@NonNull</span> ApplicationInfo appInfo)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==TEST==&quot;</span>);</span><br><span class="line">        Log.i(<span class="string">&quot;==TEST==&quot;</span>,<span class="string">&quot;ZygotePreload:&quot;</span>+appInfo.dataDir);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过符号表Hook对应的方法"><a href="#通过符号表Hook对应的方法" class="headerlink" title="通过符号表Hook对应的方法"></a>通过符号表Hook对应的方法</h3><h4 id="定义函数指针-lookup"><a href="#定义函数指针-lookup" class="headerlink" title="定义函数指针 lookup"></a>定义函数指针 lookup</h4><p>lookup需要跟实际调用方法参数保持一致</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span>* (*lookup)(<span class="type">void</span>*, <span class="type">char</span> <span class="type">const</span>*, <span class="type">unsigned</span> <span class="type">int</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="找到so对应位置"><a href="#找到so对应位置" class="headerlink" title="找到so对应位置"></a>找到so对应位置</h4><ul>
+<li>fdlopen 打开so库</li>
+<li>fdlsym 找到符号表位置</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::string soPath = <span class="string">&quot;/system/&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">get_api_level</span>() &gt; <span class="number">29</span>) &#123;</span><br><span class="line">    soPath = <span class="string">&quot;/apex/com.android.art/&quot;</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">get_api_level</span>() == <span class="number">29</span>) &#123;</span><br><span class="line">    soPath = <span class="string">&quot;/apex/com.android.runtime/&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *handle = <span class="built_in">fdlopen</span>((soPath + <span class="string">&quot;lib/libart.so&quot;</span>).<span class="built_in">c_str</span>(), RTLD_LAZY);</span><br><span class="line"><span class="keyword">if</span> (handle == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">    handle = <span class="built_in">fdlopen</span>((soPath + <span class="string">&quot;lib64/libart.so&quot;</span>).<span class="built_in">c_str</span>(), RTLD_LAZY);</span><br><span class="line">    <span class="keyword">if</span> (handle == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    lookup = (<span class="type">void</span>* (*)(<span class="type">void</span>* prt, <span class="type">char</span> <span class="type">const</span>*, <span class="type">unsigned</span> <span class="type">int</span>))<span class="built_in">fdlsym</span>(handle, <span class="string">&quot;_ZN3art10ClassTable6LookupEPKcm&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (lookup == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    lookup = (<span class="type">void</span>* (*)(<span class="type">void</span>* prt, <span class="type">char</span> <span class="type">const</span>*, <span class="type">unsigned</span> <span class="type">int</span>))<span class="built_in">fdlsym</span>(handle, <span class="string">&quot;_ZN3art10ClassTable6LookupEPKcj&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (lookup == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h4><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(*lookup)((<span class="type">void</span> *)classTableAddr, descriptor.<span class="built_in">c_str</span>(), descriptor_hash);</span><br></pre></td></tr></table></figure>
+
+<p>demo</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (jsize i = <span class="number">0</span>; i &lt; env-&gt;<span class="built_in">GetArrayLength</span>(classNames); i++) &#123;</span><br><span class="line">    jstring className = (jstring)env-&gt;<span class="built_in">GetObjectArrayElement</span>(classNames, i);</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* name = env-&gt;<span class="built_in">GetStringUTFChars</span>(className, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="keyword">if</span> (name == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    env-&gt;<span class="built_in">DeleteLocalRef</span>(className);</span><br><span class="line">    <span class="function">std::string <span class="title">descriptor</span><span class="params">(DotToDescriptor(name))</span></span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> descriptor_hash = <span class="built_in">ComputeModifiedUtf8Hash</span>(descriptor.<span class="built_in">c_str</span>());</span><br><span class="line">    <span class="type">void</span>* addr = (*lookup)((<span class="type">void</span> *)classTableAddr, descriptor.<span class="built_in">c_str</span>(), descriptor_hash);</span><br><span class="line">    <span class="keyword">if</span> (addr == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector.<span class="built_in">push_back</span>(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Android</category>
@@ -977,7 +991,7 @@ Country: null
   </entry>
   <entry>
     <title>JupyterLab NoteBook 安装</title>
-    <url>/2021/03/07/JupyterLab%20NoteBook%20%E5%AE%89%E8%A3%85/</url>
+    <url>/2021/03/08/JupyterLab%20NoteBook%20%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h3 id="1-安装python3虚拟环境"><a href="#1-安装python3虚拟环境" class="headerlink" title="1. 安装python3虚拟环境"></a>1. 安装python3虚拟环境</h3><p>此步骤根据需求而定，为了不影响系统Python环境，这里建立了虚拟环境。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~</span><br><span class="line">python3 -m venv .p3env</span><br><span class="line">source ~/.p3env/bin/activate</span><br></pre></td></tr></table></figure>
 
@@ -985,7 +999,7 @@ Country: null
 <h4 id="临时设置"><a href="#临时设置" class="headerlink" title="临时设置"></a>临时设置</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install -i https://pypi.tuna.tsinghua.edu.cn/simple some-package</span><br></pre></td></tr></table></figure>
 
 <h4 id="全局设置"><a href="#全局设置" class="headerlink" title="全局设置"></a>全局设置</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
-
+<span id="more"></span>
 <p>可以在 <code>~/.config/pip/pip.conf</code> 中找到pip全局配置</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line">[<span class="string">global</span>]</span><br><span class="line"><span class="string">index-url</span> <span class="string">=</span> <span class="string">https://pypi.tuna.tsinghua.edu.cn/simple</span></span><br></pre></td></tr></table></figure>
 
@@ -1048,6 +1062,7 @@ Country: null
 
 <h3 id="3-img分区"><a href="#3-img分区" class="headerlink" title="3. img分区"></a>3. img分区</h3><p>通过fdisk对img分区<br>执行：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo fdisk /dev/loop0</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
 <p>进入提示：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">欢迎使用 fdisk (util-linux 2.34)。</span><br><span class="line">更改将停留在内存中，直到您决定将更改写入磁盘。</span><br><span class="line">使用写入命令前请三思。</span><br><span class="line"></span><br><span class="line">设备不包含可识别的分区表。</span><br><span class="line">创建了一个磁盘标识符为 0x7accf69c 的新 DOS 磁盘标签。</span><br><span class="line"></span><br><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
@@ -1344,6 +1359,7 @@ Country: null
 <h4 id="1-2-编译环境搭建"><a href="#1-2-编译环境搭建" class="headerlink" title="1.2 编译环境搭建"></a>1.2 编译环境搭建</h4><p>V8源码通过depot_tools工具来管理，首先下载这个工具，作者以<code>/Users/*/Documents/test/v8</code> 目录为工作目录。</p>
 <p>由于需要访问国外站，在获取depot_tools前需要做一些不可描述的事情：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">export</span> http_proxy=<span class="string">&quot;http://127.0.0.1:8001&quot;</span>; <span class="built_in">export</span> HTTP_PROXY=<span class="string">&quot;http://127.0.0.1:8001&quot;</span>; <span class="built_in">export</span> https_proxy=<span class="string">&quot;http://127.0.0.1:8001&quot;</span>; <span class="built_in">export</span> HTTPS_PROXY=<span class="string">&quot;http://127.0.0.1:8001&quot;</span></span></span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
 <p>开启代理后，将其假如环境变量。</p>
 <p>进入<code>/Users/*/Documents/test/v8</code> 目录下：</p>
@@ -1367,7 +1383,7 @@ Country: null
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo xcode-select -s /Applications/Xcode9.4.1/Xcode.app/Contents/Developer</span></span><br></pre></td></tr></table></figure>
 
 <p>接下来进入编译的坑。</p>
-<span id="more"></span>
+<!-- more -->
 
 <h4 id="1-3-编译"><a href="#1-3-编译" class="headerlink" title="1.3 编译"></a>1.3 编译</h4><h5 id="1-3-1-编译V8可执行文件"><a href="#1-3-1-编译V8可执行文件" class="headerlink" title="1.3.1 编译V8可执行文件"></a>1.3.1 编译V8可执行文件</h5><p>通过 <a href="https://v8.dev/docs/cross-compile-arm">https://v8.dev/docs/cross-compile-arm</a> 官网介绍的，在<code>.gclient</code> 中添加<code>target_os = [&#39;android&#39;]</code> ，再次执行<code>gclient sync</code> ，拉取与Android编译想过的模块，主要是NDK，如果本地有ndk，可以不用添加<code>target_os = [&#39;android&#39;]</code> ，以节约时间。即是加上，拉下来的NDK也是linux的，里面缺少很多Mac下的工具，因此，我单独自己下载的。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> /Users/*/Documents/test/v8</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">curl -O https://dl.google.com/android/repository/android-ndk-r19c-darwin-x86_64.zip</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">unzip android-ndk-r19c-darwin-x86_64.zip -d ndkr19c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">export</span> ANDROID_NDK_HOME=`<span class="built_in">pwd</span>`/ndkr19c/android-ndk-r19c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> v8</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mkdir</span> third_party/android_tools</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ln</span> -s <span class="variable">$ANDROID_NDK_HOME</span> third_party/android_tools/ndk</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ln</span> -s <span class="variable">$ANDROID_NDK_HOME</span> third_party/android_ndk</span></span><br></pre></td></tr></table></figure>
@@ -1445,7 +1461,7 @@ Country: null
 
 <p>启动</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo service nginx start</span><br></pre></td></tr></table></figure>
-
+<span id="more"></span>
 <p>停止nginx服务</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo service nginx stop</span><br></pre></td></tr></table></figure>
 
@@ -1485,6 +1501,7 @@ Country: null
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo mkfs.vfat /dev/sdb1</span><br><span class="line">sudo mount /dev/sdb1 /mnt/boot</span><br></pre></td></tr></table></figure>
 
 <h3 id="准备树莓派Boot文件"><a href="#准备树莓派Boot文件" class="headerlink" title="准备树莓派Boot文件"></a>准备树莓派Boot文件</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/raspberrypi/firmware.git</span><br><span class="line">cd firmware</span><br><span class="line">cp -R boot/* /mnt/boot</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
 <p>树莓派boot文件介绍</p>
 <h4 id="bootcode-bin"><a href="#bootcode-bin" class="headerlink" title="bootcode.bin"></a>bootcode.bin</h4><p>这是引导加载程序，由SoC在引导时加载，它执行一些非常基本的设置，然后加载其中一个<code>start*.elf</code>文件。<code>bootcode.bin</code>在Raspberry Pi 4上未使用，因为它已由<a href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/booteeprom.md">板载EEPROM</a>中的启动代码替换</p>
@@ -1525,6 +1542,7 @@ Country: null
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo chmod +x NVIDIA-Linux-x86_64-460.73.01.run</span><br><span class="line">sudo ./NVIDIA-Linux-x86_64-460.73.01.run </span><br></pre></td></tr></table></figure>
 
 <p>Ubuntu没必要安装这个版本，直接在“软件和更新”中选择NVIDIA的驱动更好</p>
+<span id="more"></span>
 <h4 id="CUDA®-工具包"><a href="#CUDA®-工具包" class="headerlink" title="CUDA® 工具包"></a>CUDA® 工具包</h4><p><a href="https://developer.nvidia.com/cuda-toolkit-archive">https://developer.nvidia.com/cuda-toolkit-archive</a><br>下载Ubuntu对于的包安装，sample没必要安装</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i libcudnn8_8.2.0.53-1+cuda11.3_amd64.deb </span><br><span class="line">sudo dpkg -i libcudnn8-dev_8.2.0.53-1+cuda11.3_amd64.deb</span><br></pre></td></tr></table></figure>
 
@@ -1579,6 +1597,8 @@ Country: null
 
 <h5 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make bzImage -j8</span><br></pre></td></tr></table></figure>
 
+<span id="more"></span>
+
 <p><code>make menuconfig</code> 配置kernel编译参数，可根据自己的需求进行设置，<code>ramfs</code> 一般是默认开启的，后面通过qemu运行需要使用到这个。</p>
 <p>内存分为不同的类型，这里编译的是<code>x86_64</code> <code>bzImage</code> </p>
 <p>内核的不同类型</p>
@@ -1590,8 +1610,6 @@ Country: null
 <p>vmlinuz应该是由ELF文件vmlinux经过OBJCOPY后，并经过压缩后的文件</p>
 <p>zImage是vmlinuz经过gzip压缩后的文件，适用于小内核</p>
 </blockquote>
-<span id="more"></span>
-
 <h2 id="BusyBox编译"><a href="#BusyBox编译" class="headerlink" title="BusyBox编译"></a>BusyBox编译</h2><p>在内核加载时，需要为内核准备文件系统，以及各种基本的工具。而BusyBox整合了很多常用的Linux工具。</p>
 <h5 id="准备busybox源码"><a href="#准备busybox源码" class="headerlink" title="准备busybox源码"></a>准备busybox源码</h5><p>下载地址： <a href="https://busybox.net/">https://busybox.net/</a></p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -xvjf busybox-1.32.1.tar.bz2</span><br><span class="line">cd busybox-1.32.1</span><br></pre></td></tr></table></figure>
@@ -1754,6 +1772,7 @@ Country: null
 </ul>
 <h2 id="监督学习（supervised-learning）"><a href="#监督学习（supervised-learning）" class="headerlink" title="监督学习（supervised learning）"></a>监督学习（supervised learning）</h2><p>必须确定目标变量的值，以便机器学习算法可以发现特征和目标变量之间的关系。在监督学习中，给定一组数据，我们知道正确的输出结果应该是什么样子，并且知道在输入和输出之间有着一个特定的关系。 (包括：分类和回归)</p>
 <h2 id="非监督学习（unsupervised-learing）"><a href="#非监督学习（unsupervised-learing）" class="headerlink" title="非监督学习（unsupervised learing）"></a>非监督学习（unsupervised learing）</h2><p>在机器学习，无监督学习的问题是，在未加标签的数据中，试图找到隐藏的结构。因为提供给学习者的实例是未标记的，因此没有错误或报酬信号来评估潜在的解决方案。</p>
+<span id="more"></span>
 <h2 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h2><p>这个算法可以训练程序做出某一决定。程序在某一情况下尝试所有的可能行动，记录不同行动的结果并试着找出最好的一次尝试来做决定。 属于这一类算法的有马尔可夫决策过程。</p>
 <h4 id="机器学习过程"><a href="#机器学习过程" class="headerlink" title="机器学习过程"></a>机器学习过程</h4><p><img src="https://camo.githubusercontent.com/d8590769184ddfedf61412b48b779edcba563d4d/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f2545362539432542412545352539392541382545352541442541362545342542392541302545352539462542412545372541312538302545382541452541442545372542422538332545382542462538372545372541382538422e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1134&status=done&style=none&width=1134"></p>
 <h4 id="算法汇总"><a href="#算法汇总" class="headerlink" title="算法汇总"></a>算法汇总</h4><p><img src="https://camo.githubusercontent.com/5e3d929718cc18352130414fc6c89ef281f89d31/687474703a2f2f646174612e617061636865636e2e6f72672f696d672f41694c6561726e696e672f6d6c2f312e4d4c466f756e646174696f6e2f6d6c5f616c676f726974686d2e6a7067#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&originHeight=404&originWidth=1130&status=done&style=none&width=1130"></p>
@@ -1890,6 +1909,7 @@ Country: null
 
 <p>在命令行执行 <code>rpi-imager</code> 后会出现工具</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rpi-imager</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
 <p><img src="https://cdn.jsdelivr.net/gh/Zauther/figurebed/imgs/20210404180357.png"><br>选择刚才下载的zip文件：<br><img src="https://cdn.jsdelivr.net/gh/Zauther/figurebed/imgs/20210404192504.png"><br>或者直接选择需要安装的系统在线安装<br><img src="https://cdn.jsdelivr.net/gh/Zauther/figurebed/imgs/20210404192732.png"><br>选择A卡，点击烧录即可完成安装。</p>
 <h4 id="1-1-3-无屏幕键盘初始化树莓派"><a href="#1-1-3-无屏幕键盘初始化树莓派" class="headerlink" title="1.1.3 无屏幕键盘初始化树莓派"></a>1.1.3 无屏幕键盘初始化树莓派</h4><p>如果没有屏幕，可通过配置WIFI和SSH，通过SSH来连接树莓派。在烧录系统到A卡后，A卡上有2个分区 <code>root</code> <code>rootfs</code> ， <code>root</code> 分区上是包含树莓派引导文件已经Linux Kerne、设备数文件等等，具体的内容后面会详细介绍。<br><strong>配置网络</strong><br>如果有网线，直接插线就可以。连接WIFI需要以下操作：<br>在 <code>root</code> 分区新建 <code>wpa_supplicant.conf</code> 文件</p>
@@ -2022,13 +2042,14 @@ Country: null
   </entry>
   <entry>
     <title>树莓派使用V2ray</title>
-    <url>/2021/03/25/%E6%A0%91%E8%8E%93%E6%B4%BE%E4%BD%BF%E7%94%A8V2ray/</url>
+    <url>/2021/03/26/%E6%A0%91%E8%8E%93%E6%B4%BE%E4%BD%BF%E7%94%A8V2ray/</url>
     <content><![CDATA[<h4 id="安裝和更新-V2Ray"><a href="#安裝和更新-V2Ray" class="headerlink" title="安裝和更新 V2Ray"></a>安裝和更新 V2Ray</h4><p>地址：<br><a href="https://github.com/v2fly/fhs-install-v2ray">https://github.com/v2fly/fhs-install-v2ray</a></p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
 
 <h4 id="安裝最新發行的-geoip-dat-和-geosite-dat"><a href="#安裝最新發行的-geoip-dat-和-geosite-dat" class="headerlink" title="安裝最新發行的 geoip.dat 和 geosite.dat"></a>安裝最新發行的 geoip.dat 和 geosite.dat</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)</span><br></pre></td></tr></table></figure>
 
 <h4 id="移除-V2Ray"><a href="#移除-V2Ray" class="headerlink" title="移除 V2Ray"></a>移除 V2Ray</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
 <h4 id="离线安装V2Ray"><a href="#离线安装V2Ray" class="headerlink" title="离线安装V2Ray"></a>离线安装V2Ray</h4><p>下载v2ray core:<br><a href="https://github.com/v2ray/v2ray-core/releases">https://github.com/v2ray/v2ray-core/releases</a><br>树莓派选择：<br><a href="https://github.com/v2ray/v2ray-core/releases/download/v4.28.2/v2ray-linux-arm32-v7a.zip">v2ray-linux-arm32-v7a.zip</a></p>
 <p>安装：</p>
@@ -2129,12 +2150,13 @@ Country: null
   </entry>
   <entry>
     <title>使用NDK和CMake进行交叉编译库</title>
-    <url>/2020/08/09/%E4%BD%BF%E7%94%A8NDK%E5%92%8CCMake%E8%BF%9B%E8%A1%8C%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%BA%93/</url>
+    <url>/2020/08/10/%E4%BD%BF%E7%94%A8NDK%E5%92%8CCMake%E8%BF%9B%E8%A1%8C%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%BA%93/</url>
     <content><![CDATA[<p><a href="https://developer.android.com/ndk/guides/cmake?hl=zh-cn">https://developer.android.com/ndk/guides/cmake?hl=zh-cn</a></p>
 <p><a href="https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-android-with-the-ndk">https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-android-with-the-ndk</a></p>
 <p>NDK 通过工具链文件支持 CMake。工具链文件是用于自定义交叉编译工具链行为的 CMake 文件。用于 NDK 的工具链文件位于 NDK 中的 &#x2F;build&#x2F;cmake&#x2F;android.toolchain.cmake 内。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">/bin/bash</span></span><br><span class="line"></span><br><span class="line">export ANDROID_NDK=/opt/env/android-ndk-r14b</span><br><span class="line"></span><br><span class="line">rm -r build</span><br><span class="line">mkdir build &amp;&amp; cd build </span><br><span class="line"></span><br><span class="line">cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \</span><br><span class="line">    -DANDROID_ABI=&quot;armeabi-v7a&quot; \</span><br><span class="line">    -DANDROID_NDK=$ANDROID_NDK \</span><br><span class="line">    -DANDROID_PLATFORM=android-22 \</span><br><span class="line">    ..</span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">cd ..</span><br></pre></td></tr></table></figure>
 
+<span id="more"></span>
 <h4 id="opencv-NDK-编译"><a href="#opencv-NDK-编译" class="headerlink" title="opencv NDK 编译"></a>opencv NDK 编译</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cmake -D CMAKE_BUILD_TYPE=RELEASE \</span><br><span class="line">    -D CMAKE_TOOLCHAIN_FILE=/Users/zauther/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake \</span><br><span class="line">    -D ANDROID_TOOLCHAIN=clang \</span><br><span class="line">    -D PYTHON_DEFAULT_EXECUTABLE=$(python -c &quot;import sys; print(sys.executable)&quot;)   \</span><br><span class="line">    -D PYTHON3_EXECUTABLE=$(python -c &quot;import sys; print(sys.executable)&quot;)   \</span><br><span class="line">    -D PYTHON3_NUMPY_INCLUDE_DIRS=$(python -c &quot;import numpy; print (numpy.get_include())&quot;) \</span><br><span class="line">    -D PYTHON3_INCLUDE_PATH=/usr/local/Cellar/python/3.7.7/Frameworks/Python.framework/Headers \</span><br><span class="line">    -D PYTHON3_PACKAGES_PATH=$(python -c &quot;from distutils.sysconfig import get_python_lib; print(get_python_lib())&quot;) \</span><br><span class="line">    -D PYTHON2_EXECUTABLE=/Users/zauther/Downloads/head_file/AliNNPython   \</span><br><span class="line">    -D PYTHON2_NUMPY_INCLUDE_DIRS=/Users/zauther/Downloads/head_file \</span><br><span class="line">    -D PYTHON2_INCLUDE_PATH=/Library/Frameworks/Python.framework/Versions/2.7/Headers \</span><br><span class="line">    -D PYTHON2_PACKAGES_PATH=$(python -c &quot;from distutils.sysconfig import get_python_lib; print(get_python_lib())&quot;) \</span><br><span class="line">    -D CMAKE_CXX_FLAGS=&quot;-std=c++11&quot; \</span><br><span class="line">    -D CMAKE_C_FLAGS=&quot;-D__ANDROID_API__=26&quot; \</span><br><span class="line">    -D ANDROID_NDK=/Users/zauther/Library/Android/sdk/ndk-bundle \</span><br><span class="line">    -D ANDROID_ABI=&quot;arm64-v8a&quot; \</span><br><span class="line">    -D ANDROID_NATIVE_API_LEVEL=android-26 \</span><br><span class="line">    -D ANDROID_NO_UNDEFINED=ON \</span><br><span class="line">    -D BUILD_opencv_python3=ON \</span><br><span class="line">    -D BUILD_opencv_python2=ON \</span><br><span class="line">    -D ANDROID_SO_UNDEFINED=OFF \</span><br><span class="line">    -D DBUILD_SHARED_LIBS=ON \</span><br><span class="line">    -D ENABLE_SOLUTION_FOLDERS=ON \</span><br><span class="line">    ../opencv/</span><br><span class="line"></span><br><span class="line">make opencv_python2</span><br><span class="line">make opencv_python3</span><br><span class="line">ninja -j 8 # -GNinja \</span><br></pre></td></tr></table></figure>
 
 <p>需要使用android 24以上，<a href="https://android.googlesource.com/platform/bionic/+/master/libc/include/bits/fortify/unistd.h">https://android.googlesource.com/platform/bionic/+/master/libc/include/bits/fortify/unistd.h</a> 中的__write_chk以来24以上的版本。</p>

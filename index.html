@@ -217,7 +217,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-05-29 22:28:56 / Modified: 15:54:30" itemprop="dateCreated datePublished" datetime="2022-05-29T22:28:56+00:00">2022-05-29</time>
+              <time title="Created: 2022-05-29 14:28:56 / Modified: 15:20:35" itemprop="dateCreated datePublished" datetime="2022-05-29T14:28:56+00:00">2022-05-29</time>
             </span>
 
           <br>
@@ -494,6 +494,103 @@ Country: null
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/11/22/C++%20Hook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zauther">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zzz个人博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/C++%20Hook/" class="post-title-link" itemprop="url">C++ Hook</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-22 00:23:00" itemprop="dateCreated datePublished" datetime="2021-11-22T00:23:00+00:00">2021-11-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-07 14:28:37" itemprop="dateModified" datetime="2022-06-07T14:28:37+00:00">2022-06-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="C-Hook"><a href="#C-Hook" class="headerlink" title="C++ Hook"></a>C++ Hook</h2><h3 id="LD-PRELOAD-预加载hook-so"><a href="#LD-PRELOAD-预加载hook-so" class="headerlink" title="LD_PRELOAD 预加载hook so"></a>LD_PRELOAD 预加载hook so</h3><p>通过<code>LD_PRELOAD</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>( <span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">&quot;password&quot;</span>) )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Incorrect password\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Correct password\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o main main.c</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/22/C++%20Hook/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
     <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/11/21/ViewModel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -665,103 +762,6 @@ Country: null
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/11/21/Gradle%20%E7%94%A8%E6%B3%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
-    <link itemprop="mainEntityOfPage" href="https://blog.cwiki.cn/2021/11/21/C++%20Hook/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zauther">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zzz个人博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/21/C++%20Hook/" class="post-title-link" itemprop="url">C++ Hook</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-21 16:23:00" itemprop="dateCreated datePublished" datetime="2021-11-21T16:23:00+00:00">2021-11-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-29 14:23:29" itemprop="dateModified" datetime="2022-05-29T14:23:29+00:00">2022-05-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.2k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="C-Hook"><a href="#C-Hook" class="headerlink" title="C++ Hook"></a>C++ Hook</h2><h3 id="LD-PRELOAD"><a href="#LD-PRELOAD" class="headerlink" title="LD_PRELOAD"></a>LD_PRELOAD</h3><p>通过<code>LD_PRELOAD</code> </p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>( <span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">&quot;password&quot;</span>) )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Incorrect password\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Correct password\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o main main.c</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/21/C++%20Hook/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1154,14 +1154,14 @@ Country: null
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-04-27 14:58:00" itemprop="dateCreated datePublished" datetime="2021-04-27T14:58:00+00:00">2021-04-27</time>
+              <time title="Created: 2021-04-27 22:58:00" itemprop="dateCreated datePublished" datetime="2021-04-27T22:58:00+00:00">2021-04-27</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-09 16:33:07" itemprop="dateModified" datetime="2022-05-09T16:33:07+00:00">2022-05-09</time>
+                <time title="Modified: 2022-06-07 14:28:37" itemprop="dateModified" datetime="2022-06-07T14:28:37+00:00">2022-06-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1201,18 +1201,14 @@ Country: null
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x NVIDIA-Linux-x86_64-460.73.01.run</span><br><span class="line">sudo ./NVIDIA-Linux-x86_64-460.73.01.run </span><br></pre></td></tr></table></figure>
 
 <p>Ubuntu没必要安装这个版本，直接在“软件和更新”中选择NVIDIA的驱动更好</p>
-<h4 id="CUDA®-工具包"><a href="#CUDA®-工具包" class="headerlink" title="CUDA® 工具包"></a>CUDA® 工具包</h4><p><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">https://developer.nvidia.com/cuda-toolkit-archive</a><br>下载Ubuntu对于的包安装，sample没必要安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i libcudnn8_8.2.0.53-1+cuda11.3_amd64.deb </span><br><span class="line">sudo dpkg -i libcudnn8-dev_8.2.0.53-1+cuda11.3_amd64.deb</span><br></pre></td></tr></table></figure>
-
-<h4 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/cuda/bin$&#123;PATH:+:$&#123;PATH&#125;&#125;</span><br><span class="line">export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/lib64</span><br></pre></td></tr></table></figure>
-
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="built_in">print</span>(tf.test.is_gpu_available())</span><br></pre></td></tr></table></figure>
-
-<p>根据打印排查问题，如果最后输出为<code>True</code> 则安装成功；否则根据日志排查问题。</p>
-<h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><h4 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h4><p>ERROR: An NVIDIA kernel module ‘nvidia-drm’ appears to already be loaded in  your kernel.<br>Linux 驱动已经安装，如果需要重新安装，在“软件和更新”中选择非NVIDIA的驱动，重启，再安装。其实没必要，直接使用“软件和更新”中的驱动更好</p>
-<h4 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h4><p>Could not load dynamic library ‘libcusolver.so.10’</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd $LD_LIBRARY_PATH</span><br><span class="line">sudo ln libcusolver.so.11 libcusolver.so.10</span><br></pre></td></tr></table></figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/04/27/Ubuntu%20%E5%AE%89%E8%A3%85CUDA/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1363,12 +1359,12 @@ Country: null
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">212k</span>
+    <span title="Symbols count total">214k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">3:13</span>
+    <span title="Reading time total">3:14</span>
 </div>
 
         
