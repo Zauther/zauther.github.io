@@ -22,7 +22,6 @@ https://blog.cwiki.cn/2019/06/04/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91%E5%B7%A5%E
 https://blog.cwiki.cn/2016/03/27/Java%E6%B3%A8%E8%A7%A3/
 https://blog.cwiki.cn/2019/06/01/hello-world/
 https://blog.cwiki.cn/2021/05/01/charles%20ubuntu%20%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A6/
-https://blog.cwiki.cn/2021/10/19/JS%20%E5%BC%95%E6%93%8E%E5%AF%B9%E6%AF%94/
 https://blog.cwiki.cn/2019/07/02/Android-Native%E5%BC%80%E5%8F%91/
 https://blog.cwiki.cn/2020/02/06/Flutter-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/
 https://blog.cwiki.cn/tags/index.html
@@ -34,7 +33,6 @@ https://blog.cwiki.cn/tags/Chromiun/
 https://blog.cwiki.cn/tags/Flutter/
 https://blog.cwiki.cn/tags/ReactNative/
 https://blog.cwiki.cn/tags/Gradle/
-https://blog.cwiki.cn/tags/JS/
 https://blog.cwiki.cn/tags/Grub/
 https://blog.cwiki.cn/tags/%E5%BC%95%E5%AF%BC/
 https://blog.cwiki.cn/tags/V8/
